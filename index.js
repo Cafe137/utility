@@ -321,6 +321,19 @@ const asNullableString = string => {
     return string
 }
 
+const represent = value => {
+    if (isObject(value)) {
+        return JSON.stringify(value, null, 4)
+    }
+    if (value === null) {
+        return 'null'
+    }
+    if (isUndefined(value)) {
+        return 'undefined'
+    }
+    return value
+}
+
 class Logger {
     static fileStream
 
@@ -334,7 +347,7 @@ class Logger {
 
     log(level, pieces) {
         const timestamp = new Date().toISOString().replace('T', ' ').substr(0, 19)
-        const message = `${timestamp} ${level} ${this.module} ${pieces.join(' ')}\n`
+        const message = `${timestamp} ${level} ${this.module} ${pieces.map(represent).join(' ')}\n`
         process.stdout.write(message)
         if (level === 'ERROR') {
             process.stderr.write(message)
