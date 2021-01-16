@@ -797,11 +797,11 @@ const execAsync = async (command, resolveWithErrors, inherit, options) =>
 
 const cloneWithJson = a => JSON.parse(JSON.stringify(a))
 
-const unixTimestamp = () => Math.ceil(Date.now() / 1000)
+const unixTimestamp = optionalTimestamp => Math.ceil((optionalTimestamp || Date.now()) / 1000)
 
-const isoDate = () => new Date().toISOString().slice(0, 10)
+const isoDate = optionalDate => (optionalDate || new Date()).toISOString().slice(0, 10)
 
-const dateTimeSlug = () => new Date().toISOString().slice(0, 19).replace(/T|:/g, '-')
+const dateTimeSlug = optionalDate => (optionalDate || new Date()).toISOString().slice(0, 19).replace(/T|:/g, '-')
 
 const getAgo = date => {
     const now = Date.now()
