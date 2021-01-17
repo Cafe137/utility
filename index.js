@@ -724,15 +724,7 @@ const beforeLast = (string, searchString) => string.slice(0, string.lastIndexOf(
 
 const splitOnce = (string, separator) => [before(string, separator), after(string, separator)]
 
-const randomize = string => {
-    let result = string
-    const groups = string.match(/\{.+?\}/g)
-    for (const group of groups) {
-        const options = group.replace(/\{|\}/g, '')
-        result = result.replace(group, pick(options.split('|')))
-    }
-    return result
-}
+const randomize = string => string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
 
 const expectThrow = async (name, message, callable) => {
     try {
