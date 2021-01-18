@@ -726,6 +726,10 @@ const splitOnce = (string, separator) => [before(string, separator), after(strin
 
 const randomize = string => string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
 
+const shrinkTrim = string => string.replace(/\s+/g, ' ').replace(/\s$|^\s/g, '')
+
+const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
+
 const expectThrow = async (name, message, callable) => {
     try {
         await callable()
@@ -1225,7 +1229,9 @@ module.exports = {
         sortByFuzzyScore,
         getChecksum,
         splitOnce,
-        randomize
+        randomize,
+        shrinkTrim,
+        capitalize
     },
     Assertions: {
         asTrue,
