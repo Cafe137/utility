@@ -722,7 +722,8 @@ const afterLast = (string, searchString) => last(string.split(searchString))
 
 const beforeLast = (string, searchString) => string.slice(0, string.lastIndexOf(searchString))
 
-const splitOnce = (string, separator) => [before(string, separator), after(string, separator)]
+const splitOnce = (string, separator) =>
+    string.includes(separator) ? [before(string, separator), after(string, separator)] : [string, '']
 
 const randomize = string => string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
 
