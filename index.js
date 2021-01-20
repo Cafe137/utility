@@ -731,6 +731,8 @@ const shrinkTrim = string => string.replace(/\s+/g, ' ').replace(/\s$|^\s/g, '')
 
 const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
 
+const csvEscape = string => (string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string)
+
 const expectThrow = async (name, message, callable) => {
     try {
         await callable()
@@ -1232,7 +1234,8 @@ module.exports = {
         splitOnce,
         randomize,
         shrinkTrim,
-        capitalize
+        capitalize,
+        csvEscape
     },
     Assertions: {
         asTrue,
