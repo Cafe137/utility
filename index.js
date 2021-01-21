@@ -958,6 +958,13 @@ const mergeArrays = (target, source) => {
     }
 }
 
+const empty = array => {
+    while (array.length) {
+        array.pop()
+    }
+    return array
+}
+
 const removeEmptyArrays = object => {
     for (const key of Object.keys(object)) {
         if (Array.isArray(object[key]) && object[key].length === 0) {
@@ -1121,7 +1128,8 @@ module.exports = {
         pushAll,
         unshiftAll,
         filterAndRemove,
-        merge: mergeArrays
+        merge: mergeArrays,
+        empty
     },
     System: {
         sleepMillis,
