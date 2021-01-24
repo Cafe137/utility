@@ -258,6 +258,8 @@ const getChecksumOfFile = async path =>
 
 const isObject = value => value !== null && typeof value === 'object'
 
+const isStrictlyObject = value => isObject(value) && !Array.isArray(value)
+
 const isUndefined = value => typeof value === 'undefined'
 
 const isFunction = value => Object.prototype.toString.call(value) === '[object Function]'
@@ -392,13 +394,15 @@ const expandError = (error, stackTrace) => {
 }
 
 const mergeDeep = (target, source) => {
-    if (isObject(target) && isObject(source)) {
+    if (isStrictlyObject(target) && isStrictlyObject(source)) {
         for (const key in source) {
-            if (isObject(source[key])) {
-                if (!target[key]) Object.assign(target, { [key]: {} })
+            if (isStrictlyObject(source[key])) {
+                if (!target[key]) {
+                    target[key] = {}
+                }
                 mergeDeep(target[key], source[key])
             } else {
-                Object.assign(target, { [key]: source[key] })
+                target[key] = source[key]
             }
         }
     }
@@ -1212,6 +1216,7 @@ module.exports = {
     Types: {
         isFunction,
         isObject,
+        isStrictlyObject,
         isUndefined,
         isString,
         isNumber,
