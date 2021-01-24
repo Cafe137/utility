@@ -401,6 +401,8 @@ const mergeDeep = (target, source) => {
                     target[key] = {}
                 }
                 mergeDeep(target[key], source[key])
+            } else if (Array.isArray(source[key])) {
+                target[key] = [...source[key]]
             } else {
                 target[key] = source[key]
             }
