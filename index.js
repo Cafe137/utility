@@ -929,6 +929,8 @@ const createSequence = () => {
     return { next: () => value++ }
 }
 
+const clamp = (value, lower, upper) => (value < lower ? lower : value > upper ? upper : value)
+
 const getHeapMegabytes = () => {
     const memory = process.memoryUsage()
     return {
@@ -1141,6 +1143,7 @@ module.exports = {
         expandError
     },
     Numbers: {
+        clamp,
         range,
         interpolate,
         createSequence
