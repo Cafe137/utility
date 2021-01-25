@@ -50,6 +50,8 @@ const pluck = (array, key) => array.map(element => element[key])
 
 const randomIntInclusive = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
 
+const randomBetween = (min, max) => Math.random() * (max - min) + min
+
 const signedRandom = () => Math.random() * 2 - 1
 
 const chance = threshold => Math.random() < threshold
@@ -1112,6 +1114,7 @@ const sortObjectValues = (object, compareFn) => Object.fromEntries(Object.entrie
 module.exports = {
     Random: {
         inclusiveInt: randomIntInclusive,
+        between: randomBetween,
         chance,
         signed: signedRandom
     },
