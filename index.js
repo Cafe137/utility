@@ -969,9 +969,7 @@ const mergeArrays = (target, source) => {
 }
 
 const empty = array => {
-    while (array.length) {
-        array.pop()
-    }
+    array.splice(0, array.length)
     return array
 }
 
