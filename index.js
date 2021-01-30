@@ -820,6 +820,11 @@ const isoDate = optionalDate => (optionalDate || new Date()).toISOString().slice
 
 const dateTimeSlug = optionalDate => (optionalDate || new Date()).toISOString().slice(0, 19).replace(/T|:/g, '-')
 
+const fromUtcString = string => {
+    const date = new Date(string)
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+}
+
 const getAgo = date => {
     const now = Date.now()
     const then = date.getTime()
@@ -1164,7 +1169,8 @@ module.exports = {
         isoDate,
         debounce,
         dateTimeSlug,
-        unixTimestamp
+        unixTimestamp,
+        fromUtcString
     },
     Objects: {
         safeParse,
