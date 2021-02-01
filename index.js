@@ -855,6 +855,19 @@ const debounce = (longWrapper, millis) => {
     return false
 }
 
+const timeUnits = {
+    s: 1000,
+    m: 60000,
+    h: 3600000,
+    d: 86400000
+}
+
+const timeSince = (unit, a, optionalB) => {
+    a = isDate(a) ? a.getTime() : a
+    optionalB = optionalB ? (isDate(optionalB) ? optionalB.getTime() : optionalB) : Date.now()
+    return (optionalB - a) / timeUnits[unit]
+}
+
 const getPreLine = string => string.replace(/ +/g, ' ').replace(/^ /gm, '')
 
 const containsWord = (string, word) => {
@@ -1168,6 +1181,7 @@ module.exports = {
         getAgo,
         isoDate,
         debounce,
+        timeSince,
         dateTimeSlug,
         unixTimestamp,
         fromUtcString
