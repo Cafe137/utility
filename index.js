@@ -1015,6 +1015,15 @@ const mapObject = (object, mapper) => {
     return output
 }
 
+const rethrow = async (asyncFn, throwable) => {
+    try {
+        const returnValue = await asyncFn()
+        return returnValue
+    } catch (error) {
+        throw throwable
+    }
+}
+
 const getFlatNotation = (prefix, key, bracket) =>
     prefix + (bracket ? '[' + key + ']' : (prefix.length ? '.' : '') + key)
 
@@ -1213,7 +1222,8 @@ module.exports = {
         unflatten,
         match,
         sort: sortObjectValues,
-        map: mapObject
+        map: mapObject,
+        throwable
     },
     Pagination: {
         asPageNumber,
