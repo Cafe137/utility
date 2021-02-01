@@ -1223,7 +1223,7 @@ module.exports = {
         match,
         sort: sortObjectValues,
         map: mapObject,
-        throwable
+        rethrow
     },
     Pagination: {
         asPageNumber,
