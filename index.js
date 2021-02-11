@@ -274,13 +274,22 @@ const isDate = value => Object.prototype.toString.call(value) === '[object Date]
 
 const isBlank = value => !isString(value) || value.trim().length === 0
 
-const seedAlphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+const alphanumericAlphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
-const generateSeed = length => {
+const hexAlphabet = '0123456789abcdef'
+
+const randomAlphanumericString = length => {
     let buffer = ''
     for (let i = 0; i < length; i++) {
-        const index = Math.floor(Math.random() * seedAlphabet.length)
-        buffer += seedAlphabet[index]
+        buffer += alphanumericAlphabet[Math.floor(Math.random() * alphanumericAlphabet.length)]
+    }
+    return buffer
+}
+
+const randomHexString = length => {
+    let buffer = ''
+    for (let i = 0; i < length; i++) {
+        buffer += hexAlphabet[Math.floor(Math.random() * hexAlphabet.length)]
     }
     return buffer
 }
@@ -663,7 +672,7 @@ const slugify = string => {
     let slug = ''
     const characters = string.split('')
     for (const character of characters) {
-        if (seedAlphabet.includes(character)) {
+        if (alphanumericAlphabet.includes(character)) {
             slug += character.toLowerCase()
         } else if (slugMap[character]) {
             slug += slugMap[character]
@@ -1263,7 +1272,8 @@ module.exports = {
     Strings: {
         tokenizeByCount,
         tokenizeByLength,
-        generateSeed,
+        randomAlphanumeric: randomAlphanumericString,
+        randomHex: randomHexString,
         includesAny,
         slugify,
         enumify,
