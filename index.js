@@ -727,17 +727,27 @@ const decodeHtmlEntities = string => {
 
 const before = (string, searchString) => {
     const position = string.indexOf(searchString)
-    return string.slice(0, position)
+    return position === -1 ? string : string.slice(0, position)
 }
 
 const after = (string, searchString) => {
     const position = string.indexOf(searchString)
-    return string.slice(position + searchString.length)
+    return position === -1 ? string : string.slice(position + searchString.length)
 }
 
-const afterLast = (string, searchString) => last(string.split(searchString))
+const beforeLast = (string, searchString) => {
+    const position = string.lastIndexOf(searchString)
+    return position === -1 ? string : string.slice(0, position)
+}
 
-const beforeLast = (string, searchString) => string.slice(0, string.lastIndexOf(searchString))
+const afterLast = (string, searchString) => {
+    const position = string.lastIndexOf(searchString)
+    return position === -1 ? string : string.slice(position + searchString.length)
+}
+
+const between = (string, start, end) => before(after(string, start), end)
+
+const betweenWide = (string, start, end) => beforeLast(after(string, start), end)
 
 const splitOnce = (string, separator) =>
     string.includes(separator) ? [before(string, separator), after(string, separator)] : [string, '']
@@ -1283,6 +1293,8 @@ module.exports = {
         afterLast,
         before,
         beforeLast,
+        between,
+        betweenWide,
         getPreLine,
         containsWord,
         containsWords,
