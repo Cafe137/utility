@@ -749,6 +749,8 @@ const between = (string, start, end) => before(after(string, start), end)
 
 const betweenWide = (string, start, end) => beforeLast(after(string, start), end)
 
+const betweenNarrow = (string, start, end) => before(afterLast(string, start), end)
+
 const splitOnce = (string, separator) =>
     string.includes(separator) ? [before(string, separator), after(string, separator)] : [string, '']
 
@@ -1295,6 +1297,7 @@ module.exports = {
         beforeLast,
         between,
         betweenWide,
+        betweenNarrow,
         getPreLine,
         containsWord,
         containsWords,
