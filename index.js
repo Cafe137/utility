@@ -922,16 +922,19 @@ const getCached = async (key, ttlMillis, handler) => {
     return value
 }
 
-const cleanUrl = url => {
-    const starts = url.startsWith('/')
-    const ends = url.endsWith('/')
-    if (!starts && !ends) {
-        return url
+const joinUrl = (...parts) => {
+    let url = parts[0][parts[0].length - 1] === '/' ? parts[0].slice(0, -1) : parts[0]
+    for (let i = 1; i < parts.length; i++) {
+        const part = parts[i]
+        if (part === '/') {
+            continue
+        }
+        const starts = part[0] === '/'
+        const ends = part[part.length - 1] === '/'
+        url += '/' + part.slice(starts ? 1 : 0, ends ? -1 : undefined)
     }
-    return url.slice(starts ? 1 : 0, ends ? url.length - 1 : url.length)
+    return url
 }
-
-const joinUrl = (...parts) => parts.map(part => cleanUrl(part)).join('/')
 
 const sortObject = object => {
     const keys = Object.keys(object)
