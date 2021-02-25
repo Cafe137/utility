@@ -654,37 +654,16 @@ const includesAny = (string, substrings) => {
     return false
 }
 
-const slugMap = {
-    á: 'a',
-    à: 'a',
-    é: 'e',
-    è: 'e',
-    í: 'i',
-    ó: 'o',
-    ö: 'o',
-    ő: 'o',
-    ú: 'u',
-    ü: 'u',
-    ű: 'u'
-}
-
-const slugify = string => {
-    let slug = ''
-    const characters = string.split('')
-    for (const character of characters) {
-        if (alphanumericAlphabet.includes(character)) {
-            slug += character.toLowerCase()
-        } else if (slugMap[character]) {
-            slug += slugMap[character]
-        } else {
-            slug += '-'
-        }
-    }
-    slug = slug.replace(/-+/g, '-')
-    slug = slug.replace(/^-/, '')
-    slug = slug.replace(/-$/, '')
-    return slug
-}
+const slugify = string =>
+    string
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .split('')
+        .map(character => (/[a-z0-9]/.test(character) ? character : '-'))
+        .join('')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
 
 const enumify = string => slugify(string).replace(/-/g, '_').toUpperCase()
 
