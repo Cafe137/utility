@@ -347,48 +347,45 @@ const represent = value => {
     return value
 }
 
-class Logger {
-    static fileStream
+const loggerGlobalState = {
+    fileStream: null
+}
 
-    constructor(module) {
-        this.module = last(module.split(/\\|\//))
+const log = (level, module, pieces) => {
+    const timestamp = new Date().toISOString().replace('T', ' ').substr(0, 19)
+    const message = `${timestamp} ${level} ${module} ${pieces.map(represent).join(' ')}\n`
+    process.stdout.write(message)
+    if (level === 'ERROR') {
+        process.stderr.write(message)
     }
-
-    static enableFileLogging(path) {
-        Logger.fileStream = createWriteStream(path, { flags: 'a' })
+    if (loggerGlobalState.fileStream) {
+        loggerGlobalState.fileStream.write(message)
     }
+}
 
-    log(level, pieces) {
-        const timestamp = new Date().toISOString().replace('T', ' ').substr(0, 19)
-        const message = `${timestamp} ${level} ${this.module} ${pieces.map(represent).join(' ')}\n`
-        process.stdout.write(message)
-        if (level === 'ERROR') {
-            process.stderr.write(message)
+const createLogger = module => {
+    module = last(module.split(/\\|\//))
+    return {
+        trace: (...pieces) => {
+            log('TRACE', module, pieces)
+        },
+        info: (...pieces) => {
+            log('INFO', module, pieces)
+        },
+        warn: (...pieces) => {
+            log('WARN', module, pieces)
+        },
+        error: (...pieces) => {
+            log('ERROR', module, pieces)
+        },
+        errorObject: (error, stackTrace) => {
+            log('ERROR', module, [expandError(error, stackTrace)])
         }
-        if (Logger.fileStream) {
-            Logger.fileStream.write(message)
-        }
     }
+}
 
-    trace(...pieces) {
-        this.log('TRACE', pieces)
-    }
-
-    info(...pieces) {
-        this.log('INFO', pieces)
-    }
-
-    warn(...pieces) {
-        this.log('WARN', pieces)
-    }
-
-    error(...pieces) {
-        this.log('ERROR', pieces)
-    }
-
-    errorObject(error, stackTrace) {
-        this.log('ERROR', [expandError(error, stackTrace)])
-    }
+const enableFileLogging = path => {
+    loggerGlobalState.fileStream = createWriteStream(path, { flags: 'a' })
 }
 
 const expandError = (error, stackTrace) => {
@@ -1311,5 +1308,8 @@ module.exports = {
     Cache: {
         get: getCached
     },
-    Logger
+    Logger: {
+        create: createLogger,
+        enableFileLogging
+    }
 }
