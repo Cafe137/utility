@@ -1,8 +1,7 @@
-const { exec } = require('child_process')
-const { createHash } = require('crypto')
-const { createReadStream, createWriteStream } = require('fs')
-const { mkdir, opendir, readFile, stat, writeFile } = require('fs').promises
-const { join } = require('path')
+const ChildProcess = require('child_process')
+const Crypto = require('crypto')
+const Fs = require('fs')
+const Path = require('path')
 
 const raceFulfilled = promises => invertPromise(Promise.all(promises.map(invertPromise)))
 
@@ -166,15 +165,15 @@ const forever = async (callable, millis) => {
     }
 }
 
-const readUtf8FileAsync = async path => readFile(path, 'utf8')
+const readUtf8FileAsync = async path => Fs.promises.readFile(path, 'utf8')
 
 const readJsonAsync = async path => JSON.parse(await readUtf8FileAsync(path))
 
 const writeJsonAsync = async (path, object, prettify) => {
     if (prettify) {
-        await writeFile(path, JSON.stringify(object, null, 4))
+        await Fs.promises.writeFile(path, JSON.stringify(object, null, 4))
     } else {
-        await writeFile(path, JSON.stringify(object))
+        await Fs.promises.writeFile(path, JSON.stringify(object))
     }
 }
 
@@ -185,8 +184,8 @@ const readMatchingLines = async (path, filterFn) => (await readLinesAsync(path))
 const readNonEmptyLines = async path => readMatchingLines(path, x => x)
 
 async function* walkTreeAsync(path) {
-    for await (const directory of await opendir(path)) {
-        const entry = join(path, directory.name)
+    for await (const directory of await Fs.promises.opendir(path)) {
+        const entry = Path.join(path, directory.name)
         if (directory.isDirectory()) {
             yield* await walkTreeAsync(entry)
         } else if (directory.isFile()) {
@@ -211,7 +210,7 @@ const readdirDeepAsync = async (path, cwd) => {
 
 const existsAsync = async path => {
     try {
-        await stat(path)
+        await Fs.promises.stat(path)
         return true
     } catch (error) {
         return false
@@ -219,7 +218,7 @@ const existsAsync = async path => {
 }
 
 const getFileSize = async path => {
-    const stats = await stat(path)
+    const stats = await Fs.promises.stat(path)
     return stats.size
 }
 
@@ -244,15 +243,15 @@ const convertBytes = bytes => {
 }
 
 const getChecksum = data => {
-    const hash = createHash('sha1')
+    const hash = Crypto.createHash('sha1')
     hash.update(data)
     return hash.digest('hex')
 }
 
 const getChecksumOfFile = async path =>
     new Promise((resolve, reject) => {
-        const hash = createHash('sha1')
-        const readStream = createReadStream(path)
+        const hash = Crypto.createHash('sha1')
+        const readStream = Fs.createReadStream(path)
         readStream.on('error', reject)
         readStream.on('data', chunk => hash.update(chunk))
         readStream.on('end', () => resolve(hash.digest('hex')))
@@ -385,7 +384,7 @@ const createLogger = module => {
 }
 
 const enableFileLogging = path => {
-    loggerGlobalState.fileStream = createWriteStream(path, { flags: 'a' })
+    loggerGlobalState.fileStream = Fs.createWriteStream(path, { flags: 'a' })
 }
 
 const expandError = (error, stackTrace) => {
@@ -770,7 +769,7 @@ const mkdirp = async path => {
         buffer += segment + '/'
         if (!(await existsAsync(buffer))) {
             try {
-                await mkdir(buffer)
+                await Fs.promises.mkdir(buffer)
             } catch (error) {
                 if (error.code !== 'EEXIST') {
                     throw error
@@ -792,7 +791,7 @@ const filterAndRemove = (array, predicate) => {
 
 const execAsync = async (command, resolveWithErrors, inherit, options) =>
     new Promise((resolve, reject) => {
-        const childProcess = exec(command, options, (error, stdout, stderr) => {
+        const childProcess = ChildProcess.exec(command, options, (error, stdout, stderr) => {
             if (error) {
                 if (resolveWithErrors) {
                     resolve({ error, stdout, stderr })
