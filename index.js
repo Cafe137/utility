@@ -18,9 +18,9 @@ const sleepMillis = millis =>
 const shuffle = array => {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1))
-        const x = array[i]
+        const swap = array[i]
         array[i] = array[j]
-        array[j] = x
+        array[j] = swap
     }
     return array
 }
@@ -1096,16 +1096,19 @@ const indexArray = (array, keyFn, useArrays) => {
 
 const splitBySize = (array, size) => {
     const batches = []
-    const slices = Math.ceil(array.length / size)
-    for (let i = 0; i < slices; i++) {
-        batches.push(array.slice(i * size, i * size + size))
+    for (let i = 0; i < array.length; i += size) {
+        batches.push(array.slice(i, i + size))
     }
     return batches
 }
 
 const splitByCount = (array, count) => {
     const size = Math.ceil(array.length / count)
-    return splitBySize(array, size)
+    const batches = []
+    for (let i = 0; i < array.length; i += size) {
+        batches.push(array.slice(i, i + size))
+    }
+    return batches
 }
 
 const tokenizeByLength = (string, length) => {
