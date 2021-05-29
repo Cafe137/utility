@@ -1,7 +1,7 @@
 const { exec } = require('child_process')
 const { createHash } = require('crypto')
 const { createReadStream, createWriteStream } = require('fs')
-const { mkdir, opendir, readFile, stat, writeFile } = require('fs/promises')
+const { mkdir, opendir, readFile, stat, writeFile } = require('fs').promises
 const { join } = require('path')
 
 const raceFulfilled = promises => invertPromise(Promise.all(promises.map(invertPromise)))
