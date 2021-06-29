@@ -737,6 +737,11 @@ const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
 
 const csvEscape = string => (string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string)
 
+const humanizeProgress = state =>
+    `[${Math.floor(state.progress * 100)}%] ${humanizeTime(state.deltaMs)} out of ${humanizeTime(
+        state.totalTimeMs
+    )} (${humanizeTime(state.remainingTimeMs)} left) [${Math.round(state.baseTimeMs)} ms each]`
+
 const expectThrow = async (name, message, callable) => {
     try {
         await callable()
@@ -821,6 +826,23 @@ const fromUtcString = string => {
     return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
 }
 
+const createTimeDigits = value => String(Math.floor(value)).padStart(2, '0')
+
+const humanizeTime = millis => {
+    let seconds = Math.floor(millis / 1000)
+    if (seconds < 60) {
+        return `${seconds}s`
+    }
+    let minutes = seconds / 60
+    seconds = seconds % 60
+    if (minutes < 60) {
+        return `${createTimeDigits(minutes)}:${createTimeDigits(seconds)}`
+    }
+    const hours = minutes / 60
+    minutes = minutes % 60
+    return `${createTimeDigits(hours)}:${createTimeDigits(minutes)}:${createTimeDigits(seconds)}`
+}
+
 const getAgo = date => {
     const now = Date.now()
     const then = date.getTime()
@@ -862,6 +884,21 @@ const timeSince = (unit, a, optionalB) => {
     a = isDate(a) ? a.getTime() : a
     optionalB = optionalB ? (isDate(optionalB) ? optionalB.getTime() : optionalB) : Date.now()
     return (optionalB - a) / timeUnits[unit]
+}
+
+const getProgress = (startedAt, current, total) => {
+    const progress = current / total
+    const deltaMs = Date.now() - startedAt
+    const baseTimeMs = deltaMs / current
+    const totalTimeMs = baseTimeMs * total
+    const remainingTimeMs = totalTimeMs - deltaMs
+    return {
+        deltaMs,
+        progress,
+        baseTimeMs,
+        totalTimeMs,
+        remainingTimeMs
+    }
 }
 
 const getPreLine = string => string.replace(/ +/g, ' ').replace(/^ /gm, '')
@@ -1195,7 +1232,11 @@ module.exports = {
         timeSince,
         dateTimeSlug,
         unixTimestamp,
-        fromUtcString
+        fromUtcString,
+        getProgress,
+        humanizeTime,
+        humanizeProgress,
+        createTimeDigits
     },
     Objects: {
         safeParse,
