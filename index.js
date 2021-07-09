@@ -1086,8 +1086,8 @@ const flattenInner = (target, object, prefix, bracket, arrays) => {
     return target
 }
 
-const flatten = (object, arrays) => {
-    return flattenInner({}, object, '', false, arrays)
+const flatten = (object, arrays, prefix) => {
+    return flattenInner({}, object, prefix || '', false, arrays)
 }
 
 const unflatten = object => {
