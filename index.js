@@ -391,13 +391,12 @@ const expandError = (error, stackTrace) => {
     if (isString(error)) {
         return error
     }
-    let buffer = Object.entries(error)
-        .map(entry => `${entry[0]}: ${entry[1]}`)
-        .join('; ')
-    if (stackTrace && error.stack) {
-        buffer += `\n${error.stack}`
+    const keys = Object.keys(error)
+    if (error.message && !keys.includes('message')) {
+        keys.push('message')
     }
-    return buffer
+    const joined = keys.map(key => `${key}: ${error[key]}`).join('; ')
+    return stackTrace && error.stack ? joined + '\n' + error.stack : joined
 }
 
 const mergeDeep = (target, source) => {
