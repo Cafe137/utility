@@ -1,7 +1,13 @@
-const ChildProcess = require('child_process')
-const Crypto = require('crypto')
-const Fs = require('fs')
-const Path = require('path')
+function nodeModuleRequire(module) {
+    if (require) {
+        return require(module)
+    }
+}
+
+const ChildProcess = nodeModuleRequire('child_process')
+const Crypto = nodeModuleRequire('crypto')
+const Fs = nodeModuleRequire('fs')
+const Path = nodeModuleRequire('path')
 
 const raceFulfilled = promises => invertPromise(Promise.all(promises.map(invertPromise)))
 
