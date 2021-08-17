@@ -1067,6 +1067,12 @@ const rethrow = async (asyncFn, throwable) => {
     }
 }
 
+const setSomeOnObject = (object, key, value) => {
+    if (typeof value !== 'undefined' && value !== null) {
+        object[key] = value
+    }
+}
+
 const getFlatNotation = (prefix, key, bracket) =>
     prefix + (bracket ? '[' + key + ']' : (prefix.length ? '.' : '') + key)
 
@@ -1273,7 +1279,8 @@ module.exports = {
         match,
         sort: sortObjectValues,
         map: mapObject,
-        rethrow
+        rethrow,
+        setSomeOnObject
     },
     Pagination: {
         asPageNumber,
