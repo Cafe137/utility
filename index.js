@@ -925,7 +925,7 @@ const mapDayNumber = zeroBasedIndex => ({
 
 const getDayInfoFromDate = date => mapDayNumber(date.getDay())
 
-const getDayInfoFromDateTimeString = dateTimeString => getDayInfo(new Date(dateTimeString))
+const getDayInfoFromDateTimeString = dateTimeString => getDayInfoFromDate(new Date(dateTimeString))
 
 const getPreLine = string => string.replace(/ +/g, ' ').replace(/^ /gm, '')
 
