@@ -908,6 +908,25 @@ const getProgress = (startedAt, current, total) => {
     }
 }
 
+const dayNumberIndex = {
+    0: 'monday',
+    1: 'tuesday',
+    2: 'wednesday',
+    3: 'thursday',
+    4: 'friday',
+    5: 'saturday',
+    6: 'sunday'
+}
+
+const mapDayNumber = zeroBasedIndex => ({
+    zeroBasedIndex,
+    day: dayNumberIndex[zeroBasedIndex]
+})
+
+const getDayInfoFromDate = date => mapDayNumber(date.getDay())
+
+const getDayInfoFromDateTimeString = dateTimeString => getDayInfo(new Date(dateTimeString))
+
 const getPreLine = string => string.replace(/ +/g, ' ').replace(/^ /gm, '')
 
 const containsWord = (string, word) => {
@@ -1249,7 +1268,10 @@ module.exports = {
         getProgress,
         humanizeTime,
         humanizeProgress,
-        createTimeDigits
+        createTimeDigits,
+        mapDayNumber,
+        getDayInfoFromDate,
+        getDayInfoFromDateTimeString
     },
     Objects: {
         safeParse,
