@@ -668,6 +668,8 @@ const slugify = string =>
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '')
 
+const surroundInOut = (string, filler) => filler + string.split('').join(filler) + filler
+
 const enumify = string => slugify(string).replace(/-/g, '_').toUpperCase()
 
 const getFuzzyMatchScore = (string, input) => {
@@ -1367,7 +1369,8 @@ module.exports = {
         randomize,
         shrinkTrim,
         capitalize,
-        csvEscape
+        csvEscape,
+        surroundInOut
     },
     Assertions: {
         asTrue,
