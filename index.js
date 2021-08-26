@@ -1021,6 +1021,16 @@ const createSequence = () => {
 
 const clamp = (value, lower, upper) => (value < lower ? lower : value > upper ? upper : value)
 
+const increment = (value, change, maximum) => {
+    const result = value + change
+    return result > maximum ? maximum : result
+}
+
+const decrement = (value, change, minimum) => {
+    const result = value - change
+    return result < minimum ? minimum : result
+}
+
 const getHeapMegabytes = () => {
     const memory = process.memoryUsage()
     return {
@@ -1253,7 +1263,9 @@ module.exports = {
         clamp,
         range,
         interpolate,
-        createSequence
+        createSequence,
+        increment,
+        decrement
     },
     Promises: {
         raceFulfilled,
