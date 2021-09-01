@@ -191,6 +191,9 @@ const readMatchingLines = async (path, filterFn) => (await readLinesAsync(path))
 
 const readNonEmptyLines = async path => readMatchingLines(path, x => x)
 
+const readCsv = async (path, skip = 0) =>
+    skip ? (await readNonEmptyLines(path)).slice(skip) : await readNonEmptyLines(path)
+
 async function* walkTreeAsync(path) {
     for await (const directory of await Fs.promises.opendir(path)) {
         const entry = Path.join(path, directory.name)
@@ -752,6 +755,24 @@ const shrinkTrim = string => string.replace(/\s+/g, ' ').replace(/\s$|^\s/g, '')
 const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
 
 const csvEscape = string => (string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string)
+
+const parseCsv = (string, delimiter = ',', quote = '"') => {
+    const items = []
+    let buffer = ''
+    let escaped = false
+    for (const character of string) {
+        if (character === delimiter && !escaped) {
+            items.push(buffer)
+            buffer = ''
+        } else if (character === quote && ((!buffer && !escaped) || escaped)) {
+            escaped = !escaped
+        } else {
+            buffer += character
+        }
+    }
+    items.push(buffer)
+    return items
+}
 
 const humanizeProgress = state =>
     `[${Math.floor(state.progress * 100)}%] ${humanizeTime(state.deltaMs)} out of ${humanizeTime(
@@ -1339,6 +1360,7 @@ module.exports = {
         readLinesAsync,
         readMatchingLines,
         readNonEmptyLines,
+        readCsv,
         walkTreeAsync,
         getFileSize,
         asMegabytes,
@@ -1390,6 +1412,7 @@ module.exports = {
         shrinkTrim,
         capitalize,
         csvEscape,
+        parseCsv,
         surroundInOut
     },
     Assertions: {
