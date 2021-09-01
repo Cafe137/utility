@@ -459,6 +459,13 @@ const asPageNumber = value => {
     return number
 }
 
+const pushToBucket = (object, bucket, item) => {
+    if (!object[bucket]) {
+        object[bucket] = []
+    }
+    object[bucket].push(item)
+}
+
 const pushAll = (array, elements) => Array.prototype.push.apply(array, elements)
 
 const unshiftAll = (array, elements) => Array.prototype.unshift.apply(array, elements)
@@ -1248,7 +1255,8 @@ module.exports = {
         unshiftAll,
         filterAndRemove,
         merge: mergeArrays,
-        empty
+        empty,
+        pushToBucket
     },
     System: {
         sleepMillis,
