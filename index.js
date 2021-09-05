@@ -748,6 +748,12 @@ const betweenNarrow = (string, start, end) => before(afterLast(string, start), e
 const splitOnce = (string, separator) =>
     string.includes(separator) ? [before(string, separator), after(string, separator)] : [string, '']
 
+const getExtension = string => {
+    const name = last(string.split(/\\|\//g))
+    const lastIndexOf = name.lastIndexOf('.')
+    return lastIndexOf <= 0 ? '' : name.slice(lastIndexOf + 1)
+}
+
 const randomize = string => string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
 
 const shrinkTrim = string => string.replace(/\s+/g, ' ').replace(/\s$|^\s/g, '')
@@ -1413,7 +1419,8 @@ module.exports = {
         capitalize,
         csvEscape,
         parseCsv,
-        surroundInOut
+        surroundInOut,
+        getExtension
     },
     Assertions: {
         asTrue,
