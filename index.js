@@ -185,14 +185,16 @@ const writeJsonAsync = async (path, object, prettify) => {
     }
 }
 
-const readLinesAsync = async path => (await readUtf8FileAsync(path)).split('\n')
+const readLinesAsync = async path => (await readUtf8FileAsync(path)).split(/\r?\n/)
 
 const readMatchingLines = async (path, filterFn) => (await readLinesAsync(path)).filter(filterFn)
 
 const readNonEmptyLines = async path => readMatchingLines(path, x => x)
 
-const readCsv = async (path, skip = 0) =>
-    skip ? (await readNonEmptyLines(path)).slice(skip) : await readNonEmptyLines(path)
+const readCsv = async (path, skip = 0, delimiter = ',', quote = '"') =>
+    (skip ? (await readNonEmptyLines(path)).slice(skip) : await readNonEmptyLines(path)).map(x =>
+        parseCsv(x, delimiter, quote)
+    )
 
 async function* walkTreeAsync(path) {
     for await (const directory of await Fs.promises.opendir(path)) {
