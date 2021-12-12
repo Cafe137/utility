@@ -760,6 +760,18 @@ const getBasename = string => {
     return index <= 0 ? string : name.slice(0, index)
 }
 
+const normalizeFilename = string => `${getBasename(string)}.${getExtension(string)}`
+
+const parseFilename = string => {
+    const basename = getBasename(string)
+    const extension = getExtension(string)
+    return {
+        basename,
+        extension,
+        filename: `${basename}.${extension}`
+    }
+}
+
 const randomize = string => string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
 
 const shrinkTrim = string => string.replace(/\s+/g, ' ').replace(/\s$|^\s/g, '')
@@ -1428,7 +1440,9 @@ module.exports = {
         parseCsv,
         surroundInOut,
         getExtension,
-        getBasename
+        getBasename,
+        normalizeFilename,
+        parseFilename
     },
     Assertions: {
         asTrue,
