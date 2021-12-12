@@ -750,8 +750,14 @@ const splitOnce = (string, separator) =>
 
 const getExtension = string => {
     const name = last(string.split(/\\|\//g))
-    const lastIndexOf = name.lastIndexOf('.')
-    return lastIndexOf <= 0 ? '' : name.slice(lastIndexOf + 1)
+    const lastIndex = name.lastIndexOf('.')
+    return lastIndex <= 0 ? '' : name.slice(lastIndex + 1)
+}
+
+const getBasename = string => {
+    const name = last(string.split(/\\|\//g))
+    const index = name.indexOf('.', 1)
+    return index <= 0 ? string : name.slice(0, index)
 }
 
 const randomize = string => string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
@@ -1421,7 +1427,8 @@ module.exports = {
         csvEscape,
         parseCsv,
         surroundInOut,
-        getExtension
+        getExtension,
+        getBasename
     },
     Assertions: {
         asTrue,
