@@ -32,11 +32,19 @@ const shuffle = array => {
     return array
 }
 
-const findFirst = (array, filterFn) => {
-    for (const element of array) {
-        if (filterFn(element)) {
-            return element
-        }
+const onlyOrThrow = array => {
+    if (array && array.length === 1) {
+        return array[0]
+    }
+    if (array && 'length' in array) {
+        throw Error('Expected array to have length 1, got: ' + array.length)
+    }
+    throw Error('Expected array, got: ' + array)
+}
+
+const onlyOrNull = array => {
+    if (array && array.length === 1) {
+        return array[0]
     }
     return null
 }
@@ -602,16 +610,6 @@ const asNotConflicting = (data, options) => {
     if (data) {
         throw new ConflictError(`This ${options.field} already exists.`, options.location)
     }
-}
-
-const asOnly = array => {
-    if (!array) {
-        throw new Error('Expected array, was: ' + array)
-    }
-    if (array.length !== 1) {
-        throw new Error('Expected array length to be exactly 1, was: ' + array.length)
-    }
-    return array[0]
 }
 
 const asBetween = (data, minimum, maximum, options) => {
@@ -1268,8 +1266,9 @@ module.exports = {
         splitBySize,
         splitByCount,
         index: indexArray,
+        onlyOrThrow,
+        onlyOrNull,
         firstOrNull,
-        findFirst,
         shuffle,
         takeRandomly,
         initialize: initializeArray,
@@ -1431,7 +1430,6 @@ module.exports = {
         asFound,
         asSame,
         asNotConflicting,
-        asOnly,
         asBetween,
         asLengthBetween,
         expectThrow
