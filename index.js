@@ -1156,6 +1156,14 @@ const setSomeOnObject = (object, key, value) => {
     }
 }
 
+const flip = object => {
+    const result = {}
+    for (const [key, value] of Object.entries(object)) {
+        result[value] = key
+    }
+    return result
+}
+
 const getFlatNotation = (prefix, key, bracket) =>
     prefix + (bracket ? '[' + key + ']' : (prefix.length ? '.' : '') + key)
 
@@ -1370,7 +1378,8 @@ module.exports = {
         sort: sortObjectValues,
         map: mapObject,
         rethrow,
-        setSomeOnObject
+        setSomeOnObject,
+        flip
     },
     Pagination: {
         asPageNumber,
