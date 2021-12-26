@@ -15,6 +15,18 @@ const raceFulfilled = promises => invertPromise(Promise.all(promises.map(invertP
 
 const invertPromise = promise => new Promise((resolve, reject) => promise.then(reject, resolve))
 
+const runInParallelBatches = async (promises, concurrency = 1) => {
+    const batches = splitByCount(promises, concurrency)
+    const results = []
+    const jobs = batches.map(async batch => {
+        for (const promise of batch) {
+            results.push(await promise())
+        }
+    })
+    await Promise.all(jobs)
+    return results
+}
+
 const sleepMillis = millis =>
     new Promise(resolve =>
         setTimeout(() => {
@@ -1331,7 +1343,8 @@ module.exports = {
     },
     Promises: {
         raceFulfilled,
-        invert: invertPromise
+        invert: invertPromise,
+        runInParallelBatches
     },
     Dates: {
         getAgo,
