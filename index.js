@@ -1176,6 +1176,29 @@ const flip = object => {
     return result
 }
 
+const crossJoin = object => {
+    const keys = Object.keys(object)
+    const lengths = keys.map(key => object[key].length)
+    const count = lengths.reduce((previous, current) => (previous *= current))
+    let divisor = 1
+    const divisors = [1]
+    for (let i = 0; i < lengths.length - 1; i++) {
+        divisor *= lengths[i]
+        divisors.push(divisor)
+    }
+    const results = []
+    for (let i = 0; i < count; i++) {
+        const value = {}
+        for (let j = 0; j < keys.length; j++) {
+            const array = object[keys[j]]
+            const index = Math.floor(i / divisors[j]) % array.length
+            value[keys[j]] = array[index]
+        }
+        results.push(value)
+    }
+    return results
+}
+
 const getFlatNotation = (prefix, key, bracket) =>
     prefix + (bracket ? '[' + key + ']' : (prefix.length ? '.' : '') + key)
 
@@ -1392,7 +1415,8 @@ module.exports = {
         map: mapObject,
         rethrow,
         setSomeOnObject,
-        flip
+        flip,
+        crossJoin
     },
     Pagination: {
         asPageNumber,
