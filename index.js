@@ -491,6 +491,13 @@ const pushToBucket = (object, bucket, item) => {
     object[bucket].push(item)
 }
 
+const unshiftAndLimit = (array, item, limit) => {
+    array.unshift(item)
+    while (array.length > limit) {
+        array.pop()
+    }
+}
+
 const pushAll = (array, elements) => Array.prototype.push.apply(array, elements)
 
 const unshiftAll = (array, elements) => Array.prototype.unshift.apply(array, elements)
@@ -1199,6 +1206,10 @@ const crossJoin = object => {
     return results
 }
 
+const countTruthyValues = object => {
+    return Object.values(object).filter(x => x).length
+}
+
 const getFlatNotation = (prefix, key, bracket) =>
     prefix + (bracket ? '[' + key + ']' : (prefix.length ? '.' : '') + key)
 
@@ -1345,7 +1356,8 @@ module.exports = {
         filterAndRemove,
         merge: mergeArrays,
         empty,
-        pushToBucket
+        pushToBucket,
+        unshiftAndLimit
     },
     System: {
         sleepMillis,
@@ -1416,7 +1428,8 @@ module.exports = {
         rethrow,
         setSomeOnObject,
         flip,
-        crossJoin
+        crossJoin,
+        countTruthyValues
     },
     Pagination: {
         asPageNumber,
