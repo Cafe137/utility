@@ -697,6 +697,8 @@ const slugify = string =>
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '')
 
+const camelToTitle = string => capitalize(string.replace(/([A-Z])/g, ' $1'))
+
 const surroundInOut = (string, filler) => filler + string.split('').join(filler) + filler
 
 const enumify = string => slugify(string).replace(/-/g, '_').toUpperCase()
@@ -1501,7 +1503,8 @@ module.exports = {
         getExtension,
         getBasename,
         normalizeFilename,
-        parseFilename
+        parseFilename,
+        camelToTitle
     },
     Assertions: {
         asTrue,
