@@ -1094,6 +1094,37 @@ const createSequence = () => {
     return { next: () => value++ }
 }
 
+const thresholds = [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e33]
+const longNumberUnits = [
+    'thousand',
+    'million',
+    'billion',
+    'trillion',
+    'quadrillion',
+    'quintillion',
+    'sextillion',
+    'septillion',
+    'octillion',
+    'nonillion',
+    'decillion'
+]
+const shortNumberUnits = ['K', 'M', 'B', 't', 'q', 'Q', 's', 'S', 'o', 'n', 'd']
+
+const prettifyNumber = (number, precision = 1, long = false) => {
+    const table = long ? longNumberUnits : shortNumberUnits
+    if (number < thresholds[0]) {
+        return number
+    }
+    for (let i = 0; i < thresholds.length - 1; i++) {
+        if (number < thresholds[i + 1]) {
+            return `${(number / thresholds[i]).toFixed(precision)}${long ? ' ' : ''}${table[i]}`
+        }
+    }
+    return `${(number / thresholds[thresholds.length - 1]).toFixed(precision)}${long ? ' ' : ''}${
+        table[thresholds.length - 1]
+    }`
+}
+
 const clamp = (value, lower, upper) => (value < lower ? lower : value > upper ? upper : value)
 
 const increment = (value, change, maximum) => {
@@ -1378,7 +1409,8 @@ module.exports = {
         interpolate,
         createSequence,
         increment,
-        decrement
+        decrement,
+        prettify: prettifyNumber
     },
     Promises: {
         raceFulfilled,
