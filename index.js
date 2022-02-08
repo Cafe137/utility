@@ -669,6 +669,10 @@ const scheduleMany = (handlers, dates) => {
 
 const interpolate = (a, b, t) => a + (b - a) * t
 
+const sum = array => array.reduce((a, b) => a + b, 0)
+
+const average = array => array.reduce((a, b) => a + b, 0) / array.length
+
 const range = (start, end) => {
     const array = []
     for (let i = start; i <= end; i++) {
@@ -1404,6 +1408,8 @@ module.exports = {
         expandError
     },
     Numbers: {
+        sum,
+        average,
         clamp,
         range,
         interpolate,
