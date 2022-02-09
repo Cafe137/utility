@@ -1364,6 +1364,20 @@ const countUnique = (array, mapper, plain, sort, reverse) => {
 
 const sortObjectValues = (object, compareFn) => Object.fromEntries(Object.entries(object).sort(compareFn))
 
+const transformToArray = objectOfArrays => {
+    const array = []
+    const keys = Object.keys(objectOfArrays)
+    const length = objectOfArrays[keys[0]].length
+    for (let i = 0; i < length; i++) {
+        const object = {}
+        for (const key of keys) {
+            object[key] = objectOfArrays[key][i]
+        }
+        array.push(object)
+    }
+    return array
+}
+
 module.exports = {
     Random: {
         inclusiveInt: randomIntInclusive,
@@ -1471,7 +1485,8 @@ module.exports = {
         setSomeOnObject,
         flip,
         crossJoin,
-        countTruthyValues
+        countTruthyValues,
+        transformToArray
     },
     Pagination: {
         asPageNumber,
