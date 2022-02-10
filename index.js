@@ -1378,6 +1378,18 @@ const transformToArray = objectOfArrays => {
     return array
 }
 
+const incrementMulti = (objects, key, step = 1) => {
+    for (const object of objects) {
+        object[key] += step
+    }
+}
+
+const setMulti = (objects, key, value) => {
+    for (const object of objects) {
+        object[key] = value
+    }
+}
+
 module.exports = {
     Random: {
         inclusiveInt: randomIntInclusive,
@@ -1486,7 +1498,9 @@ module.exports = {
         flip,
         crossJoin,
         countTruthyValues,
-        transformToArray
+        transformToArray,
+        setMulti,
+        incrementMulti
     },
     Pagination: {
         asPageNumber,
