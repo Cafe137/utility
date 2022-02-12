@@ -1129,6 +1129,26 @@ const prettifyNumber = (number, precision = 1, long = false) => {
     }`
 }
 
+const parseIntOrThrow = numberOrString => {
+    if (typeof numberOrString === 'number') {
+        if (isNaN(numberOrString)) {
+            throw Error('parseIntOrThrow got NaN for input')
+        }
+        if (!isFinite(numberOrString)) {
+            throw Error('parseIntOrThrow got infinite for input')
+        }
+        return Math.trunc(numberOrString)
+    }
+    if (typeof numberOrString === 'string') {
+        const parsed = parseInt(numberOrString, 10)
+        if (isNaN(parsed)) {
+            throw Error('parseIntOrThrow parsed NaN for input: ' + numberOrString)
+        }
+        return parsed
+    }
+    throw Error('parseIntOrThrow got unsupported input type: ' + typeof numberOrString)
+}
+
 const clamp = (value, lower, upper) => (value < lower ? lower : value > upper ? upper : value)
 
 const increment = (value, change, maximum) => {
@@ -1442,7 +1462,8 @@ module.exports = {
         createSequence,
         increment,
         decrement,
-        prettify: prettifyNumber
+        prettify: prettifyNumber,
+        parseIntOrThrow
     },
     Promises: {
         raceFulfilled,
