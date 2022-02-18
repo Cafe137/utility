@@ -901,6 +901,20 @@ const execAsync = async (command, resolveWithErrors, inherit, options) =>
         }
     })
 
+const runProcess = async (command, args, onStdout, onStderr) =>
+    new Promise((resolve, reject) => {
+        const subprocess = ChildProcess.spawn(command, args)
+        subprocess.stdout.on('data', onStdout)
+        subprocess.stderr.on('data', onStderr)
+        subprocess.on('close', code => {
+            if (code === 0) {
+                resolve(code)
+            } else {
+                reject(code)
+            }
+        })
+    })
+
 const cloneWithJson = a => JSON.parse(JSON.stringify(a))
 
 const unixTimestamp = optionalTimestamp => Math.ceil((optionalTimestamp || Date.now()) / 1000)
@@ -1451,7 +1465,8 @@ module.exports = {
         waitFor,
         execAsync,
         getHeapMegabytes,
-        expandError
+        expandError,
+        runProcess
     },
     Numbers: {
         sum,
