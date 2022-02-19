@@ -1424,6 +1424,20 @@ const setMulti = (objects, key, value) => {
     }
 }
 
+const createFastIndex = () => ({ index: {}, keys: [] })
+
+const pushToFastIndex = (object, key, item, limit = 100) => {
+    if (object.index[key]) {
+        return
+    }
+    object.index[key] = item
+    object.keys.push(key)
+    if (object.keys.length > limit) {
+        const oldKey = object.keys.shift()
+        delete object.index[oldKey]
+    }
+}
+
 module.exports = {
     Random: {
         inclusiveInt: randomIntInclusive,
@@ -1536,7 +1550,9 @@ module.exports = {
         countTruthyValues,
         transformToArray,
         setMulti,
-        incrementMulti
+        incrementMulti,
+        createFastIndex,
+        pushToFastIndex
     },
     Pagination: {
         asPageNumber,
