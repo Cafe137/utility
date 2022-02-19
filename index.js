@@ -1428,7 +1428,8 @@ const createFastIndex = () => ({ index: {}, keys: [] })
 
 const pushToFastIndex = (object, key, item, limit = 100) => {
     if (object.index[key]) {
-        return
+        const index = object.keys.indexOf(key)
+        object.keys.splice(index, 1)
     }
     object.index[key] = item
     object.keys.push(key)
@@ -1436,6 +1437,18 @@ const pushToFastIndex = (object, key, item, limit = 100) => {
         const oldKey = object.keys.shift()
         delete object.index[oldKey]
     }
+}
+
+const pushToFastIndexWithExpiracy = (object, key, item, expiration, limit = 100) => {
+    pushToFastIndex(object, key, { validUntil: Date.now() + expiration, data: item }, limit)
+}
+
+const getFromFastIndexWithExpiracy = (object, key) => {
+    const item = object.index[key]
+    if (item && item.validUntil > Date.now()) {
+        return item.data
+    }
+    return null
 }
 
 module.exports = {
@@ -1552,7 +1565,9 @@ module.exports = {
         setMulti,
         incrementMulti,
         createFastIndex,
-        pushToFastIndex
+        pushToFastIndex,
+        pushToFastIndexWithExpiracy,
+        getFromFastIndexWithExpiracy
     },
     Pagination: {
         asPageNumber,
