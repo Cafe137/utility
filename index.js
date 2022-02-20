@@ -558,102 +558,44 @@ const pageify = (data, totalElements, pageSize, currentPage) => {
     }
 }
 
-class BadRequestError extends Error {
-    constructor() {
-        super()
-        this.name = 'BadRequestError'
+const asEqual = (a, b) => {
+    if (a !== b) {
+        throw Error(`Expected [${a}] to equal [${b}]`)
     }
-}
-
-class ValidationError extends Error {
-    constructor(message, location) {
-        super()
-        this.name = 'ValidationError'
-        this.message = message
-        this.location = location
-    }
-}
-
-class NotFoundError extends Error {
-    constructor() {
-        super()
-        this.name = 'NotFoundError'
-    }
-}
-
-class ConflictError extends Error {
-    constructor(message, location) {
-        super()
-        this.name = 'ConflictError'
-        this.message = message
-        this.location = location
-    }
+    return [a, b]
 }
 
 const asTrue = data => {
+    if (data !== true) {
+        throw Error(`Expected [true], got [${data}]`)
+    }
+    return data
+}
+
+const asTruthy = data => {
     if (!data) {
-        throw new BadRequestError()
+        throw Error(`Expected truthy value, got [${data}]`)
     }
     return data
 }
 
 const asFalse = data => {
+    if (data !== false) {
+        throw Error(`Expected [false], got [${data}]`)
+    }
+    return data
+}
+
+const asFalsy = data => {
     if (data) {
-        throw new BadRequestError()
+        throw Error(`Expected falsy value, got [${data}]`)
     }
     return data
 }
 
 const asEither = (data, values) => {
     if (!values.includes(data)) {
-        throw new BadRequestError()
-    }
-    return data
-}
-
-const asFound = data => {
-    if (!data) {
-        throw new NotFoundError()
-    }
-    return data
-}
-
-const asSame = (data, other, options) => {
-    if (data !== other) {
-        throw new ValidationError(`Expected ${options.field} fields to be the same.`, options.location)
-    }
-    return data
-}
-
-const asNotConflicting = (data, options) => {
-    if (data) {
-        throw new ConflictError(`This ${options.field} already exists.`, options.location)
-    }
-}
-
-const asBetween = (data, minimum, maximum, options) => {
-    const number = parseInt(data, 10)
-    if (isNaN(number) || number < minimum || number > maximum) {
-        throw new ValidationError(
-            `Value of ${options.field} is expected to be between ${minimum} and ${maximum}.`,
-            options.location
-        )
-    }
-    return number
-}
-
-/**
- * @returns {string}
- */
-const asLengthBetween = (data, minimum, maximum, options) => {
-    if (!isString(data)) {
-        throw new ValidationError(options.field, options.location)
-    }
-    if (data.length < minimum || data.length > maximum) {
-        throw new ValidationError(
-            `Length of ${options.field} is expected to be between ${minimum} and ${maximum}.`,
-            options.location
-        )
+        throw Error(`Expected any of [${values.join(', ')}], got [${data}]`)
     }
     return data
 }
@@ -1644,15 +1586,12 @@ module.exports = {
         slugToTitle
     },
     Assertions: {
+        asEqual,
         asTrue,
+        asTruthy,
         asFalse,
-        asEither,
-        asFound,
-        asSame,
-        asNotConflicting,
-        asBetween,
-        asLengthBetween,
-        expectThrow
+        asFalsy,
+        asEither
     },
     Cache: {
         get: getCached
