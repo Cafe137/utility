@@ -498,6 +498,11 @@ const unshiftAndLimit = (array, item, limit) => {
     }
 }
 
+const atRolling = (array, index) => {
+    const realIndex = index % array.length
+    return array[realIndex]
+}
+
 const pushAll = (array, elements) => Array.prototype.push.apply(array, elements)
 
 const unshiftAll = (array, elements) => Array.prototype.unshift.apply(array, elements)
@@ -1425,7 +1430,8 @@ module.exports = {
         merge: mergeArrays,
         empty,
         pushToBucket,
-        unshiftAndLimit
+        unshiftAndLimit,
+        atRolling
     },
     System: {
         sleepMillis,
