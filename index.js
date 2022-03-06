@@ -652,6 +652,19 @@ const camelToTitle = string => capitalize(string.replace(/([A-Z])/g, ' $1'))
 
 const slugToTitle = string => string.split('-').map(capitalize).join(' ')
 
+const joinHumanly = (parts, separator = ', ', lastSeparator = ' and ') => {
+    if (!parts || !parts.length) {
+        return null
+    }
+    if (parts.length === 1) {
+        return parts[0]
+    }
+    if (parts.length === 2) {
+        return `${parts[0]}${lastSeparator}${parts[1]}`
+    }
+    return `${parts.slice(0, parts.length - 1).join(separator)}${lastSeparator}${parts[parts.length - 1]}`
+}
+
 const surroundInOut = (string, filler) => filler + string.split('').join(filler) + filler
 
 const enumify = string => slugify(string).replace(/-/g, '_').toUpperCase()
@@ -1589,7 +1602,8 @@ module.exports = {
         normalizeFilename,
         parseFilename,
         camelToTitle,
-        slugToTitle
+        slugToTitle,
+        joinHumanly
     },
     Assertions: {
         asEqual,
