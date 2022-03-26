@@ -449,17 +449,21 @@ const mergeDeep = (target, source) => {
     }
 }
 
-const zip = (first, second, reducer) => {
-    const result = { ...first }
-    for (const entry of Object.entries(second)) {
-        if (result[entry[0]]) {
-            result[entry[0]] = reducer(result[entry[0]], entry[1])
-        } else {
-            result[entry[0]] = entry[1]
+const zip = (objects, reducer) => {
+    const result = {}
+    for (const object of objects) {
+        for (const key of Object.keys(object)) {
+            if (result[key]) {
+                result[key] = reducer(result[key], object[key])
+            } else {
+                result[key] = object[key]
+            }
         }
     }
     return result
 }
+
+const zipSum = objects => zip(objects, (x, y) => x + y)
 
 /**
  * @param {*} value
@@ -1510,6 +1514,7 @@ module.exports = {
         runOn,
         ifPresent,
         zip,
+        zipSum,
         removeEmptyArrays,
         removeEmptyValues,
         flatten,
