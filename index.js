@@ -656,6 +656,8 @@ const camelToTitle = string => capitalize(string.replace(/([A-Z])/g, ' $1'))
 
 const slugToTitle = string => string.split('-').map(capitalize).join(' ')
 
+const slugToCamel = string => decapitalize(string.split('-').map(capitalize).join(''))
+
 const joinHumanly = (parts, separator = ', ', lastSeparator = ' and ') => {
     if (!parts || !parts.length) {
         return null
@@ -768,6 +770,8 @@ const randomize = string => string.replace(/\{(.+?)\}/g, (_, group) => pick(grou
 const shrinkTrim = string => string.replace(/\s+/g, ' ').replace(/\s$|^\s/g, '')
 
 const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
+
+const decapitalize = string => string.charAt(0).toLowerCase() + string.slice(1)
 
 const csvEscape = string => (string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string)
 
@@ -1599,6 +1603,7 @@ module.exports = {
         randomize,
         shrinkTrim,
         capitalize,
+        decapitalize,
         csvEscape,
         parseCsv,
         surroundInOut,
@@ -1608,6 +1613,7 @@ module.exports = {
         parseFilename,
         camelToTitle,
         slugToTitle,
+        slugToCamel,
         joinHumanly
     },
     Assertions: {
