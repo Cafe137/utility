@@ -1,21 +1,17 @@
-function nodeModuleRequire(module) {
-    if (require) {
-        try {
-            return require(module)
-        } catch {}
-    }
+const ChildProcess = require('child_process')
+const NodeCrypto = require('crypto')
+const Fs = require('fs')
+const Path = require('path')
+
+async function invertPromise(promise) {
+    return new Promise((resolve, reject) => promise.then(reject, resolve))
 }
 
-const ChildProcess = nodeModuleRequire('child_process')
-const Crypto = nodeModuleRequire('crypto')
-const Fs = nodeModuleRequire('fs')
-const Path = nodeModuleRequire('path')
+async function raceFulfilled(promises) {
+    invertPromise(Promise.all(promises.map(invertPromise)))
+}
 
-const raceFulfilled = promises => invertPromise(Promise.all(promises.map(invertPromise)))
-
-const invertPromise = promise => new Promise((resolve, reject) => promise.then(reject, resolve))
-
-const runInParallelBatches = async (promises, concurrency = 1) => {
+async function runInParallelBatches(promises, concurrency = 1) {
     const batches = splitByCount(promises, concurrency)
     const results = []
     const jobs = batches.map(async batch => {
@@ -27,14 +23,15 @@ const runInParallelBatches = async (promises, concurrency = 1) => {
     return results
 }
 
-const sleepMillis = millis =>
-    new Promise(resolve =>
+async function sleepMillis(millis) {
+    return new Promise(resolve =>
         setTimeout(() => {
             resolve(true)
         }, millis)
     )
+}
 
-const shuffle = array => {
+function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1))
         const swap = array[i]
@@ -44,7 +41,7 @@ const shuffle = array => {
     return array
 }
 
-const onlyOrThrow = array => {
+function onlyOrThrow(array) {
     if (array && array.length === 1) {
         return array[0]
     }
@@ -54,16 +51,18 @@ const onlyOrThrow = array => {
     throw Error('Expected array, got: ' + array)
 }
 
-const onlyOrNull = array => {
+function onlyOrNull(array) {
     if (array && array.length === 1) {
         return array[0]
     }
     return null
 }
 
-const firstOrNull = array => (array.length > 0 ? array[0] : null)
+function firstOrNull(array) {
+    return array.length > 0 ? array[0] : null
+}
 
-const initializeArray = (count, initializer) => {
+function initializeArray(count, initializer) {
     const results = []
     for (let i = 0; i < count; i++) {
         results.push(initializer(i))
@@ -71,23 +70,39 @@ const initializeArray = (count, initializer) => {
     return results
 }
 
-const takeRandomly = (array, count) => shuffle(array).slice(0, count)
+function takeRandomly(array, count) {
+    return shuffle(array).slice(0, count)
+}
 
-const pluck = (array, key) => array.map(element => element[key])
+function pluck(array, key) {
+    return array.map(element => element[key])
+}
 
-const randomIntInclusive = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
+function randomIntInclusive(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}
 
-const randomBetween = (min, max) => Math.random() * (max - min) + min
+function randomBetween(min, max) {
+    return Math.random() * (max - min) + min
+}
 
-const signedRandom = () => Math.random() * 2 - 1
+function signedRandom() {
+    return Math.random() * 2 - 1
+}
 
-const chance = threshold => Math.random() < threshold
+function chance(threshold) {
+    return Math.random() < threshold
+}
 
-const pick = array => array[Math.floor(array.length * Math.random())]
+function pick(array) {
+    return array[Math.floor(array.length * Math.random())]
+}
 
-const last = array => array[array.length - 1]
+function last(array) {
+    return array[array.length - 1]
+}
 
-const pickWeighted = (array, weights, randomNumber) => {
+function pickWeighted(array, weights, randomNumber) {
     if (array.length !== weights.length) {
         throw new Error('Array length mismatch')
     }
@@ -99,18 +114,19 @@ const pickWeighted = (array, weights, randomNumber) => {
             return array[i]
         }
     }
+    throw new Error('Weight out of range')
 }
 
-const sortWeighted = (array, weights) => {
+function sortWeighted(array, weights) {
     const rolls = weights.map(weight => Math.random() * weight)
     const results = []
-    for (let i = 0; i < array; i++) {
+    for (let i = 0; i < array.length; i++) {
         results.push([array[i], rolls[i]])
     }
     return results.sort((a, b) => a[1] - b[1]).map(a => a[0])
 }
 
-const getDeep = (object, path) => {
+function getDeep(object, path) {
     const parts = path.split('.')
     let buffer = object
     for (const part of parts) {
@@ -122,9 +138,11 @@ const getDeep = (object, path) => {
     return buffer
 }
 
-const getDeepOrElse = (object, path, fallback) => getDeep(object, path) || fallback
+function getDeepOrElse(object, path, fallback) {
+    return getDeep(object, path) || fallback
+}
 
-const setDeep = (object, path, value) => {
+function setDeep(object, path, value) {
     const parts = path.split(/\.|\[/)
     let buffer = object
     for (let i = 0; i < parts.length; i++) {
@@ -148,16 +166,18 @@ const setDeep = (object, path, value) => {
     return value
 }
 
-const ensureDeep = (object, path, value) => getDeep(object, path) || setDeep(object, path, value)
+function ensureDeep(object, path, value) {
+    return getDeep(object, path) || setDeep(object, path, value)
+}
 
-const deleteDeep = (object, path) => {
+function deleteDeep(object, path) {
     const location = beforeLast(path, '.')
     const toDelete = afterLast(path, '.')
     const segment = getDeep(object, location)
     delete segment[toDelete]
 }
 
-const replaceDeep = (object, path, value) => {
+function replaceDeep(object, path, value) {
     const existing = getDeep(object, path)
     if (!existing) {
         throw new Error("Key '" + path + "' does not exist.")
@@ -166,7 +186,7 @@ const replaceDeep = (object, path, value) => {
     return existing
 }
 
-const getFirstDeep = (object, paths, fallbackToAnyKey) => {
+function getFirstDeep(object, paths, fallbackToAnyKey) {
     for (const path of paths) {
         const value = getDeep(object, path)
         if (value) {
@@ -182,7 +202,7 @@ const getFirstDeep = (object, paths, fallbackToAnyKey) => {
     return null
 }
 
-const forever = async (callable, millis) => {
+async function forever(callable, millis) {
     while (true) {
         try {
             await callable()
@@ -193,11 +213,15 @@ const forever = async (callable, millis) => {
     }
 }
 
-const readUtf8FileAsync = async path => Fs.promises.readFile(path, 'utf8')
+async function readUtf8FileAsync(path) {
+    return Fs.promises.readFile(path, 'utf8')
+}
 
-const readJsonAsync = async path => JSON.parse(await readUtf8FileAsync(path))
+async function readJsonAsync(path) {
+    return JSON.parse(await readUtf8FileAsync(path))
+}
 
-const writeJsonAsync = async (path, object, prettify) => {
+async function writeJsonAsync(path, object, prettify) {
     if (prettify) {
         await Fs.promises.writeFile(path, JSON.stringify(object, null, 4))
     } else {
@@ -205,16 +229,23 @@ const writeJsonAsync = async (path, object, prettify) => {
     }
 }
 
-const readLinesAsync = async path => (await readUtf8FileAsync(path)).split(/\r?\n/)
+async function readLinesAsync(path) {
+    return (await readUtf8FileAsync(path)).split(/\r?\n/)
+}
 
-const readMatchingLines = async (path, filterFn) => (await readLinesAsync(path)).filter(filterFn)
+async function readMatchingLines(path, filterFn) {
+    return (await readLinesAsync(path)).filter(filterFn)
+}
 
-const readNonEmptyLines = async path => readMatchingLines(path, x => x)
+async function readNonEmptyLines(path) {
+    return readMatchingLines(path, x => !!x)
+}
 
-const readCsv = async (path, skip = 0, delimiter = ',', quote = '"') =>
-    (skip ? (await readNonEmptyLines(path)).slice(skip) : await readNonEmptyLines(path)).map(x =>
+async function readCsv(path, skip = 0, delimiter = ',', quote = '"') {
+    return (skip ? (await readNonEmptyLines(path)).slice(skip) : await readNonEmptyLines(path)).map(x =>
         parseCsv(x, delimiter, quote)
     )
+}
 
 async function* walkTreeAsync(path) {
     for await (const directory of await Fs.promises.opendir(path)) {
@@ -227,13 +258,13 @@ async function* walkTreeAsync(path) {
     }
 }
 
-const removeLeadingDirectory = (path, directory) => {
+function removeLeadingDirectory(path, directory) {
     directory = directory.startsWith('./') ? directory.slice(2) : directory
     directory = directory.endsWith('/') ? directory : directory + '/'
     return path.replace(directory, '')
 }
 
-const readdirDeepAsync = async (path, cwd) => {
+async function readdirDeepAsync(path, cwd) {
     const entries = []
     for await (const entry of walkTreeAsync(path)) {
         entries.push(cwd ? removeLeadingDirectory(entry, cwd) : entry)
@@ -241,7 +272,7 @@ const readdirDeepAsync = async (path, cwd) => {
     return entries
 }
 
-const existsAsync = async path => {
+async function existsAsync(path) {
     try {
         await Fs.promises.stat(path)
         return true
@@ -250,14 +281,16 @@ const existsAsync = async path => {
     }
 }
 
-const getFileSize = async path => {
+async function getFileSize(path) {
     const stats = await Fs.promises.stat(path)
     return stats.size
 }
 
-const asMegabytes = number => number / 1024 / 1024
+function asMegabytes(number) {
+    return number / 1024 / 1024
+}
 
-const getDirectorySize = async path => {
+async function getDirectorySize(path) {
     let size = 0
     for await (const file of walkTreeAsync(path)) {
         size += await getFileSize(file)
@@ -265,52 +298,86 @@ const getDirectorySize = async path => {
     return size
 }
 
-const convertBytes = bytes => {
+function convertBytes(bytes) {
     if (bytes > 1000000) {
         return (bytes / 1000000).toFixed(3) + 'MB'
     }
     if (bytes > 1000) {
         return (bytes / 1000).toFixed(3) + 'KB'
     }
-    return bytes
+    return bytes + ''
 }
 
-const getChecksum = data => {
-    const hash = Crypto.createHash('sha1')
+function getChecksum(data) {
+    const hash = NodeCrypto.createHash('sha1')
     hash.update(data)
     return hash.digest('hex')
 }
 
-const getChecksumOfFile = async path =>
-    new Promise((resolve, reject) => {
-        const hash = Crypto.createHash('sha1')
+async function getChecksumOfFile(path) {
+    return new Promise((resolve, reject) => {
+        const hash = NodeCrypto.createHash('sha1')
         const readStream = Fs.createReadStream(path)
         readStream.on('error', reject)
         readStream.on('data', chunk => hash.update(chunk))
         readStream.on('end', () => resolve(hash.digest('hex')))
     })
+}
 
-const isObject = value => value !== null && typeof value === 'object'
+function isObject(value) {
+    return value !== null && typeof value === 'object'
+}
 
-const isStrictlyObject = value => isObject(value) && !Array.isArray(value)
+function isStrictlyObject(value) {
+    return isObject(value) && !Array.isArray(value)
+}
 
-const isUndefined = value => typeof value === 'undefined'
+function isEmptyArray(value) {
+    return Array.isArray(value) && value.length === 0
+}
 
-const isFunction = value => Object.prototype.toString.call(value) === '[object Function]'
+function isUndefined(value) {
+    return typeof value === 'undefined'
+}
 
-const isString = value => Object.prototype.toString.call(value) === '[object String]'
+function isFunction(value) {
+    return Object.prototype.toString.call(value) === '[object Function]'
+}
 
-const isNumber = value => !isNaN(value) && String(value) === String(parseFloat(value))
+function isString(value) {
+    return Object.prototype.toString.call(value) === '[object String]'
+}
 
-const isDate = value => Object.prototype.toString.call(value) === '[object Date]'
+function isPromise(value) {
+    return value && typeof value.then === 'function'
+}
 
-const isBlank = value => !isString(value) || value.trim().length === 0
+function isNumber(value) {
+    return !isNaN(value) && String(value) === String(parseFloat(value))
+}
 
+function isDate(value) {
+    return Object.prototype.toString.call(value) === '[object Date]'
+}
+
+function isBlank(value) {
+    return !isString(value) || value.trim().length === 0
+}
+
+const alphabet = 'abcdefghijklmnopqrstuvwxyz'
 const alphanumericAlphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-
+const richAsciiAlphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=[]{}|;:<>?,./'
+const unicodeTestingAlphabet = ['—', '\\', '東', '京', '都', '𝖆', '𝖇', '𝖈', '👾', '🙇', '💁', '🙅']
 const hexAlphabet = '0123456789abcdef'
+function randomLetterString(length) {
+    let buffer = ''
+    for (let i = 0; i < length; i++) {
+        buffer += alphabet[Math.floor(Math.random() * alphabet.length)]
+    }
+    return buffer
+}
 
-const randomAlphanumericString = length => {
+function randomAlphanumericString(length) {
     let buffer = ''
     for (let i = 0; i < length; i++) {
         buffer += alphanumericAlphabet[Math.floor(Math.random() * alphanumericAlphabet.length)]
@@ -318,7 +385,23 @@ const randomAlphanumericString = length => {
     return buffer
 }
 
-const randomHexString = length => {
+function randomRichAsciiString(length) {
+    let buffer = ''
+    for (let i = 0; i < length; i++) {
+        buffer += richAsciiAlphabet[Math.floor(Math.random() * richAsciiAlphabet.length)]
+    }
+    return buffer
+}
+
+function randomUnicodeString(length) {
+    let buffer = ''
+    for (let i = 0; i < length; i++) {
+        buffer += unicodeTestingAlphabet[Math.floor(Math.random() * unicodeTestingAlphabet.length)]
+    }
+    return buffer
+}
+
+function randomHexString(length) {
     let buffer = ''
     for (let i = 0; i < length; i++) {
         buffer += hexAlphabet[Math.floor(Math.random() * hexAlphabet.length)]
@@ -326,47 +409,35 @@ const randomHexString = length => {
     return buffer
 }
 
-/**
- * @param {*} string
- * @returns {string}
- */
-const asString = string => {
+function asString(string) {
     if (isBlank(string)) {
         throw new TypeError('Expected string, got: ' + string)
     }
     return string
 }
 
-/**
- * @param {*} number
- * @returns {number}
- */
-const asNumber = number => {
+function asNumber(number) {
     if (!isNumber(number)) {
         throw new TypeError('Expected number, got: ' + number)
     }
     return number
 }
 
-/**
- * @param {*} date
- * @returns {Date}
- */
-const asDate = date => {
-    if (Object.prototype.toString.call(date) === '[object Date]') {
-        return date
+function asDate(date) {
+    if (!isDate(date)) {
+        throw new TypeError('Expected date, got: ' + date)
     }
-    throw new TypeError('Expected date, got: ' + date)
+    return date
 }
 
-const asNullableString = string => {
+function asNullableString(string) {
     if (isBlank(string)) {
         return null
     }
     return string
 }
 
-const represent = value => {
+function represent(value) {
     if (isObject(value)) {
         return JSON.stringify(value, null, 4)
     }
@@ -383,8 +454,8 @@ const loggerGlobalState = {
     fileStream: null
 }
 
-const log = (level, module, pieces) => {
-    const timestamp = new Date().toISOString().replace('T', ' ').substr(0, 19)
+function log(level, module, pieces) {
+    const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19)
     const message = `${timestamp} ${level} ${module} ${pieces.map(represent).join(' ')}\n`
     process.stdout.write(message)
     if (level === 'ERROR') {
@@ -395,7 +466,7 @@ const log = (level, module, pieces) => {
     }
 }
 
-const createLogger = module => {
+function createLogger(module) {
     module = last(module.split(/\\|\//))
     return {
         trace: (...pieces) => {
@@ -416,11 +487,11 @@ const createLogger = module => {
     }
 }
 
-const enableFileLogging = path => {
+function enableFileLogging(path) {
     loggerGlobalState.fileStream = Fs.createWriteStream(path, { flags: 'a' })
 }
 
-const expandError = (error, stackTrace) => {
+function expandError(error, stackTrace) {
     if (isString(error)) {
         return error
     }
@@ -432,7 +503,7 @@ const expandError = (error, stackTrace) => {
     return stackTrace && error.stack ? joined + '\n' + error.stack : joined
 }
 
-const mergeDeep = (target, source) => {
+function mergeDeep(target, source) {
     if (isStrictlyObject(target) && isStrictlyObject(source)) {
         for (const key in source) {
             if (isStrictlyObject(source[key])) {
@@ -447,9 +518,10 @@ const mergeDeep = (target, source) => {
             }
         }
     }
+    return target
 }
 
-const zip = (objects, reducer) => {
+function zip(objects, reducer) {
     const result = {}
     for (const object of objects) {
         for (const key of Object.keys(object)) {
@@ -463,13 +535,11 @@ const zip = (objects, reducer) => {
     return result
 }
 
-const zipSum = objects => zip(objects, (x, y) => x + y)
+function zipSum(objects) {
+    return zip(objects, (x, y) => x + y)
+}
 
-/**
- * @param {*} value
- * @returns {number}
- */
-const asPageNumber = value => {
+function asPageNumber(value) {
     let number
     try {
         number = parseInt(value, 10)
@@ -488,52 +558,37 @@ const asPageNumber = value => {
     return number
 }
 
-const pushToBucket = (object, bucket, item) => {
+function pushToBucket(object, bucket, item) {
     if (!object[bucket]) {
         object[bucket] = []
     }
     object[bucket].push(item)
 }
 
-const unshiftAndLimit = (array, item, limit) => {
+function unshiftAndLimit(array, item, limit) {
     array.unshift(item)
     while (array.length > limit) {
         array.pop()
     }
 }
 
-const atRolling = (array, index) => {
-    const realIndex = index % array.length
+function atRolling(array, index) {
+    let realIndex = index % array.length
+    if (realIndex < 0) {
+        realIndex += array.length
+    }
     return array[realIndex]
 }
 
-const pushAll = (array, elements) => Array.prototype.push.apply(array, elements)
-
-const unshiftAll = (array, elements) => Array.prototype.unshift.apply(array, elements)
-
-const mapWithIndex = (array, callback) => {
-    const results = new Array(array.length)
-    for (let i = 0; i < array.length; i++) {
-        results[i] = callback(array[i], i)
-    }
-    return results
+function pushAll(array, elements) {
+    Array.prototype.push.apply(array, elements)
 }
 
-const mapWithGetters = (object, keys) => {
-    const mapped = {}
-    for (const key of keys) {
-        if (Array.isArray(key)) {
-            mapped[key[1]] = object.get(key[0])
-        } else {
-            mapped[key] = object.get(key)
-        }
-    }
-    return mapped
+function unshiftAll(array, elements) {
+    Array.prototype.unshift.apply(array, elements)
 }
 
-const mapAllWithGetters = (array, keys) => array.map(object => mapWithGetters(object, keys))
-
-const mapAllAsync = async (array, fn) => {
+async function mapAllAsync(array, fn) {
     const mapped = []
     for (const object of array) {
         mapped.push(await fn(object))
@@ -541,7 +596,7 @@ const mapAllAsync = async (array, fn) => {
     return mapped
 }
 
-const glue = (array, glueElement) => {
+function glue(array, glueElement) {
     const results = []
     for (let i = 0; i < array.length; i++) {
         results.push(array[i])
@@ -556,7 +611,7 @@ const glue = (array, glueElement) => {
     return results
 }
 
-const pageify = (data, totalElements, pageSize, currentPage) => {
+function pageify(data, totalElements, pageSize, currentPage) {
     const totalPages = Math.floor(totalElements / pageSize) + 1
     return {
         data,
@@ -567,49 +622,49 @@ const pageify = (data, totalElements, pageSize, currentPage) => {
     }
 }
 
-const asEqual = (a, b) => {
+function asEqual(a, b) {
     if (a !== b) {
         throw Error(`Expected [${a}] to equal [${b}]`)
     }
     return [a, b]
 }
 
-const asTrue = data => {
+function asTrue(data) {
     if (data !== true) {
         throw Error(`Expected [true], got [${data}]`)
     }
     return data
 }
 
-const asTruthy = data => {
+function asTruthy(data) {
     if (!data) {
         throw Error(`Expected truthy value, got [${data}]`)
     }
     return data
 }
 
-const asFalse = data => {
+function asFalse(data) {
     if (data !== false) {
         throw Error(`Expected [false], got [${data}]`)
     }
     return data
 }
 
-const asFalsy = data => {
+function asFalsy(data) {
     if (data) {
         throw Error(`Expected falsy value, got [${data}]`)
     }
     return data
 }
 
-const asEither = (data, values) => {
+function asEither(data, values) {
     if (!values.includes(data)) {
         throw Error(`Expected any of [${values.join(', ')}], got [${data}]`)
     }
     return data
 }
 
-const scheduleMany = (handlers, dates) => {
+function scheduleMany(handlers, dates) {
     for (let i = 0; i < handlers.length; i++) {
         const handler = handlers[i]
         const date = dates[i]
@@ -618,13 +673,19 @@ const scheduleMany = (handlers, dates) => {
     }
 }
 
-const interpolate = (a, b, t) => a + (b - a) * t
+function interpolate(a, b, t) {
+    return a + (b - a) * t
+}
 
-const sum = array => array.reduce((a, b) => a + b, 0)
+function sum(array) {
+    return array.reduce((a, b) => a + b, 0)
+}
 
-const average = array => array.reduce((a, b) => a + b, 0) / array.length
+function average(array) {
+    return array.reduce((a, b) => a + b, 0) / array.length
+}
 
-const range = (start, end) => {
+function range(start, end) {
     const array = []
     for (let i = start; i <= end; i++) {
         array.push(i)
@@ -632,7 +693,7 @@ const range = (start, end) => {
     return array
 }
 
-const includesAny = (string, substrings) => {
+function includesAny(string, substrings) {
     for (const substring of substrings) {
         if (string.includes(substring)) {
             return true
@@ -641,8 +702,8 @@ const includesAny = (string, substrings) => {
     return false
 }
 
-const slugify = string =>
-    string
+function slugify(string) {
+    return string
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
@@ -651,14 +712,21 @@ const slugify = string =>
         .join('')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '')
+}
 
-const camelToTitle = string => capitalize(string.replace(/([A-Z])/g, ' $1'))
+function camelToTitle(string) {
+    return capitalize(string.replace(/([A-Z])/g, ' $1'))
+}
 
-const slugToTitle = string => string.split('-').map(capitalize).join(' ')
+function slugToTitle(string) {
+    return string.split('-').map(capitalize).join(' ')
+}
 
-const slugToCamel = string => decapitalize(string.split('-').map(capitalize).join(''))
+function slugToCamel(string) {
+    return decapitalize(string.split('-').map(capitalize).join(''))
+}
 
-const joinHumanly = (parts, separator = ', ', lastSeparator = ' and ') => {
+function joinHumanly(parts, separator = ', ', lastSeparator = ' and ') {
     if (!parts || !parts.length) {
         return null
     }
@@ -671,16 +739,23 @@ const joinHumanly = (parts, separator = ', ', lastSeparator = ' and ') => {
     return `${parts.slice(0, parts.length - 1).join(separator)}${lastSeparator}${parts[parts.length - 1]}`
 }
 
-const surroundInOut = (string, filler) => filler + string.split('').join(filler) + filler
+function surroundInOut(string, filler) {
+    return filler + string.split('').join(filler) + filler
+}
 
-const enumify = string => slugify(string).replace(/-/g, '_').toUpperCase()
+function enumify(string) {
+    return slugify(string).replace(/-/g, '_').toUpperCase()
+}
 
-const getFuzzyMatchScore = (string, input) => {
+function getFuzzyMatchScore(string, input) {
     if (input.length === 0) {
         return 0
     }
     const lowercaseString = string.toLowerCase()
     const lowercaseInput = input.toLowerCase()
+    if (string === input) {
+        return 10000
+    }
     if (lowercaseString.startsWith(lowercaseInput)) {
         return 10000 - string.length
     }
@@ -691,12 +766,15 @@ const getFuzzyMatchScore = (string, input) => {
     return regex.test(lowercaseString) ? 1000 - string.length : 0
 }
 
-const sortByFuzzyScore = (strings, input) =>
-    strings
+function sortByFuzzyScore(strings, input) {
+    return strings
         .filter(a => getFuzzyMatchScore(a, input))
         .sort((a, b) => getFuzzyMatchScore(b, input) - getFuzzyMatchScore(a, input))
+}
 
-const escapeHtml = string => string.replace(/\</g, '&lt;').replace('/>/g', '&gt;')
+function escapeHtml(string) {
+    return string.replace(/\</g, '&lt;').replace('/>/g', '&gt;')
+}
 
 const htmlEntityMap = {
     '&quot;': '"',
@@ -704,82 +782,104 @@ const htmlEntityMap = {
     '&lt': '<'
 }
 
-const decodeHtmlEntities = string => {
-    let buffer = string.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
+function decodeHtmlEntities(string) {
+    let buffer = string.replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec))
     for (const key of Object.keys(htmlEntityMap)) {
         buffer = buffer.split(key).join(htmlEntityMap[key])
     }
     return buffer
 }
 
-const before = (string, searchString) => {
+function before(string, searchString) {
     const position = string.indexOf(searchString)
     return position === -1 ? string : string.slice(0, position)
 }
 
-const after = (string, searchString) => {
+function after(string, searchString) {
     const position = string.indexOf(searchString)
     return position === -1 ? string : string.slice(position + searchString.length)
 }
 
-const beforeLast = (string, searchString) => {
+function beforeLast(string, searchString) {
     const position = string.lastIndexOf(searchString)
     return position === -1 ? string : string.slice(0, position)
 }
 
-const afterLast = (string, searchString) => {
+function afterLast(string, searchString) {
     const position = string.lastIndexOf(searchString)
     return position === -1 ? string : string.slice(position + searchString.length)
 }
 
-const between = (string, start, end) => before(after(string, start), end)
+function between(string, start, end) {
+    return before(after(string, start), end)
+}
 
-const betweenWide = (string, start, end) => beforeLast(after(string, start), end)
+function betweenWide(string, start, end) {
+    return after(beforeLast(string, end), start)
+}
 
-const betweenNarrow = (string, start, end) => before(afterLast(string, start), end)
+function betweenNarrow(string, start, end) {
+    return before(after(string, start), end)
+}
 
-const splitOnce = (string, separator) =>
-    string.includes(separator) ? [before(string, separator), after(string, separator)] : [string, '']
+function splitOnce(string, separator) {
+    return string.includes(separator) ? [before(string, separator), after(string, separator)] : [string, '']
+}
 
-const getExtension = string => {
-    const name = last(string.split(/\\|\//g))
-    const lastIndex = name.lastIndexOf('.')
+function getExtension(path) {
+    const name = last(path.split(/\\|\//g))
+    const lastIndex = name.lastIndexOf('.', name.length - 1)
     return lastIndex <= 0 ? '' : name.slice(lastIndex + 1)
 }
 
-const getBasename = string => {
-    const name = last(string.split(/\\|\//g))
-    const index = name.indexOf('.', 1)
-    return index <= 0 ? string : name.slice(0, index)
+function getBasename(path) {
+    const name = last(path.split(/\\|\//g))
+    const lastIndex = name.lastIndexOf('.', name.length - 1)
+    return lastIndex <= 0 ? name : name.slice(0, lastIndex)
 }
 
-const normalizeFilename = string => `${getBasename(string)}.${getExtension(string)}`
+function normalizeFilename(path) {
+    const basename = getBasename(path)
+    const extension = getExtension(path)
+    return extension ? `${basename}.${extension}` : basename
+}
 
-const parseFilename = string => {
+function parseFilename(string) {
     const basename = getBasename(string)
     const extension = getExtension(string)
     return {
         basename,
         extension,
-        filename: `${basename}.${extension}`
+        filename: extension ? `${basename}.${extension}` : basename
     }
 }
 
-const randomize = string => string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
+function randomize(string) {
+    return string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
+}
 
-const shrinkTrim = string => string.replace(/\s+/g, ' ').replace(/\s$|^\s/g, '')
+function shrinkTrim(string) {
+    return string.replace(/\s+/g, ' ').replace(/\s$|^\s/g, '')
+}
 
-const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+}
 
-const decapitalize = string => string.charAt(0).toLowerCase() + string.slice(1)
+function decapitalize(string) {
+    return string.charAt(0).toLowerCase() + string.slice(1)
+}
 
-const csvEscape = string => (string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string)
+function csvEscape(string) {
+    return string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string
+}
 
-const parseCsv = (string, delimiter = ',', quote = '"') => {
+function parseCsv(string, delimiter = ',', quote = '"') {
     const items = []
     let buffer = ''
     let escaped = false
-    for (const character of string) {
+    const characters = string.split('')
+    for (const character of characters) {
         if (character === delimiter && !escaped) {
             items.push(buffer)
             buffer = ''
@@ -793,23 +893,13 @@ const parseCsv = (string, delimiter = ',', quote = '"') => {
     return items
 }
 
-const humanizeProgress = state =>
-    `[${Math.floor(state.progress * 100)}%] ${humanizeTime(state.deltaMs)} out of ${humanizeTime(
+function humanizeProgress(state) {
+    return `[${Math.floor(state.progress * 100)}%] ${humanizeTime(state.deltaMs)} out of ${humanizeTime(
         state.totalTimeMs
     )} (${humanizeTime(state.remainingTimeMs)} left) [${Math.round(state.baseTimeMs)} ms each]`
-
-const expectThrow = async (name, message, callable) => {
-    try {
-        await callable()
-        throw new Error('Expected ' + name + ' ' + message + ' but everything went fine')
-    } catch (error) {
-        if (error.name !== name || error.message !== message) {
-            throw new Error('Expected ' + name + ' ' + message + ' but caught ' + error.name + ' ' + error.message)
-        }
-    }
 }
 
-const waitFor = async (predicate, waitLength, maxWaits) => {
+async function waitFor(predicate, waitLength, maxWaits) {
     for (let i = 0; i < maxWaits; i++) {
         try {
             if (await predicate()) {
@@ -823,7 +913,7 @@ const waitFor = async (predicate, waitLength, maxWaits) => {
     return false
 }
 
-const mkdirp = async path => {
+async function mkdirp(path) {
     const segments = path.split('/')
     let buffer = ''
     for (const segment of segments) {
@@ -840,7 +930,7 @@ const mkdirp = async path => {
     }
 }
 
-const filterAndRemove = (array, predicate) => {
+function filterAndRemove(array, predicate) {
     const results = []
     for (let i = array.length - 1; i >= 0; i--) {
         if (predicate(array[i])) {
@@ -850,8 +940,8 @@ const filterAndRemove = (array, predicate) => {
     return results
 }
 
-const execAsync = async (command, resolveWithErrors, inherit, options) =>
-    new Promise((resolve, reject) => {
+async function execAsync(command, resolveWithErrors, inherit, options) {
+    return new Promise((resolve, reject) => {
         const childProcess = ChildProcess.exec(command, options, (error, stdout, stderr) => {
             if (error) {
                 if (resolveWithErrors) {
@@ -864,16 +954,17 @@ const execAsync = async (command, resolveWithErrors, inherit, options) =>
             }
         })
         if (inherit) {
-            childProcess.stdout.pipe(process.stdout)
-            childProcess.stderr.pipe(process.stderr)
+            childProcess.stdout && childProcess.stdout.pipe(process.stdout)
+            childProcess.stderr && childProcess.stderr.pipe(process.stderr)
         }
     })
+}
 
-const runProcess = async (command, args, onStdout, onStderr) =>
-    new Promise((resolve, reject) => {
-        const subprocess = ChildProcess.spawn(command, args)
-        subprocess.stdout.on('data', onStdout)
-        subprocess.stderr.on('data', onStderr)
+async function runProcess(command, args, options, onStdout, onStderr) {
+    return new Promise((resolve, reject) => {
+        const subprocess = ChildProcess.spawn(command, args, options)
+        subprocess?.stdout?.on('data', onStdout)
+        subprocess?.stderr?.on('data', onStderr)
         subprocess.on('close', code => {
             if (code === 0) {
                 resolve(code)
@@ -882,23 +973,34 @@ const runProcess = async (command, args, onStdout, onStderr) =>
             }
         })
     })
+}
 
-const cloneWithJson = a => JSON.parse(JSON.stringify(a))
+function cloneWithJson(a) {
+    return JSON.parse(JSON.stringify(a))
+}
 
-const unixTimestamp = optionalTimestamp => Math.ceil((optionalTimestamp || Date.now()) / 1000)
+function unixTimestamp(optionalTimestamp) {
+    return Math.ceil((optionalTimestamp || Date.now()) / 1000)
+}
 
-const isoDate = optionalDate => (optionalDate || new Date()).toISOString().slice(0, 10)
+function isoDate(optionalDate) {
+    return (optionalDate || new Date()).toISOString().slice(0, 10)
+}
 
-const dateTimeSlug = optionalDate => (optionalDate || new Date()).toISOString().slice(0, 19).replace(/T|:/g, '-')
+function dateTimeSlug(optionalDate) {
+    return (optionalDate || new Date()).toISOString().slice(0, 19).replace(/T|:/g, '-')
+}
 
-const fromUtcString = string => {
+function fromUtcString(string) {
     const date = new Date(string)
     return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
 }
 
-const createTimeDigits = value => String(Math.floor(value)).padStart(2, '0')
+function createTimeDigits(value) {
+    return String(Math.floor(value)).padStart(2, '0')
+}
 
-const humanizeTime = millis => {
+function humanizeTime(millis) {
     let seconds = Math.floor(millis / 1000)
     if (seconds < 60) {
         return `${seconds}s`
@@ -913,8 +1015,10 @@ const humanizeTime = millis => {
     return `${createTimeDigits(hours)}:${createTimeDigits(minutes)}:${createTimeDigits(seconds)}`
 }
 
-const getAgo = date => {
-    const now = Date.now()
+function getAgo(date, now) {
+    if (!now) {
+        now = Date.now()
+    }
     const then = date.getTime()
     let delta = (now - then) / 1000
     if (delta < 10) {
@@ -935,7 +1039,7 @@ const getAgo = date => {
     return delta.toFixed(0) + ' days ago'
 }
 
-const debounce = (longWrapper, millis) => {
+function debounce(longWrapper, millis) {
     if (Date.now() > longWrapper.value) {
         longWrapper.value = Date.now() + millis
         return true
@@ -950,15 +1054,18 @@ const timeUnits = {
     d: 86400000
 }
 
-const timeSince = (unit, a, optionalB) => {
+function timeSince(unit, a, optionalB) {
     a = isDate(a) ? a.getTime() : a
     optionalB = optionalB ? (isDate(optionalB) ? optionalB.getTime() : optionalB) : Date.now()
     return (optionalB - a) / timeUnits[unit]
 }
 
-const getProgress = (startedAt, current, total) => {
+function getProgress(startedAt, current, total, now) {
+    if (!now) {
+        now = Date.now()
+    }
     const progress = current / total
-    const deltaMs = Date.now() - startedAt
+    const deltaMs = now - startedAt
     const baseTimeMs = deltaMs / current
     const totalTimeMs = baseTimeMs * total
     const remainingTimeMs = totalTimeMs - deltaMs
@@ -981,23 +1088,31 @@ const dayNumberIndex = {
     6: 'saturday'
 }
 
-const mapDayNumber = zeroBasedIndex => ({
-    zeroBasedIndex,
-    day: dayNumberIndex[zeroBasedIndex]
-})
+function mapDayNumber(zeroBasedIndex) {
+    return {
+        zeroBasedIndex,
+        day: dayNumberIndex[zeroBasedIndex]
+    }
+}
 
-const getDayInfoFromDate = date => mapDayNumber(date.getDay())
+function getDayInfoFromDate(date) {
+    return mapDayNumber(date.getDay())
+}
 
-const getDayInfoFromDateTimeString = dateTimeString => getDayInfoFromDate(new Date(dateTimeString))
+function getDayInfoFromDateTimeString(dateTimeString) {
+    return getDayInfoFromDate(new Date(dateTimeString))
+}
 
-const getPreLine = string => string.replace(/ +/g, ' ').replace(/^ /gm, '')
+function getPreLine(string) {
+    return string.replace(/ +/g, ' ').replace(/^ /gm, '')
+}
 
-const containsWord = (string, word) => {
+function containsWord(string, word) {
     const slug = slugify(string)
     return slug.startsWith(word + '-') || slug.endsWith('-' + word) || slug.includes('-' + word + '-') || slug === word
 }
 
-const containsWords = (string, words) => {
+function containsWords(string, words) {
     for (const word of words) {
         if (containsWord(string, word)) {
             return true
@@ -1007,8 +1122,7 @@ const containsWords = (string, words) => {
 }
 
 const tinyCache = {}
-
-const getCached = async (key, ttlMillis, handler) => {
+async function getCached(key, ttlMillis, handler) {
     const now = Date.now()
     const existing = tinyCache[key]
     if (existing && existing.validUntil > now) {
@@ -1023,7 +1137,7 @@ const getCached = async (key, ttlMillis, handler) => {
     return value
 }
 
-const joinUrl = (...parts) => {
+function joinUrl(...parts) {
     let url = parts[0][parts[0].length - 1] === '/' ? parts[0].slice(0, -1) : parts[0]
     for (let i = 1; i < parts.length; i++) {
         const part = parts[i]
@@ -1037,7 +1151,7 @@ const joinUrl = (...parts) => {
     return url
 }
 
-const sortObject = object => {
+function sortObject(object) {
     const keys = Object.keys(object)
     const orderedKeys = keys.sort((a, b) => a.localeCompare(b))
     const sorted = {}
@@ -1047,7 +1161,7 @@ const sortObject = object => {
     return sorted
 }
 
-const sortArray = array => {
+function sortArray(array) {
     const result = []
     array
         .sort((a, b) => JSON.stringify(sortAny(a)).localeCompare(JSON.stringify(sortAny(b))))
@@ -1055,7 +1169,7 @@ const sortArray = array => {
     return result
 }
 
-const sortAny = any => {
+function sortAny(any) {
     if (Array.isArray(any)) {
         return sortArray(any)
     }
@@ -1065,9 +1179,11 @@ const sortAny = any => {
     return any
 }
 
-const deepEquals = (a, b) => JSON.stringify(sortAny(a)) === JSON.stringify(sortAny(b))
+function deepEquals(a, b) {
+    return JSON.stringify(sortAny(a)) === JSON.stringify(sortAny(b))
+}
 
-const safeParse = stringable => {
+function safeParse(stringable) {
     try {
         return JSON.parse(stringable)
     } catch (error) {
@@ -1095,23 +1211,25 @@ const longNumberUnits = [
     'decillion'
 ]
 const shortNumberUnits = ['K', 'M', 'B', 't', 'q', 'Q', 's', 'S', 'o', 'n', 'd']
-
-const prettifyNumber = (number, precision = 1, long = false) => {
-    const table = long ? longNumberUnits : shortNumberUnits
+function formatNumber(number, options) {
+    const longFormat = options?.longForm ?? false
+    const unitString = options?.unit ? ` ${options.unit}` : ''
+    const table = longFormat ? longNumberUnits : shortNumberUnits
+    const precision = options?.precision ?? 1
     if (number < thresholds[0]) {
-        return number
+        return `${number}${unitString}`
     }
     for (let i = 0; i < thresholds.length - 1; i++) {
         if (number < thresholds[i + 1]) {
-            return `${(number / thresholds[i]).toFixed(precision)}${long ? ' ' : ''}${table[i]}`
+            return `${(number / thresholds[i]).toFixed(precision)}${longFormat ? ' ' : ''}${table[i]}${unitString}`
         }
     }
-    return `${(number / thresholds[thresholds.length - 1]).toFixed(precision)}${long ? ' ' : ''}${
+    return `${(number / thresholds[thresholds.length - 1]).toFixed(precision)}${longFormat ? ' ' : ''}${
         table[thresholds.length - 1]
-    }`
+    }${unitString}`
 }
 
-const parseIntOrThrow = numberOrString => {
+function parseIntOrThrow(numberOrString) {
     if (typeof numberOrString === 'number') {
         if (isNaN(numberOrString)) {
             throw Error('parseIntOrThrow got NaN for input')
@@ -1131,19 +1249,21 @@ const parseIntOrThrow = numberOrString => {
     throw Error('parseIntOrThrow got unsupported input type: ' + typeof numberOrString)
 }
 
-const clamp = (value, lower, upper) => (value < lower ? lower : value > upper ? upper : value)
+function clamp(value, lower, upper) {
+    return value < lower ? lower : value > upper ? upper : value
+}
 
-const increment = (value, change, maximum) => {
+function increment(value, change, maximum) {
     const result = value + change
     return result > maximum ? maximum : result
 }
 
-const decrement = (value, change, minimum) => {
+function decrement(value, change, minimum) {
     const result = value - change
     return result < minimum ? minimum : result
 }
 
-const getHeapMegabytes = () => {
+function getHeapMegabytes() {
     const memory = process.memoryUsage()
     return {
         used: (memory.heapUsed / 1024 / 1024).toFixed(3),
@@ -1152,18 +1272,18 @@ const getHeapMegabytes = () => {
     }
 }
 
-const runOn = (object, callable) => {
+function runOn(object, callable) {
     callable(object)
     return object
 }
 
-const ifPresent = (object, callable) => {
+function ifPresent(object, callable) {
     if (object) {
         callable(object)
     }
 }
 
-const mergeArrays = (target, source) => {
+function mergeArrays(target, source) {
     const keys = Object.keys(source)
     for (const key of keys) {
         if (Array.isArray(source[key]) && Array.isArray(target[key])) {
@@ -1172,28 +1292,30 @@ const mergeArrays = (target, source) => {
     }
 }
 
-const empty = array => {
+function empty(array) {
     array.splice(0, array.length)
     return array
 }
 
-const removeEmptyArrays = object => {
+function removeEmptyArrays(object) {
     for (const key of Object.keys(object)) {
-        if (Array.isArray(object[key]) && object[key].length === 0) {
+        if (isEmptyArray(object[key])) {
             delete object[key]
         }
     }
+    return object
 }
 
-const removeEmptyValues = object => {
+function removeEmptyValues(object) {
     for (const entry of Object.entries(object)) {
         if (isUndefined(entry[1]) || entry[1] === null || (isString(entry[1]) && isBlank(entry[1]))) {
             delete object[entry[0]]
         }
     }
+    return object
 }
 
-const mapObject = (object, mapper) => {
+function mapObject(object, mapper) {
     const output = {}
     for (const entry of Object.entries(object)) {
         output[entry[0]] = mapper(entry[1])
@@ -1201,7 +1323,7 @@ const mapObject = (object, mapper) => {
     return output
 }
 
-const rethrow = async (asyncFn, throwable) => {
+async function rethrow(asyncFn, throwable) {
     try {
         const returnValue = await asyncFn()
         return returnValue
@@ -1210,13 +1332,13 @@ const rethrow = async (asyncFn, throwable) => {
     }
 }
 
-const setSomeOnObject = (object, key, value) => {
+function setSomeOnObject(object, key, value) {
     if (typeof value !== 'undefined' && value !== null) {
         object[key] = value
     }
 }
 
-const flip = object => {
+function flip(object) {
     const result = {}
     for (const [key, value] of Object.entries(object)) {
         result[value] = key
@@ -1224,7 +1346,7 @@ const flip = object => {
     return result
 }
 
-const crossJoin = object => {
+function getAllPermutations(object) {
     const keys = Object.keys(object)
     const lengths = keys.map(key => object[key].length)
     const count = lengths.reduce((previous, current) => (previous *= current))
@@ -1247,14 +1369,15 @@ const crossJoin = object => {
     return results
 }
 
-const countTruthyValues = object => {
+function countTruthyValues(object) {
     return Object.values(object).filter(x => x).length
 }
 
-const getFlatNotation = (prefix, key, bracket) =>
-    prefix + (bracket ? '[' + key + ']' : (prefix.length ? '.' : '') + key)
+function getFlatNotation(prefix, key, bracket) {
+    return prefix + (bracket ? '[' + key + ']' : (prefix.length ? '.' : '') + key)
+}
 
-const flattenInner = (target, object, prefix, bracket, arrays) => {
+function flattenInner(target, object, prefix, bracket, arrays) {
     if (!isObject(object)) {
         return object
     }
@@ -1277,11 +1400,11 @@ const flattenInner = (target, object, prefix, bracket, arrays) => {
     return target
 }
 
-const flatten = (object, arrays, prefix) => {
+function flatten(object, arrays = false, prefix) {
     return flattenInner({}, object, prefix || '', false, arrays)
 }
 
-const unflatten = object => {
+function unflatten(object) {
     if (!isObject(object)) {
         return object
     }
@@ -1300,9 +1423,11 @@ const unflatten = object => {
     return target
 }
 
-const match = (value, options, fallback) => (options[value] ? options[value] : fallback)
+function match(value, options, fallback) {
+    return options[value] ? options[value] : fallback
+}
 
-const indexArray = (array, keyFn, useArrays) => {
+function indexArray(array, keyFn, useArrays) {
     const target = {}
     for (const element of array) {
         const key = keyFn(element)
@@ -1318,7 +1443,7 @@ const indexArray = (array, keyFn, useArrays) => {
     return target
 }
 
-const splitBySize = (array, size) => {
+function splitBySize(array, size) {
     const batches = []
     for (let i = 0; i < array.length; i += size) {
         batches.push(array.slice(i, i + size))
@@ -1326,7 +1451,7 @@ const splitBySize = (array, size) => {
     return batches
 }
 
-const splitByCount = (array, count) => {
+function splitByCount(array, count) {
     const size = Math.ceil(array.length / count)
     const batches = []
     for (let i = 0; i < array.length; i += size) {
@@ -1335,7 +1460,7 @@ const splitByCount = (array, count) => {
     return batches
 }
 
-const tokenizeByLength = (string, length) => {
+function tokenizeByLength(string, length) {
     const parts = []
     const count = Math.ceil(string.length / length)
     for (let i = 0; i < count; i++) {
@@ -1344,14 +1469,16 @@ const tokenizeByLength = (string, length) => {
     return parts
 }
 
-const tokenizeByCount = (string, count) => {
+function tokenizeByCount(string, count) {
     const length = Math.ceil(string.length / count)
     return tokenizeByLength(string, length)
 }
 
-const makeUnique = (array, fn) => Object.values(indexArray(array, fn, false))
+function makeUnique(array, fn) {
+    return Object.values(indexArray(array, fn, false))
+}
 
-const countUnique = (array, mapper, plain, sort, reverse) => {
+function countUnique(array, mapper, plain, sort, reverse) {
     const mapped = mapper ? array.map(mapper) : array
     const object = {}
     for (const item of mapped) {
@@ -1364,9 +1491,11 @@ const countUnique = (array, mapper, plain, sort, reverse) => {
     return sorted
 }
 
-const sortObjectValues = (object, compareFn) => Object.fromEntries(Object.entries(object).sort(compareFn))
+function sortObjectValues(object, compareFn) {
+    return Object.fromEntries(Object.entries(object).sort(compareFn))
+}
 
-const transformToArray = objectOfArrays => {
+function transformToArray(objectOfArrays) {
     const array = []
     const keys = Object.keys(objectOfArrays)
     const length = objectOfArrays[keys[0]].length
@@ -1380,21 +1509,23 @@ const transformToArray = objectOfArrays => {
     return array
 }
 
-const incrementMulti = (objects, key, step = 1) => {
+function incrementMulti(objects, key, step = 1) {
     for (const object of objects) {
         object[key] += step
     }
 }
 
-const setMulti = (objects, key, value) => {
+function setMulti(objects, key, value) {
     for (const object of objects) {
         object[key] = value
     }
 }
 
-const createFastIndex = () => ({ index: {}, keys: [] })
+function createFastIndex() {
+    return { index: {}, keys: [] }
+}
 
-const pushToFastIndex = (object, key, item, limit = 100) => {
+function pushToFastIndex(object, key, item, limit = 100) {
     if (object.index[key]) {
         const index = object.keys.indexOf(key)
         object.keys.splice(index, 1)
@@ -1403,15 +1534,15 @@ const pushToFastIndex = (object, key, item, limit = 100) => {
     object.keys.push(key)
     if (object.keys.length > limit) {
         const oldKey = object.keys.shift()
-        delete object.index[oldKey]
+        oldKey && delete object.index[oldKey]
     }
 }
 
-const pushToFastIndexWithExpiracy = (object, key, item, expiration, limit = 100) => {
+function pushToFastIndexWithExpiracy(object, key, item, expiration, limit = 100) {
     pushToFastIndex(object, key, { validUntil: Date.now() + expiration, data: item }, limit)
 }
 
-const getFromFastIndexWithExpiracy = (object, key) => {
+function getFromFastIndexWithExpiracy(object, key) {
     const item = object.index[key]
     if (item && item.validUntil > Date.now()) {
         return item.data
@@ -1419,216 +1550,281 @@ const getFromFastIndexWithExpiracy = (object, key) => {
     return null
 }
 
-module.exports = {
-    Random: {
-        inclusiveInt: randomIntInclusive,
-        between: randomBetween,
-        chance,
-        signed: signedRandom
-    },
-    Arrays: {
-        countUnique,
-        makeUnique,
-        splitBySize,
-        splitByCount,
-        index: indexArray,
-        onlyOrThrow,
-        onlyOrNull,
-        firstOrNull,
-        shuffle,
-        takeRandomly,
-        initialize: initializeArray,
-        mapWithIndex,
-        glue,
-        pluck,
-        pick,
-        last,
-        pickWeighted,
-        sortWeighted,
-        pushAll,
-        unshiftAll,
-        filterAndRemove,
-        merge: mergeArrays,
-        empty,
-        pushToBucket,
-        unshiftAndLimit,
-        atRolling
-    },
-    System: {
-        sleepMillis,
-        forever,
-        scheduleMany,
-        waitFor,
-        execAsync,
-        getHeapMegabytes,
-        expandError,
-        runProcess
-    },
-    Numbers: {
-        sum,
-        average,
-        clamp,
-        range,
-        interpolate,
-        createSequence,
-        increment,
-        decrement,
-        prettify: prettifyNumber,
-        parseIntOrThrow
-    },
-    Promises: {
-        raceFulfilled,
-        invert: invertPromise,
-        runInParallelBatches
-    },
-    Dates: {
-        getAgo,
-        isoDate,
-        debounce,
-        timeSince,
-        dateTimeSlug,
-        unixTimestamp,
-        fromUtcString,
-        getProgress,
-        humanizeTime,
-        humanizeProgress,
-        createTimeDigits,
-        mapDayNumber,
-        getDayInfoFromDate,
-        getDayInfoFromDateTimeString
-    },
-    Objects: {
-        safeParse,
-        deleteDeep,
-        getDeep,
-        getDeepOrElse,
-        setDeep,
-        ensureDeep,
-        replaceDeep,
-        getFirstDeep,
-        mergeDeep,
-        mapWithGetters,
-        mapAllWithGetters,
-        mapAllAsync,
-        cloneWithJson,
-        sortObject,
-        sortArray,
-        sortAny,
-        deepEquals,
-        runOn,
-        ifPresent,
-        zip,
-        zipSum,
-        removeEmptyArrays,
-        removeEmptyValues,
-        flatten,
-        unflatten,
-        match,
-        sort: sortObjectValues,
-        map: mapObject,
-        rethrow,
-        setSomeOnObject,
-        flip,
-        crossJoin,
-        countTruthyValues,
-        transformToArray,
-        setMulti,
-        incrementMulti,
-        createFastIndex,
-        pushToFastIndex,
-        pushToFastIndexWithExpiracy,
-        getFromFastIndexWithExpiracy
-    },
-    Pagination: {
-        asPageNumber,
-        pageify
-    },
-    Files: {
-        existsAsync,
-        writeJsonAsync,
-        readdirDeepAsync,
-        readUtf8FileAsync,
-        readJsonAsync,
-        readLinesAsync,
-        readMatchingLines,
-        readNonEmptyLines,
-        readCsv,
-        walkTreeAsync,
-        getFileSize,
-        asMegabytes,
-        getDirectorySize,
-        convertBytes,
-        getChecksum: getChecksumOfFile,
-        mkdirp
-    },
-    Types: {
-        isFunction,
-        isObject,
-        isStrictlyObject,
-        isUndefined,
-        isString,
-        isNumber,
-        isDate,
-        isBlank,
-        asString,
-        asNumber,
-        asDate,
-        asNullableString
-    },
-    Strings: {
-        tokenizeByCount,
-        tokenizeByLength,
-        randomAlphanumeric: randomAlphanumericString,
-        randomHex: randomHexString,
-        includesAny,
-        slugify,
-        enumify,
-        escapeHtml,
-        decodeHtmlEntities,
-        after,
-        afterLast,
-        before,
-        beforeLast,
-        between,
-        betweenWide,
-        betweenNarrow,
-        getPreLine,
-        containsWord,
-        containsWords,
-        joinUrl,
-        getFuzzyMatchScore,
-        sortByFuzzyScore,
-        getChecksum,
-        splitOnce,
-        randomize,
-        shrinkTrim,
-        capitalize,
-        decapitalize,
-        csvEscape,
-        parseCsv,
-        surroundInOut,
-        getExtension,
-        getBasename,
-        normalizeFilename,
-        parseFilename,
-        camelToTitle,
-        slugToTitle,
-        slugToCamel,
-        joinHumanly
-    },
-    Assertions: {
-        asEqual,
-        asTrue,
-        asTruthy,
-        asFalse,
-        asFalsy,
-        asEither
-    },
-    Cache: {
-        get: getCached
-    },
-    Logger: {
-        create: createLogger,
-        enableFileLogging
+function makeAsyncQueue(concurrency = 1) {
+    const queue = []
+    let running = 0
+    async function runOneTask() {
+        if (queue.length > 0 && running < concurrency) {
+            running++
+            const task = queue.shift()
+            try {
+                task && (await task())
+            } finally {
+                running--
+                runOneTask()
+            }
+        }
     }
+    return {
+        enqueue(fn) {
+            queue.push(fn)
+            runOneTask()
+        }
+    }
+}
+
+class Maybe {
+    constructor(value) {
+        this.value = value
+    }
+    bind(fn) {
+        if (this.value === null || this.value === undefined) {
+            return new Maybe(null)
+        }
+        if (isPromise(this.value)) {
+            return new Maybe(this.value.then(x => (x !== null && x !== undefined ? fn(x) : null)).catch(() => null))
+        }
+        try {
+            const result = fn(this.value)
+            return new Maybe(result)
+        } catch (error) {
+            return new Maybe(null)
+        }
+    }
+    async valueOf() {
+        try {
+            return await this.value
+        } catch {
+            return null
+        }
+    }
+}
+
+exports.Maybe = Maybe
+
+exports.Random = {
+    inclusiveInt: randomIntInclusive,
+    between: randomBetween,
+    chance,
+    signed: signedRandom
+}
+
+exports.Arrays = {
+    countUnique,
+    makeUnique,
+    splitBySize,
+    splitByCount,
+    index: indexArray,
+    onlyOrThrow,
+    onlyOrNull,
+    firstOrNull,
+    shuffle,
+    takeRandomly,
+    initialize: initializeArray,
+    glue,
+    pluck,
+    pick,
+    last,
+    pickWeighted,
+    sortWeighted,
+    pushAll,
+    unshiftAll,
+    filterAndRemove,
+    merge: mergeArrays,
+    empty,
+    pushToBucket,
+    unshiftAndLimit,
+    atRolling
+}
+
+exports.System = {
+    sleepMillis,
+    forever,
+    scheduleMany,
+    waitFor,
+    execAsync,
+    getHeapMegabytes,
+    expandError,
+    runProcess
+}
+
+exports.Numbers = {
+    sum,
+    average,
+    clamp,
+    range,
+    interpolate,
+    createSequence,
+    increment,
+    decrement,
+    format: formatNumber,
+    parseIntOrThrow
+}
+
+exports.Promises = {
+    raceFulfilled,
+    invert: invertPromise,
+    runInParallelBatches,
+    makeAsyncQueue
+}
+
+exports.Dates = {
+    getAgo,
+    isoDate,
+    debounce,
+    timeSince,
+    dateTimeSlug,
+    unixTimestamp,
+    fromUtcString,
+    getProgress,
+    humanizeTime,
+    humanizeProgress,
+    createTimeDigits,
+    mapDayNumber,
+    getDayInfoFromDate,
+    getDayInfoFromDateTimeString
+}
+
+exports.Objects = {
+    safeParse,
+    deleteDeep,
+    getDeep,
+    getDeepOrElse,
+    setDeep,
+    ensureDeep,
+    replaceDeep,
+    getFirstDeep,
+    mergeDeep,
+    mapAllAsync,
+    cloneWithJson,
+    sortObject,
+    sortArray,
+    sortAny,
+    deepEquals,
+    runOn,
+    ifPresent,
+    zip,
+    zipSum,
+    removeEmptyArrays,
+    removeEmptyValues,
+    flatten,
+    unflatten,
+    match,
+    sort: sortObjectValues,
+    map: mapObject,
+    rethrow,
+    setSomeOnObject,
+    flip,
+    getAllPermutations,
+    countTruthyValues,
+    transformToArray,
+    setMulti,
+    incrementMulti,
+    createFastIndex,
+    pushToFastIndex,
+    pushToFastIndexWithExpiracy,
+    getFromFastIndexWithExpiracy
+}
+
+exports.Pagination = {
+    asPageNumber,
+    pageify
+}
+
+exports.Files = {
+    existsAsync,
+    writeJsonAsync,
+    readdirDeepAsync,
+    readUtf8FileAsync,
+    readJsonAsync,
+    readLinesAsync,
+    readMatchingLines,
+    readNonEmptyLines,
+    readCsv,
+    walkTreeAsync,
+    getFileSize,
+    asMegabytes,
+    getDirectorySize,
+    convertBytes,
+    getChecksum: getChecksumOfFile,
+    mkdirp
+}
+
+exports.Types = {
+    isFunction,
+    isObject,
+    isStrictlyObject,
+    isEmptyArray,
+    isUndefined,
+    isString,
+    isNumber,
+    isDate,
+    isBlank,
+    asString,
+    asNumber,
+    asDate,
+    asNullableString
+}
+
+exports.Strings = {
+    tokenizeByCount,
+    tokenizeByLength,
+    randomHex: randomHexString,
+    randomLetter: randomLetterString,
+    randomAlphanumeric: randomAlphanumericString,
+    randomRichAscii: randomRichAsciiString,
+    randomUnicode: randomUnicodeString,
+    includesAny,
+    slugify,
+    enumify,
+    escapeHtml,
+    decodeHtmlEntities,
+    after,
+    afterLast,
+    before,
+    beforeLast,
+    between,
+    betweenWide,
+    betweenNarrow,
+    getPreLine,
+    containsWord,
+    containsWords,
+    joinUrl,
+    getFuzzyMatchScore,
+    sortByFuzzyScore,
+    getChecksum,
+    splitOnce,
+    randomize,
+    shrinkTrim,
+    capitalize,
+    decapitalize,
+    csvEscape,
+    parseCsv,
+    surroundInOut,
+    getExtension,
+    getBasename,
+    normalizeFilename,
+    parseFilename,
+    camelToTitle,
+    slugToTitle,
+    slugToCamel,
+    joinHumanly
+}
+
+exports.Assertions = {
+    asEqual,
+    asTrue,
+    asTruthy,
+    asFalse,
+    asFalsy,
+    asEither
+}
+
+exports.Cache = {
+    get: getCached
+}
+
+exports.Logger = {
+    create: createLogger,
+    enableFileLogging
 }

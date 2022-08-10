@@ -14,3 +14,4 @@ export const Random = utility.Random
 export const Strings = utility.Strings
 export const System = utility.System
 export const Types = utility.Types
+export const Maybe = utility.Maybe
