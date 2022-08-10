@@ -13,6 +13,7 @@ declare function onlyOrNull<T>(array: T[]): T | null;
 declare function firstOrNull<T>(array: T[]): T | null;
 declare function initializeArray<T>(count: number, initializer: (index: number) => T): T[];
 declare function takeRandomly<T>(array: T[], count: number): T[];
+declare function pickRandomIndices<T>(array: T[], count: number): number[];
 declare function pluck<T, K extends keyof T>(array: T[], key: K): T[K][];
 declare function randomIntInclusive(min: number, max: number): number;
 declare function randomBetween(min: number, max: number): number;
@@ -25,6 +26,7 @@ declare function sortWeighted<T>(array: T[], weights: number[]): T[];
 declare function getDeep(object: CafeObject, path: string): unknown;
 declare function getDeepOrElse(object: CafeObject, path: string, fallback: unknown): unknown;
 declare function setDeep<T>(object: CafeObject, path: string, value: T): T;
+declare function incrementDeep(object: CafeObject, path: string, amount?: number): number;
 declare function ensureDeep(object: CafeObject, path: string, value: unknown): unknown;
 declare function deleteDeep(object: CafeObject, path: string): void;
 declare function replaceDeep(object: CafeObject, path: string, value: unknown): unknown;
@@ -185,6 +187,9 @@ interface DayInfo {
 declare function mapDayNumber(zeroBasedIndex: keyof typeof dayNumberIndex): DayInfo;
 declare function getDayInfoFromDate(date: Date): DayInfo;
 declare function getDayInfoFromDateTimeString(dateTimeString: string): DayInfo;
+declare function seconds(value: number): number;
+declare function minutes(value: number): number;
+declare function hours(value: number): number;
 declare function getPreLine(string: string): string;
 declare function containsWord(string: string, word: string): boolean;
 declare function containsWords(string: string, words: string[]): boolean;
@@ -280,6 +285,7 @@ export declare const Arrays: {
     firstOrNull: typeof firstOrNull;
     shuffle: typeof shuffle;
     takeRandomly: typeof takeRandomly;
+    pickRandomIndices: typeof pickRandomIndices;
     initialize: typeof initializeArray;
     glue: typeof glue;
     pluck: typeof pluck;
@@ -341,6 +347,9 @@ export declare const Dates: {
     mapDayNumber: typeof mapDayNumber;
     getDayInfoFromDate: typeof getDayInfoFromDate;
     getDayInfoFromDateTimeString: typeof getDayInfoFromDateTimeString;
+    seconds: typeof seconds;
+    minutes: typeof minutes;
+    hours: typeof hours;
 };
 export declare const Objects: {
     safeParse: typeof safeParse;
@@ -348,6 +357,7 @@ export declare const Objects: {
     getDeep: typeof getDeep;
     getDeepOrElse: typeof getDeepOrElse;
     setDeep: typeof setDeep;
+    incrementDeep: typeof incrementDeep;
     ensureDeep: typeof ensureDeep;
     replaceDeep: typeof replaceDeep;
     getFirstDeep: typeof getFirstDeep;

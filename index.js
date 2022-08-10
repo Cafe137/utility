@@ -74,6 +74,10 @@ function takeRandomly(array, count) {
     return shuffle(array).slice(0, count)
 }
 
+function pickRandomIndices(array, count) {
+    return shuffle(range(0, array.length - 1)).slice(0, count)
+}
+
 function pluck(array, key) {
     return array.map(element => element[key])
 }
@@ -164,6 +168,12 @@ function setDeep(object, path, value) {
         buffer = buffer[normalizedPart]
     }
     return value
+}
+
+function incrementDeep(object, path, amount = 1) {
+    const existing = getDeep(object, path) || 0
+    setDeep(object, path, existing + amount)
+    return existing
 }
 
 function ensureDeep(object, path, value) {
@@ -1103,6 +1113,18 @@ function getDayInfoFromDateTimeString(dateTimeString) {
     return getDayInfoFromDate(new Date(dateTimeString))
 }
 
+function seconds(value) {
+    return value * 1000
+}
+
+function minutes(value) {
+    return value * 60000
+}
+
+function hours(value) {
+    return value * 3600000
+}
+
 function getPreLine(string) {
     return string.replace(/ +/g, ' ').replace(/^ /gm, '')
 }
@@ -1633,6 +1655,7 @@ exports.Arrays = {
     firstOrNull,
     shuffle,
     takeRandomly,
+    pickRandomIndices,
     initialize: initializeArray,
     glue,
     pluck,
@@ -1695,7 +1718,10 @@ exports.Dates = {
     createTimeDigits,
     mapDayNumber,
     getDayInfoFromDate,
-    getDayInfoFromDateTimeString
+    getDayInfoFromDateTimeString,
+    seconds,
+    minutes,
+    hours
 }
 
 exports.Objects = {
@@ -1704,6 +1730,7 @@ exports.Objects = {
     getDeep,
     getDeepOrElse,
     setDeep,
+    incrementDeep,
     ensureDeep,
     replaceDeep,
     getFirstDeep,
