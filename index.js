@@ -1552,6 +1552,7 @@ function getFromFastIndexWithExpiracy(object, key) {
 
 function makeAsyncQueue(concurrency = 1) {
     const queue = []
+    const listeners = []
     let running = 0
     async function runOneTask() {
         if (queue.length > 0 && running < concurrency) {
@@ -1560,16 +1561,29 @@ function makeAsyncQueue(concurrency = 1) {
             try {
                 task && (await task())
             } finally {
-                running--
+                if (--running === 0) {
+                    while (listeners.length > 0) {
+                        listeners.shift()()
+                    }
+                }
                 runOneTask()
             }
         }
+    }
+    async function drain() {
+        if (!running) {
+            return Promise.resolve()
+        }
+        return new Promise(resolve => {
+            listeners.push(resolve)
+        })
     }
     return {
         enqueue(fn) {
             queue.push(fn)
             runOneTask()
-        }
+        },
+        drain
     }
 }
 
@@ -1601,7 +1615,6 @@ class Maybe {
 }
 
 exports.Maybe = Maybe
-
 exports.Random = {
     inclusiveInt: randomIntInclusive,
     between: randomBetween,

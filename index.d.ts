@@ -255,6 +255,7 @@ declare function pushToFastIndexWithExpiracy<T>(object: FastIndex<T>, key: strin
 declare function getFromFastIndexWithExpiracy<T>(object: FastIndex<T>, key: string): T | null;
 declare function makeAsyncQueue(concurrency?: number): {
     enqueue(fn: () => Promise<void>): void;
+    drain: () => Promise<void>;
 };
 export declare class Maybe<T> {
     private value;
