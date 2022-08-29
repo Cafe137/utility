@@ -51,6 +51,7 @@ declare function getChecksumOfFile(path: string): Promise<string>;
 declare function isObject(value: any): value is object;
 declare function isStrictlyObject(value: any): value is object;
 declare function isEmptyArray(value: any): boolean;
+declare function isEmptyObject(value: any): boolean;
 declare function isUndefined(value: any): value is undefined;
 declare function isFunction(value: any): value is Function;
 declare function isString(value: any): value is string;
@@ -423,6 +424,7 @@ export declare const Types: {
     isObject: typeof isObject;
     isStrictlyObject: typeof isStrictlyObject;
     isEmptyArray: typeof isEmptyArray;
+    isEmptyObject: typeof isEmptyObject;
     isUndefined: typeof isUndefined;
     isString: typeof isString;
     isNumber: typeof isNumber;

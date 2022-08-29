@@ -349,6 +349,10 @@ function isEmptyArray(value) {
     return Array.isArray(value) && value.length === 0
 }
 
+function isEmptyObject(value) {
+    return isStrictlyObject(value) && Object.keys(value).length === 0
+}
+
 function isUndefined(value) {
     return typeof value === 'undefined'
 }
@@ -1820,6 +1824,7 @@ exports.Types = {
     isObject,
     isStrictlyObject,
     isEmptyArray,
+    isEmptyObject,
     isUndefined,
     isString,
     isNumber,
