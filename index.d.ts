@@ -31,7 +31,7 @@ declare function ensureDeep(object: CafeObject, path: string, value: unknown): u
 declare function deleteDeep(object: CafeObject, path: string): void;
 declare function replaceDeep(object: CafeObject, path: string, value: unknown): unknown;
 declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAnyKey: string): unknown;
-declare function forever(callable: () => Promise<never>, millis: number): Promise<never>;
+declare function forever(callable: () => Promise<void>, millis: number): Promise<never>;
 declare function readUtf8FileAsync(path: string): Promise<string>;
 declare function readJsonAsync(path: string): Promise<CafeObject>;
 declare function writeJsonAsync(path: string, object: CafeObject, prettify?: boolean): Promise<void>;
@@ -206,7 +206,7 @@ interface NumberFormatOptions {
     unit?: null | string;
 }
 declare function formatNumber(number: number, options?: NumberFormatOptions): string;
-declare function parseIntOrThrow(numberOrString: string | number): number;
+declare function parseIntOrThrow(numberOrString: any): number;
 declare function clamp(value: number, lower: number, upper: number): number;
 declare function increment(value: number, change: number, maximum: number): number;
 declare function decrement(value: number, change: number, minimum: number): number;
@@ -222,6 +222,8 @@ declare function mergeArrays(target: CafeObject<unknown[]>, source: CafeObject<u
 declare function empty<T>(array: T[]): T[];
 declare function removeEmptyArrays(object: CafeObject): CafeObject;
 declare function removeEmptyValues(object: CafeObject): CafeObject;
+declare function filterObjectKeys<T>(object: CafeObject<T>, predicate: (key: string) => boolean): CafeObject<T>;
+declare function filterObjectValues<T>(object: CafeObject<T>, predicate: (value: T) => boolean): CafeObject<T>;
 declare function mapObject<T, K>(object: CafeObject<T>, mapper: (value: T) => K): CafeObject<K>;
 declare function rethrow<T>(asyncFn: () => Promise<T>, throwable: Error): Promise<T>;
 declare function setSomeOnObject(object: CafeObject, key: string, value: unknown): void;
@@ -379,6 +381,8 @@ export declare const Objects: {
     match: typeof match;
     sort: typeof sortObjectValues;
     map: typeof mapObject;
+    filterKeys: typeof filterObjectKeys;
+    filterValues: typeof filterObjectValues;
     rethrow: typeof rethrow;
     setSomeOnObject: typeof setSomeOnObject;
     flip: typeof flip;

@@ -107,18 +107,21 @@ function last(array) {
 }
 
 function pickWeighted(array, weights, randomNumber) {
+    if (isUndefined(randomNumber)) {
+        randomNumber = Math.random()
+    }
     if (array.length !== weights.length) {
         throw new Error('Array length mismatch')
     }
     let sum = weights.reduce((accumulator, element) => accumulator + element, 0)
-    const random = (randomNumber ? randomNumber : Math.random()) * sum
-    for (let i = 0; i < array.length; i++) {
+    const random = randomNumber * sum
+    for (let i = 0; i < array.length - 1; i++) {
         sum -= weights[i]
         if (random >= sum) {
             return array[i]
         }
     }
-    throw new Error('Weight out of range')
+    return last(array)
 }
 
 function sortWeighted(array, weights) {
@@ -1337,6 +1340,26 @@ function removeEmptyValues(object) {
     return object
 }
 
+function filterObjectKeys(object, predicate) {
+    const output = {}
+    for (const [key, value] of Object.entries(object)) {
+        if (predicate(key)) {
+            output[key] = value
+        }
+    }
+    return output
+}
+
+function filterObjectValues(object, predicate) {
+    const output = {}
+    for (const [key, value] of Object.entries(object)) {
+        if (predicate(value)) {
+            output[key] = value
+        }
+    }
+    return output
+}
+
 function mapObject(object, mapper) {
     const output = {}
     for (const entry of Object.entries(object)) {
@@ -1752,6 +1775,8 @@ exports.Objects = {
     match,
     sort: sortObjectValues,
     map: mapObject,
+    filterKeys: filterObjectKeys,
+    filterValues: filterObjectValues,
     rethrow,
     setSomeOnObject,
     flip,
