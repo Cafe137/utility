@@ -1056,9 +1056,10 @@ function getAgo(date, now) {
     return delta.toFixed(0) + ' days ago'
 }
 
-function debounce(longWrapper, millis) {
-    if (Date.now() > longWrapper.value) {
-        longWrapper.value = Date.now() + millis
+const throttleTimers = {}
+function throttle(identifier, millis) {
+    if (!throttleTimers[identifier] || Date.now() > throttleTimers[identifier]) {
+        throttleTimers[identifier] = Date.now() + millis
         return true
     }
     return false
@@ -1734,7 +1735,7 @@ exports.Promises = {
 exports.Dates = {
     getAgo,
     isoDate,
-    debounce,
+    throttle,
     timeSince,
     dateTimeSlug,
     unixTimestamp,

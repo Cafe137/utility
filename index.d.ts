@@ -31,7 +31,7 @@ declare function ensureDeep(object: CafeObject, path: string, value: unknown): u
 declare function deleteDeep(object: CafeObject, path: string): void;
 declare function replaceDeep(object: CafeObject, path: string, value: unknown): unknown;
 declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAnyKey: string): unknown;
-declare function forever(callable: () => Promise<void>, millis: number): Promise<never>;
+declare function forever(callable: () => Promise<void> | (() => void), millis: number): Promise<never>;
 declare function readUtf8FileAsync(path: string): Promise<string>;
 declare function readJsonAsync(path: string): Promise<CafeObject>;
 declare function writeJsonAsync(path: string, object: CafeObject, prettify?: boolean): Promise<void>;
@@ -40,7 +40,7 @@ declare function readMatchingLines(path: string, filterFn: (matcher: string) => 
 declare function readNonEmptyLines(path: string): Promise<string[]>;
 declare function readCsv(path: string, skip?: number, delimiter?: string, quote?: string): Promise<string[][]>;
 declare function walkTreeAsync(path: string): AsyncIterable<string>;
-declare function readdirDeepAsync(path: string, cwd: string): Promise<string[]>;
+declare function readdirDeepAsync(path: string, cwd?: string): Promise<string[]>;
 declare function existsAsync(path: string): Promise<boolean>;
 declare function getFileSize(path: string): Promise<number>;
 declare function asMegabytes(number: number): number;
@@ -145,9 +145,9 @@ declare function humanizeProgress(state: Progress): string;
 declare function waitFor(predicate: () => Promise<boolean>, waitLength: number, maxWaits: number): Promise<boolean>;
 declare function mkdirp(path: string): Promise<void>;
 declare function filterAndRemove<T>(array: T[], predicate: (item: T) => boolean): T[];
-declare function execAsync(command: string, resolveWithErrors: boolean, inherit: boolean, options: ExecOptions): Promise<{
-    stdout: string;
-    stderr: string;
+declare function execAsync(command: string, resolveWithErrors?: boolean, inherit?: boolean, options?: ExecOptions): Promise<{
+    stdout: string | Buffer;
+    stderr: string | Buffer;
     error?: string | Error;
 }>;
 declare function runProcess(command: string, args: string[], options: ChildProcess.SpawnOptions, onStdout: (chunk: string) => void, onStderr: (chunk: string) => void): Promise<number>;
@@ -159,10 +159,7 @@ declare function fromUtcString(string: string): Date;
 declare function createTimeDigits(value: number): string;
 declare function humanizeTime(millis: number): string;
 declare function getAgo(date: Date, now?: number): string;
-interface WrappedNumber {
-    value: number;
-}
-declare function debounce(longWrapper: WrappedNumber, millis: number): boolean;
+declare function throttle(identifier: string, millis: number): boolean;
 declare function timeSince(unit: 's' | 'm' | 'h' | 'd', a: Date | number, optionalB?: Date | number): number;
 interface Progress {
     deltaMs: number;
@@ -338,7 +335,7 @@ export declare const Promises: {
 export declare const Dates: {
     getAgo: typeof getAgo;
     isoDate: typeof isoDate;
-    debounce: typeof debounce;
+    throttle: typeof throttle;
     timeSince: typeof timeSince;
     dateTimeSlug: typeof dateTimeSlug;
     unixTimestamp: typeof unixTimestamp;
