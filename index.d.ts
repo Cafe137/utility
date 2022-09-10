@@ -31,7 +31,7 @@ declare function ensureDeep(object: CafeObject, path: string, value: unknown): u
 declare function deleteDeep(object: CafeObject, path: string): void;
 declare function replaceDeep(object: CafeObject, path: string, value: unknown): unknown;
 declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAnyKey: string): unknown;
-declare function forever(callable: () => Promise<void> | (() => void), millis: number): Promise<never>;
+declare function forever(callable: (() => Promise<void>) | (() => void), millis: number): Promise<never>;
 declare function readUtf8FileAsync(path: string): Promise<string>;
 declare function readJsonAsync(path: string): Promise<CafeObject>;
 declare function writeJsonAsync(path: string, object: CafeObject, prettify?: boolean): Promise<void>;
@@ -231,7 +231,8 @@ declare function countTruthyValues(object: CafeObject): number;
 declare function flatten(object: CafeObject, arrays?: boolean, prefix?: string): CafeObject | Array<unknown>;
 declare function unflatten(object: CafeObject): CafeObject;
 declare function match(value: string, options: CafeObject<string>, fallback: string): string;
-declare function indexArray<T>(array: T[], keyFn: (item: T) => Indexable, useArrays?: boolean): CafeObject<T | T[]>;
+declare function indexArray<T>(array: T[], keyFn: (item: T) => Indexable): CafeObject<T>;
+declare function indexArrayToCollection<T>(array: T[], keyFn: (item: T) => Indexable): CafeObject<T[]>;
 declare function splitBySize<T>(array: T[], size: number): T[][];
 declare function splitByCount<T>(array: T[], count: number): T[][];
 declare function tokenizeByLength(string: string, length: number): string[];
@@ -280,6 +281,7 @@ export declare const Arrays: {
     splitBySize: typeof splitBySize;
     splitByCount: typeof splitByCount;
     index: typeof indexArray;
+    indexCollection: typeof indexArrayToCollection;
     onlyOrThrow: typeof onlyOrThrow;
     onlyOrNull: typeof onlyOrNull;
     firstOrNull: typeof firstOrNull;

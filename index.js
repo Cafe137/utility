@@ -1477,18 +1477,23 @@ function match(value, options, fallback) {
     return options[value] ? options[value] : fallback
 }
 
-function indexArray(array, keyFn, useArrays) {
+function indexArray(array, keyFn) {
     const target = {}
     for (const element of array) {
         const key = keyFn(element)
-        if (useArrays) {
-            if (!target[key]) {
-                target[key] = []
-            }
-            target[key].push(element)
-        } else {
-            target[key] = element
+        target[key] = element
+    }
+    return target
+}
+
+function indexArrayToCollection(array, keyFn) {
+    const target = {}
+    for (const element of array) {
+        const key = keyFn(element)
+        if (!target[key]) {
+            target[key] = []
         }
+        target[key].push(element)
     }
     return target
 }
@@ -1525,7 +1530,7 @@ function tokenizeByCount(string, count) {
 }
 
 function makeUnique(array, fn) {
-    return Object.values(indexArray(array, fn, false))
+    return Object.values(indexArray(array, fn))
 }
 
 function countUnique(array, mapper, plain, sort, reverse) {
@@ -1678,6 +1683,7 @@ exports.Arrays = {
     splitBySize,
     splitByCount,
     index: indexArray,
+    indexCollection: indexArrayToCollection,
     onlyOrThrow,
     onlyOrNull,
     firstOrNull,
