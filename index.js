@@ -381,6 +381,10 @@ function isBlank(value) {
     return !isString(value) || value.trim().length === 0
 }
 
+function isId(value) {
+    return Number.isInteger(value) && value >= 1
+}
+
 const alphabet = 'abcdefghijklmnopqrstuvwxyz'
 const alphanumericAlphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 const richAsciiAlphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=[]{}|;:<>?,./'
@@ -452,6 +456,13 @@ function asNullableString(string) {
         return null
     }
     return string
+}
+
+function asId(value) {
+    if (!isId(value)) {
+        throw new TypeError('Expected id, got: ' + value)
+    }
+    return value
 }
 
 function represent(value) {
@@ -1837,10 +1848,12 @@ exports.Types = {
     isNumber,
     isDate,
     isBlank,
+    isId,
     asString,
     asNumber,
     asDate,
-    asNullableString
+    asNullableString,
+    asId
 }
 
 exports.Strings = {

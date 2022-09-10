@@ -58,6 +58,7 @@ declare function isString(value: any): value is string;
 declare function isNumber(value: any): value is number;
 declare function isDate(value: any): value is Date;
 declare function isBlank(value: any): boolean;
+declare function isId(value: any): value is number;
 declare function randomLetterString(length: number): string;
 declare function randomAlphanumericString(length: number): string;
 declare function randomRichAsciiString(length: number): string;
@@ -67,6 +68,7 @@ declare function asString(string: any): string;
 declare function asNumber(number: any): number;
 declare function asDate(date: any): Date;
 declare function asNullableString(string: any): string | null;
+declare function asId(value: any): number;
 declare function createLogger(module: string): {
     trace: (...pieces: string[]) => void;
     info: (...pieces: string[]) => void;
@@ -429,10 +431,12 @@ export declare const Types: {
     isNumber: typeof isNumber;
     isDate: typeof isDate;
     isBlank: typeof isBlank;
+    isId: typeof isId;
     asString: typeof asString;
     asNumber: typeof asNumber;
     asDate: typeof asDate;
     asNullableString: typeof asNullableString;
+    asId: typeof asId;
 };
 export declare const Strings: {
     tokenizeByCount: typeof tokenizeByCount;
