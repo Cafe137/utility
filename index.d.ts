@@ -30,7 +30,7 @@ declare function incrementDeep(object: CafeObject, path: string, amount?: number
 declare function ensureDeep(object: CafeObject, path: string, value: unknown): unknown;
 declare function deleteDeep(object: CafeObject, path: string): void;
 declare function replaceDeep(object: CafeObject, path: string, value: unknown): unknown;
-declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAnyKey: string): unknown;
+declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAnyKey?: boolean): unknown;
 declare function forever(callable: (() => Promise<void>) | (() => void), millis: number): Promise<never>;
 declare function readUtf8FileAsync(path: string): Promise<string>;
 declare function readJsonAsync(path: string): Promise<CafeObject>;
@@ -74,10 +74,10 @@ declare function createLogger(module: string): {
     info: (...pieces: any[]) => void;
     warn: (...pieces: any[]) => void;
     error: (...pieces: any[]) => void;
-    errorObject: (error: Error, stackTrace?: boolean) => void;
+    errorObject: (error: any, stackTrace?: boolean) => void;
 };
 declare function enableFileLogging(path: string): void;
-declare function expandError(error: string | Error, stackTrace?: boolean): string;
+declare function expandError(error: any, stackTrace?: boolean): string;
 declare function mergeDeep(target: CafeObject, source: CafeObject): CafeObject;
 declare function zip<T>(objects: CafeObject<T>[], reducer: (a: T, b: T) => T): CafeObject<T>;
 declare function zipSum(objects: CafeObject<number>[]): CafeObject<number>;
