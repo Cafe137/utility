@@ -70,10 +70,10 @@ declare function asDate(date: any): Date;
 declare function asNullableString(string: any): string | null;
 declare function asId(value: any): number;
 declare function createLogger(module: string): {
-    trace: (...pieces: string[]) => void;
-    info: (...pieces: string[]) => void;
-    warn: (...pieces: string[]) => void;
-    error: (...pieces: string[]) => void;
+    trace: (...pieces: any[]) => void;
+    info: (...pieces: any[]) => void;
+    warn: (...pieces: any[]) => void;
+    error: (...pieces: any[]) => void;
     errorObject: (error: Error, stackTrace?: boolean) => void;
 };
 declare function enableFileLogging(path: string): void;
