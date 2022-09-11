@@ -382,7 +382,8 @@ function isBlank(value) {
 }
 
 function isId(value) {
-    return Number.isInteger(value) && value >= 1
+    const numeric = typeof value === 'string' ? parseInt(value, 10) : value
+    return Number.isInteger(numeric) && numeric >= 1
 }
 
 const alphabet = 'abcdefghijklmnopqrstuvwxyz'
@@ -462,7 +463,7 @@ function asId(value) {
     if (!isId(value)) {
         throw new TypeError('Expected id, got: ' + value)
     }
-    return value
+    return typeof value === 'string' ? parseInt(value, 10) : value
 }
 
 function represent(value) {
