@@ -466,6 +466,13 @@ function asId(value) {
     return typeof value === 'string' ? parseInt(value, 10) : value
 }
 
+function asArray(value) {
+    if (!Array.isArray(value)) {
+        throw new TypeError('Expected array, got: ' + value)
+    }
+    return value
+}
+
 function represent(value) {
     if (isObject(value)) {
         return JSON.stringify(value, null, 4)
@@ -1854,7 +1861,8 @@ exports.Types = {
     asNumber,
     asDate,
     asNullableString,
-    asId
+    asId,
+    asArray
 }
 
 exports.Strings = {
