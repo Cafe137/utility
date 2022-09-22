@@ -473,6 +473,13 @@ function asArray(value) {
     return value
 }
 
+function asObject(value) {
+    if (!isStrictlyObject(value)) {
+        throw new TypeError('Expected object, got: ' + value)
+    }
+    return value
+}
+
 function represent(value) {
     if (isObject(value)) {
         return JSON.stringify(value, null, 4)
@@ -1862,7 +1869,8 @@ exports.Types = {
     asDate,
     asNullableString,
     asId,
-    asArray
+    asArray,
+    asObject
 }
 
 exports.Strings = {

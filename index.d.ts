@@ -70,6 +70,7 @@ declare function asDate(date: any): Date;
 declare function asNullableString(string: any): string | null;
 declare function asId(value: any): number;
 declare function asArray(value: any): unknown[];
+declare function asObject(value: any): Record<string, unknown>;
 declare function createLogger(module: string): {
     trace: (...pieces: any[]) => void;
     info: (...pieces: any[]) => void;
@@ -439,6 +440,7 @@ export declare const Types: {
     asNullableString: typeof asNullableString;
     asId: typeof asId;
     asArray: typeof asArray;
+    asObject: typeof asObject;
 };
 export declare const Strings: {
     tokenizeByCount: typeof tokenizeByCount;
