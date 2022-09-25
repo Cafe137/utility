@@ -15,6 +15,7 @@ declare function initializeArray<T>(count: number, initializer: (index: number) 
 declare function takeRandomly<T>(array: T[], count: number): T[];
 declare function pickRandomIndices<T>(array: T[], count: number): number[];
 declare function pluck<T, K extends keyof T>(array: T[], key: K): T[K][];
+declare function makeSeededRng(seed: number): () => number;
 declare function randomIntInclusive(min: number, max: number): number;
 declare function randomBetween(min: number, max: number): number;
 declare function signedRandom(): number;
@@ -278,6 +279,7 @@ export declare const Random: {
     between: typeof randomBetween;
     chance: typeof chance;
     signed: typeof signedRandom;
+    makeSeededRng: typeof makeSeededRng;
 };
 export declare const Arrays: {
     countUnique: typeof countUnique;

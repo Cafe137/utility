@@ -82,6 +82,20 @@ function pluck(array, key) {
     return array.map(element => element[key])
 }
 
+function makeSeededRng(seed) {
+    let a = seed
+    let b = 0xcafe1337
+    let c = 0xdeadbeef
+    return function () {
+        a += b
+        b ^= a << 7
+        a *= c
+        c ^= a << 13
+        a ^= b ^ c
+        return (a >>> 0) / 4294967296
+    }
+}
+
 function randomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
@@ -1700,7 +1714,8 @@ exports.Random = {
     inclusiveInt: randomIntInclusive,
     between: randomBetween,
     chance,
-    signed: signedRandom
+    signed: signedRandom,
+    makeSeededRng
 }
 
 exports.Arrays = {
