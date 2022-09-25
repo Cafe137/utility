@@ -934,12 +934,12 @@ function csvEscape(string) {
 function findWeightedPair(string, start = 0, opening = '{', closing = '}') {
     let weight = 1
     for (let i = start; i < string.length; i++) {
-        if (string[i] === opening) {
-            weight++
-        } else if (string[i] === closing) {
+        if (string[i] === closing) {
             if (--weight === 0) {
                 return i
             }
+        } else if (string[i] === opening) {
+            weight++
         }
     }
     return -1
