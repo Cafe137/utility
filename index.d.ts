@@ -145,6 +145,14 @@ declare function shrinkTrim(string: string): string;
 declare function capitalize(string: string): string;
 declare function decapitalize(string: string): string;
 declare function csvEscape(string: string): string;
+declare function findWeightedPair(string: string, start?: number, opening?: string, closing?: string): number;
+interface BlockExtractionOptions {
+    start?: number;
+    opening: string;
+    closing: string;
+    exclusive?: boolean;
+}
+declare function extractBlock(string: string, options: BlockExtractionOptions): string | null;
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
 declare function waitFor(predicate: () => Promise<boolean>, waitLength: number, maxWaits: number): Promise<boolean>;
@@ -487,6 +495,8 @@ export declare const Strings: {
     slugToTitle: typeof slugToTitle;
     slugToCamel: typeof slugToCamel;
     joinHumanly: typeof joinHumanly;
+    findWeightedPair: typeof findWeightedPair;
+    extractBlock: typeof extractBlock;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;

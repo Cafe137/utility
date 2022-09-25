@@ -931,6 +931,33 @@ function csvEscape(string) {
     return string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string
 }
 
+function findWeightedPair(string, start = 0, opening = '{', closing = '}') {
+    let weight = 1
+    for (let i = start; i < string.length; i++) {
+        if (string[i] === opening) {
+            weight++
+        } else if (string[i] === closing) {
+            if (--weight === 0) {
+                return i
+            }
+        }
+    }
+    return -1
+}
+
+function extractBlock(string, options) {
+    const opensAt = string.indexOf(options.opening, options.start || 0)
+    if (opensAt === -1) {
+        return null
+    }
+    const closesAt = findWeightedPair(string, opensAt + 1, options.opening, options.closing)
+    return closesAt === -1
+        ? null
+        : options.exclusive
+        ? string.slice(opensAt + 1, closesAt)
+        : string.slice(opensAt, closesAt + 1)
+}
+
 function parseCsv(string, delimiter = ',', quote = '"') {
     const items = []
     let buffer = ''
@@ -1930,7 +1957,9 @@ exports.Strings = {
     camelToTitle,
     slugToTitle,
     slugToCamel,
-    joinHumanly
+    joinHumanly,
+    findWeightedPair,
+    extractBlock
 }
 
 exports.Assertions = {
