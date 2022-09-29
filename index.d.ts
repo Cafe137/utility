@@ -144,6 +144,9 @@ declare function randomize(string: string): string;
 declare function shrinkTrim(string: string): string;
 declare function capitalize(string: string): string;
 declare function decapitalize(string: string): string;
+declare function isLetter(character: string): boolean;
+declare function isDigit(character: string): boolean;
+declare function isLetterOrDigit(character: string): boolean;
 declare function csvEscape(string: string): string;
 declare function findWeightedPair(string: string, start?: number, opening?: string, closing?: string): number;
 interface BlockExtractionOptions {
@@ -497,6 +500,9 @@ export declare const Strings: {
     joinHumanly: typeof joinHumanly;
     findWeightedPair: typeof findWeightedPair;
     extractBlock: typeof extractBlock;
+    isLetter: typeof isLetter;
+    isDigit: typeof isDigit;
+    isLetterOrDigit: typeof isLetterOrDigit;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;

@@ -927,6 +927,20 @@ function decapitalize(string) {
     return string.charAt(0).toLowerCase() + string.slice(1)
 }
 
+function isLetter(character) {
+    const code = character.charCodeAt(0)
+    return (code >= 65 && code <= 90) || (code >= 97 && code <= 122)
+}
+
+function isDigit(character) {
+    const code = character.charCodeAt(0)
+    return code >= 48 && code <= 57
+}
+
+function isLetterOrDigit(character) {
+    return isLetter(character) || isDigit(character)
+}
+
 function csvEscape(string) {
     return string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string
 }
@@ -1959,7 +1973,10 @@ exports.Strings = {
     slugToCamel,
     joinHumanly,
     findWeightedPair,
-    extractBlock
+    extractBlock,
+    isLetter,
+    isDigit,
+    isLetterOrDigit
 }
 
 exports.Assertions = {
