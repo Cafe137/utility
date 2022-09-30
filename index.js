@@ -947,6 +947,10 @@ function isLetterOrDigit(character) {
     return isLetter(character) || isDigit(character)
 }
 
+function insertString(string, index, length, before, after) {
+    return string.slice(0, index) + before + string.slice(index, index + length) + after + string.slice(index + length)
+}
+
 function csvEscape(string) {
     return string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string
 }
@@ -1982,7 +1986,8 @@ exports.Strings = {
     extractBlock,
     isLetter,
     isDigit,
-    isLetterOrDigit
+    isLetterOrDigit,
+    insert: insertString
 }
 
 exports.Assertions = {

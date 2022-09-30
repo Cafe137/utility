@@ -147,6 +147,7 @@ declare function decapitalize(string: string): string;
 declare function isLetter(character: string): boolean;
 declare function isDigit(character: string): boolean;
 declare function isLetterOrDigit(character: string): boolean;
+declare function insertString(string: string, index: number, length: number, before: string, after: string): string;
 declare function csvEscape(string: string): string;
 declare function findWeightedPair(string: string, start?: number, opening?: string, closing?: string): number;
 interface BlockExtractionOptions {
@@ -503,6 +504,7 @@ export declare const Strings: {
     isLetter: typeof isLetter;
     isDigit: typeof isDigit;
     isLetterOrDigit: typeof isLetterOrDigit;
+    insert: typeof insertString;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;
