@@ -928,11 +928,17 @@ function decapitalize(string) {
 }
 
 function isLetter(character) {
+    if (!character) {
+        return false
+    }
     const code = character.charCodeAt(0)
     return (code >= 65 && code <= 90) || (code >= 97 && code <= 122)
 }
 
 function isDigit(character) {
+    if (!character) {
+        return false
+    }
     const code = character.charCodeAt(0)
     return code >= 48 && code <= 57
 }
