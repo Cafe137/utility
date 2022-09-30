@@ -840,7 +840,9 @@ const htmlEntityMap = {
 }
 
 function decodeHtmlEntities(string) {
-    let buffer = string.replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec))
+    let buffer = string
+        .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec))
+        .replace(/&#x(\d+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
     for (const key of Object.keys(htmlEntityMap)) {
         buffer = buffer.split(key).join(htmlEntityMap[key])
     }
