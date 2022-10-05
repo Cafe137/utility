@@ -387,6 +387,10 @@ function isNumber(value) {
     return !isNaN(value) && String(value) === String(parseFloat(value))
 }
 
+function isBoolean(value) {
+    return value === true || value === false
+}
+
 function isDate(value) {
     return Object.prototype.toString.call(value) === '[object Date]'
 }
@@ -457,6 +461,13 @@ function asNumber(number) {
         throw new TypeError('Expected number, got: ' + number)
     }
     return number
+}
+
+function asBoolean(bool) {
+    if (!isBoolean(bool)) {
+        throw new TypeError('Expected boolean, got: ' + bool)
+    }
+    return bool
 }
 
 function asDate(date) {
@@ -1931,11 +1942,13 @@ exports.Types = {
     isUndefined,
     isString,
     isNumber,
+    isBoolean,
     isDate,
     isBlank,
     isId,
     asString,
     asNumber,
+    asBoolean,
     asDate,
     asNullableString,
     asId,
