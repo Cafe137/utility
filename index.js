@@ -112,8 +112,8 @@ function chance(threshold) {
     return Math.random() < threshold
 }
 
-function pick(array) {
-    return array[Math.floor(array.length * Math.random())]
+function pick(array, generator = Math.random) {
+    return array[Math.floor(array.length * generator())]
 }
 
 function last(array) {

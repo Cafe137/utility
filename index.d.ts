@@ -20,7 +20,7 @@ declare function randomIntInclusive(min: number, max: number): number;
 declare function randomBetween(min: number, max: number): number;
 declare function signedRandom(): number;
 declare function chance(threshold: number): boolean;
-declare function pick<T>(array: T[]): T;
+declare function pick<T>(array: T[], generator?: () => number): T;
 declare function last<T>(array: T[]): T;
 declare function pickWeighted<T>(array: T[], weights: number[], randomNumber?: number): T;
 declare function sortWeighted<T>(array: T[], weights: number[]): T[];
