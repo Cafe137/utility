@@ -70,6 +70,17 @@ function initializeArray(count, initializer) {
     return results
 }
 
+function initialize2DArray(x, y, initialValue) {
+    const array = []
+    for (let i = 0; i < x; i++) {
+        array.push([])
+        for (let j = 0; j < y; j++) {
+            array[i].push(initialValue)
+        }
+    }
+    return array
+}
+
 function takeRandomly(array, count) {
     return shuffle(array).slice(0, count)
 }
@@ -1798,6 +1809,7 @@ exports.Arrays = {
     takeRandomly,
     pickRandomIndices,
     initialize: initializeArray,
+    initialize2D: initialize2DArray,
     glue,
     pluck,
     pick,

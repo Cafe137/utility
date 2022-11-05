@@ -12,6 +12,7 @@ declare function onlyOrThrow<T>(array: T[]): T;
 declare function onlyOrNull<T>(array: T[]): T | null;
 declare function firstOrNull<T>(array: T[]): T | null;
 declare function initializeArray<T>(count: number, initializer: (index: number) => T): T[];
+declare function initialize2DArray<T>(x: number, y: number, initialValue: T): T[][];
 declare function takeRandomly<T>(array: T[], count: number): T[];
 declare function pickRandomIndices<T>(array: T[], count: number): number[];
 declare function pluck<T, K extends keyof T>(array: T[], key: K): T[K][];
@@ -309,6 +310,7 @@ export declare const Arrays: {
     takeRandomly: typeof takeRandomly;
     pickRandomIndices: typeof pickRandomIndices;
     initialize: typeof initializeArray;
+    initialize2D: typeof initialize2DArray;
     glue: typeof glue;
     pluck: typeof pluck;
     pick: typeof pick;
