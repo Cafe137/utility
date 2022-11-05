@@ -70,11 +70,22 @@ function initializeArray(count, initializer) {
     return results
 }
 
-function initialize2DArray(x, y, initialValue) {
+function rotate2DArray(array) {
+    const newArray = []
+    for (let i = 0; i < array[0].length; i++) {
+        newArray.push([])
+        for (let j = 0; j < array.length; j++) {
+            newArray[i].push(array[j][i])
+        }
+    }
+    return newArray
+}
+
+function initialize2DArray(width, height, initialValue) {
     const array = []
-    for (let i = 0; i < x; i++) {
+    for (let i = 0; i < width; i++) {
         array.push([])
-        for (let j = 0; j < y; j++) {
+        for (let j = 0; j < height; j++) {
             array[i].push(initialValue)
         }
     }
@@ -82,7 +93,7 @@ function initialize2DArray(x, y, initialValue) {
 }
 
 function containsShape(array2D, shape, x, y) {
-    if (x < 0 || y < 0 || y + shape.length - 1 > array2D.length || x + shape[0].length - 1 > array2D[0].length) {
+    if (x < 0 || y < 0 || y + shape[0].length - 1 > array2D[0].length || x + shape.length - 1 > array2D.length) {
         return false
     }
     for (let i = 0; i < shape.length; i++) {
@@ -90,7 +101,7 @@ function containsShape(array2D, shape, x, y) {
             if (shape[i][j] === undefined) {
                 continue
             }
-            if (array2D[i + y][j + x] !== shape[i][j]) {
+            if (array2D[x + i][y + j] !== shape[i][j]) {
                 return false
             }
         }
@@ -1827,6 +1838,7 @@ exports.Arrays = {
     pickRandomIndices,
     initialize: initializeArray,
     initialize2D: initialize2DArray,
+    rotate2D: rotate2DArray,
     containsShape,
     glue,
     pluck,

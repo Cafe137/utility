@@ -12,7 +12,8 @@ declare function onlyOrThrow<T>(array: T[]): T;
 declare function onlyOrNull<T>(array: T[]): T | null;
 declare function firstOrNull<T>(array: T[]): T | null;
 declare function initializeArray<T>(count: number, initializer: (index: number) => T): T[];
-declare function initialize2DArray<T>(x: number, y: number, initialValue: T): T[][];
+declare function rotate2DArray<T>(array: T[][]): T[][];
+declare function initialize2DArray<T>(width: number, height: number, initialValue: T): T[][];
 declare function containsShape<T>(array2D: T[][], shape: T[][], x: number, y: number): boolean;
 declare function takeRandomly<T>(array: T[], count: number): T[];
 declare function pickRandomIndices<T>(array: T[], count: number): number[];
@@ -312,6 +313,7 @@ export declare const Arrays: {
     pickRandomIndices: typeof pickRandomIndices;
     initialize: typeof initializeArray;
     initialize2D: typeof initialize2DArray;
+    rotate2D: typeof rotate2DArray;
     containsShape: typeof containsShape;
     glue: typeof glue;
     pluck: typeof pluck;
