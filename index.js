@@ -81,6 +81,23 @@ function initialize2DArray(x, y, initialValue) {
     return array
 }
 
+function containsShape(array2D, shape, x, y) {
+    if (x < 0 || y < 0 || y + shape.length - 1 > array2D.length || x + shape[0].length - 1 > array2D[0].length) {
+        return false
+    }
+    for (let i = 0; i < shape.length; i++) {
+        for (let j = 0; j < shape[i].length; j++) {
+            if (shape[i][j] === undefined) {
+                continue
+            }
+            if (array2D[i + y][j + x] !== shape[i][j]) {
+                return false
+            }
+        }
+    }
+    return true
+}
+
 function takeRandomly(array, count) {
     return shuffle(array).slice(0, count)
 }
@@ -1810,6 +1827,7 @@ exports.Arrays = {
     pickRandomIndices,
     initialize: initializeArray,
     initialize2D: initialize2DArray,
+    containsShape,
     glue,
     pluck,
     pick,
