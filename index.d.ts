@@ -172,7 +172,7 @@ declare function execAsync(command: string, resolveWithErrors?: boolean, inherit
     stderr: string | Buffer;
     error?: string | Error;
 }>;
-declare function runProcess(command: string, args: string[], options: ChildProcess.SpawnOptions, onStdout: (chunk: string) => void, onStderr: (chunk: string) => void): Promise<number>;
+declare function runProcess(command: string, args?: string[], options?: ChildProcess.SpawnOptions, onStdout?: (chunk: string | Buffer | Error) => void, onStderr?: (chunk: string | Buffer | Error) => void): Promise<number>;
 declare function cloneWithJson<T>(a: T): T;
 declare function unixTimestamp(optionalTimestamp?: number): number;
 declare function isoDate(optionalDate?: Date): string;

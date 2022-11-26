@@ -93,7 +93,7 @@ function initialize2DArray(width, height, initialValue) {
 }
 
 function containsShape(array2D, shape, x, y) {
-    if (x < 0 || y < 0 || y + shape[0].length - 1 > array2D[0].length || x + shape.length - 1 > array2D.length) {
+    if (x < 0 || y < 0 || y + shape[0].length > array2D[0].length || x + shape.length > array2D.length) {
         return false
     }
     for (let i = 0; i < shape.length; i++) {
@@ -1124,14 +1124,33 @@ async function execAsync(command, resolveWithErrors, inherit, options) {
 
 async function runProcess(command, args, options, onStdout, onStderr) {
     return new Promise((resolve, reject) => {
-        const subprocess = ChildProcess.spawn(command, args, options)
-        subprocess?.stdout?.on('data', onStdout)
-        subprocess?.stderr?.on('data', onStderr)
+        const subprocess = ChildProcess.spawn(command, args || [], options || {})
+        subprocess?.stdout?.on(
+            'data',
+            onStdout ||
+                (data => {
+                    process.stdout.write(data.toString())
+                })
+        )
+        subprocess?.stderr?.on(
+            'data',
+            onStderr ||
+                (data => {
+                    process.stdout.write(data.toString())
+                })
+        )
         subprocess.on('close', code => {
             if (code === 0) {
                 resolve(code)
             } else {
                 reject(code)
+            }
+        })
+        subprocess.on('error', error => {
+            if (error.name === 'AbortError') {
+                resolve(0)
+            } else {
+                reject(1)
             }
         })
     })
