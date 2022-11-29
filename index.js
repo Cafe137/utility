@@ -1005,6 +1005,24 @@ function insertString(string, index, length, before, after) {
     return string.slice(0, index) + before + string.slice(index, index + length) + after + string.slice(index + length)
 }
 
+function linesMatchOrdered(lines, expectedLines) {
+    let lineIndex = 0
+    for (let i = 0; i < expectedLines.length; i++) {
+        const expectedLine = expectedLines[i]
+        let found = false
+        while (!found && lineIndex < lines.length) {
+            if (lines[lineIndex].includes(expectedLine)) {
+                found = true
+            }
+            lineIndex++
+        }
+        if (!found) {
+            return false
+        }
+    }
+    return true
+}
+
 function csvEscape(string) {
     return string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string
 }
@@ -2065,7 +2083,8 @@ exports.Strings = {
     isLetter,
     isDigit,
     isLetterOrDigit,
-    insert: insertString
+    insert: insertString,
+    linesMatchOrdered
 }
 
 exports.Assertions = {
