@@ -1,8 +1,3 @@
-const ChildProcess = require('child_process')
-const NodeCrypto = require('crypto')
-const Fs = require('fs')
-const Path = require('path')
-
 async function invertPromise(promise) {
     return new Promise((resolve, reject) => promise.then(reject, resolve))
 }
@@ -279,89 +274,8 @@ async function forever(callable, millis) {
     }
 }
 
-async function readUtf8FileAsync(path) {
-    return Fs.promises.readFile(path, 'utf8')
-}
-
-async function readJsonAsync(path) {
-    return JSON.parse(await readUtf8FileAsync(path))
-}
-
-async function writeJsonAsync(path, object, prettify) {
-    if (prettify) {
-        await Fs.promises.writeFile(path, JSON.stringify(object, null, 4))
-    } else {
-        await Fs.promises.writeFile(path, JSON.stringify(object))
-    }
-}
-
-async function readLinesAsync(path) {
-    return (await readUtf8FileAsync(path)).split(/\r?\n/)
-}
-
-async function readMatchingLines(path, filterFn) {
-    return (await readLinesAsync(path)).filter(filterFn)
-}
-
-async function readNonEmptyLines(path) {
-    return readMatchingLines(path, x => !!x)
-}
-
-async function readCsv(path, skip = 0, delimiter = ',', quote = '"') {
-    return (skip ? (await readNonEmptyLines(path)).slice(skip) : await readNonEmptyLines(path)).map(x =>
-        parseCsv(x, delimiter, quote)
-    )
-}
-
-async function* walkTreeAsync(path) {
-    for await (const directory of await Fs.promises.opendir(path)) {
-        const entry = Path.join(path, directory.name)
-        if (directory.isDirectory()) {
-            yield* await walkTreeAsync(entry)
-        } else if (directory.isFile()) {
-            yield entry
-        }
-    }
-}
-
-function removeLeadingDirectory(path, directory) {
-    directory = directory.startsWith('./') ? directory.slice(2) : directory
-    directory = directory.endsWith('/') ? directory : directory + '/'
-    return path.replace(directory, '')
-}
-
-async function readdirDeepAsync(path, cwd) {
-    const entries = []
-    for await (const entry of walkTreeAsync(path)) {
-        entries.push(cwd ? removeLeadingDirectory(entry, cwd) : entry)
-    }
-    return entries
-}
-
-async function existsAsync(path) {
-    try {
-        await Fs.promises.stat(path)
-        return true
-    } catch (error) {
-        return false
-    }
-}
-
-async function getFileSize(path) {
-    const stats = await Fs.promises.stat(path)
-    return stats.size
-}
-
 function asMegabytes(number) {
     return number / 1024 / 1024
-}
-
-async function getDirectorySize(path) {
-    let size = 0
-    for await (const file of walkTreeAsync(path)) {
-        size += await getFileSize(file)
-    }
-    return size
 }
 
 function convertBytes(bytes) {
@@ -372,22 +286,6 @@ function convertBytes(bytes) {
         return (bytes / 1000).toFixed(3) + 'KB'
     }
     return bytes + ''
-}
-
-function getChecksum(data) {
-    const hash = NodeCrypto.createHash('sha1')
-    hash.update(data)
-    return hash.digest('hex')
-}
-
-async function getChecksumOfFile(path) {
-    return new Promise((resolve, reject) => {
-        const hash = NodeCrypto.createHash('sha1')
-        const readStream = Fs.createReadStream(path)
-        readStream.on('error', reject)
-        readStream.on('data', chunk => hash.update(chunk))
-        readStream.on('end', () => resolve(hash.digest('hex')))
-    })
 }
 
 function isObject(value) {
@@ -555,47 +453,6 @@ function represent(value) {
         return 'undefined'
     }
     return value
-}
-
-const loggerGlobalState = {
-    fileStream: null
-}
-
-function log(level, module, pieces) {
-    const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19)
-    const message = `${timestamp} ${level} ${module} ${pieces.map(represent).join(' ')}\n`
-    process.stdout.write(message)
-    if (level === 'ERROR') {
-        process.stderr.write(message)
-    }
-    if (loggerGlobalState.fileStream) {
-        loggerGlobalState.fileStream.write(message)
-    }
-}
-
-function createLogger(module) {
-    module = last(module.split(/\\|\//))
-    return {
-        trace: (...pieces) => {
-            log('TRACE', module, pieces)
-        },
-        info: (...pieces) => {
-            log('INFO', module, pieces)
-        },
-        warn: (...pieces) => {
-            log('WARN', module, pieces)
-        },
-        error: (...pieces) => {
-            log('ERROR', module, pieces)
-        },
-        errorObject: (error, stackTrace) => {
-            log('ERROR', module, [expandError(error, stackTrace)])
-        }
-    }
-}
-
-function enableFileLogging(path) {
-    loggerGlobalState.fileStream = Fs.createWriteStream(path, { flags: 'a' })
 }
 
 function expandError(error, stackTrace) {
@@ -890,7 +747,6 @@ const htmlEntityMap = {
     '&gt;': '>',
     '&lt;': '<'
 }
-
 function decodeHtmlEntities(string) {
     let buffer = string
         .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec))
@@ -1093,23 +949,6 @@ async function waitFor(predicate, waitLength, maxWaits) {
     return false
 }
 
-async function mkdirp(path) {
-    const segments = path.split('/')
-    let buffer = ''
-    for (const segment of segments) {
-        buffer += segment + '/'
-        if (!(await existsAsync(buffer))) {
-            try {
-                await Fs.promises.mkdir(buffer)
-            } catch (error) {
-                if (error.code !== 'EEXIST') {
-                    throw error
-                }
-            }
-        }
-    }
-}
-
 function filterAndRemove(array, predicate) {
     const results = []
     for (let i = array.length - 1; i >= 0; i--) {
@@ -1118,60 +957,6 @@ function filterAndRemove(array, predicate) {
         }
     }
     return results
-}
-
-async function execAsync(command, resolveWithErrors, inherit, options) {
-    return new Promise((resolve, reject) => {
-        const childProcess = ChildProcess.exec(command, options, (error, stdout, stderr) => {
-            if (error) {
-                if (resolveWithErrors) {
-                    resolve({ error, stdout, stderr })
-                } else {
-                    reject({ error, stdout, stderr })
-                }
-            } else {
-                resolve({ stdout, stderr })
-            }
-        })
-        if (inherit) {
-            childProcess.stdout && childProcess.stdout.pipe(process.stdout)
-            childProcess.stderr && childProcess.stderr.pipe(process.stderr)
-        }
-    })
-}
-
-async function runProcess(command, args, options, onStdout, onStderr) {
-    return new Promise((resolve, reject) => {
-        const subprocess = ChildProcess.spawn(command, args || [], options || {})
-        subprocess?.stdout?.on(
-            'data',
-            onStdout ||
-                (data => {
-                    process.stdout.write(data.toString())
-                })
-        )
-        subprocess?.stderr?.on(
-            'data',
-            onStderr ||
-                (data => {
-                    process.stdout.write(data.toString())
-                })
-        )
-        subprocess.on('close', code => {
-            if (code === 0) {
-                resolve(code)
-            } else {
-                reject(code)
-            }
-        })
-        subprocess.on('error', error => {
-            if (error.name === 'AbortError') {
-                resolve(0)
-            } else {
-                reject(1)
-            }
-        })
-    })
 }
 
 function cloneWithJson(a) {
@@ -1253,7 +1038,6 @@ const timeUnits = {
     h: 3600000,
     d: 86400000
 }
-
 function timeSince(unit, a, optionalB) {
     a = isDate(a) ? a.getTime() : a
     optionalB = optionalB ? (isDate(optionalB) ? optionalB.getTime() : optionalB) : Date.now()
@@ -1287,7 +1071,6 @@ const dayNumberIndex = {
     5: 'friday',
     6: 'saturday'
 }
-
 function mapDayNumber(zeroBasedIndex) {
     return {
         zeroBasedIndex,
@@ -1407,7 +1190,6 @@ const createSequence = () => {
     let value = 0
     return { next: () => value++ }
 }
-
 const thresholds = [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e33]
 const longNumberUnits = [
     'thousand',
@@ -1473,15 +1255,6 @@ function increment(value, change, maximum) {
 function decrement(value, change, minimum) {
     const result = value - change
     return result < minimum ? minimum : result
-}
-
-function getHeapMegabytes() {
-    const memory = process.memoryUsage()
-    return {
-        used: (memory.heapUsed / 1024 / 1024).toFixed(3),
-        total: (memory.heapTotal / 1024 / 1024).toFixed(3),
-        rss: (memory.rss / 1024 / 1024).toFixed(3)
-    }
 }
 
 function runOn(object, callable) {
@@ -1758,6 +1531,26 @@ function setMulti(objects, key, value) {
     }
 }
 
+function group(array, groupFn) {
+    const groups = []
+    let group = []
+    if (array.length) {
+        groups.push(group)
+        group.push(array[0])
+    }
+    for (let i = 1; i < array.length; i++) {
+        const belongsToSameGroup = groupFn(array[i], array[i - 1])
+        if (belongsToSameGroup) {
+            group.push(array[i])
+        } else {
+            group = []
+            groups.push(group)
+            group.push(array[i])
+        }
+    }
+    return groups
+}
+
 function createFastIndex() {
     return { index: {}, keys: [] }
 }
@@ -1852,6 +1645,253 @@ class Maybe {
 }
 
 exports.Maybe = Maybe
+function addPoint(a, b) {
+    return {
+        x: a.x + b.x,
+        y: a.y + b.y
+    }
+}
+
+function subtractPoint(a, b) {
+    return {
+        x: a.x - b.x,
+        y: a.y - b.y
+    }
+}
+
+function multiplyPoint(point, scalar) {
+    return {
+        x: point.x * scalar,
+        y: point.y * scalar
+    }
+}
+
+function normalizePoint(point) {
+    const length = Math.sqrt(point.x * point.x + point.y * point.y)
+    return {
+        x: point.x / length,
+        y: point.y / length
+    }
+}
+
+function pushPoint(point, angle, length) {
+    return {
+        x: point.x + Math.cos(angle) * length,
+        y: point.y + Math.sin(angle) * length
+    }
+}
+
+function getDistanceBetweenPoints(a, b) {
+    return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
+}
+
+function filterCoordinates(grid, predicate, direction = 'row-first') {
+    const result = []
+    if (direction === 'column-first') {
+        for (let x = 0; x < grid.length; x++) {
+            for (let y = 0; y < grid[0].length; y++) {
+                if (predicate(x, y)) {
+                    result.push({ x, y })
+                }
+            }
+        }
+    } else {
+        for (let y = 0; y < grid[0].length; y++) {
+            for (let x = 0; x < grid.length; x++) {
+                if (predicate(x, y)) {
+                    result.push({ x, y })
+                }
+            }
+        }
+    }
+    return result
+}
+
+function isHorizontalLine(tiles, x, y) {
+    return tiles[x + 1]?.[y] && tiles[x - 1]?.[y] && !tiles[x][y - 1] && !tiles[x][y + 1]
+}
+
+function isVerticalLine(tiles, x, y) {
+    return tiles[x][y + 1] && tiles[x][y - 1] && !tiles[x - 1]?.[y] && !tiles[x + 1]?.[y]
+}
+
+function isLeftmost(tiles, x, y) {
+    return !tiles[x - 1]?.[y]
+}
+
+function isRightmost(tiles, x, y) {
+    return !tiles[x + 1]?.[y]
+}
+
+function isTopmost(tiles, x, y) {
+    return !tiles[x][y - 1]
+}
+
+function isBottommost(tiles, x, y) {
+    return !tiles[x][y + 1]
+}
+
+function getCorners(tiles, x, y) {
+    const corners = []
+    if (!tiles[x][y]) {
+        if (tiles[x - 1]?.[y] && tiles[x][y - 1]) {
+            corners.push({ x, y })
+        }
+        if (tiles[x + 1]?.[y] && tiles[x][y - 1]) {
+            corners.push({ x: x + 1, y })
+        }
+        if (tiles[x - 1]?.[y] && tiles[x][y + 1]) {
+            corners.push({ x, y: y + 1 })
+        }
+        if (tiles[x + 1]?.[y] && tiles[x][y + 1]) {
+            corners.push({ x: x + 1, y: y + 1 })
+        }
+        return corners
+    }
+    if (isHorizontalLine(tiles, x, y) || isVerticalLine(tiles, x, y)) {
+        return []
+    }
+    if (!tiles[x - 1]?.[y - 1] && isLeftmost(tiles, x, y) && isTopmost(tiles, x, y)) {
+        corners.push({ x, y })
+    }
+    if (!tiles[x + 1]?.[y - 1] && isRightmost(tiles, x, y) && isTopmost(tiles, x, y)) {
+        corners.push({ x: x + 1, y })
+    }
+    if (!tiles[x - 1]?.[y + 1] && isLeftmost(tiles, x, y) && isBottommost(tiles, x, y)) {
+        corners.push({ x, y: y + 1 })
+    }
+    if (!tiles[x + 1]?.[y + 1] && isRightmost(tiles, x, y) && isBottommost(tiles, x, y)) {
+        corners.push({ x: x + 1, y: y + 1 })
+    }
+    return corners
+}
+
+function findCorners(tiles, tileSize, columns, rows) {
+    const corners = [
+        { x: 0, y: 0 },
+        { x: columns, y: 0 },
+        { x: 0, y: rows },
+        { x: columns, y: rows }
+    ]
+    for (let x = 0; x < tiles.length; x++) {
+        for (let y = 0; y < tiles[0].length; y++) {
+            const findings = getCorners(tiles, x, y)
+            for (const finding of findings) {
+                if (!corners.some(c => c.x === finding.x && c.y === finding.y)) {
+                    corners.push(finding)
+                }
+            }
+        }
+    }
+    return corners.map(corner => ({ x: corner.x * tileSize, y: corner.y * tileSize }))
+}
+
+function findLines(grid, tileSize) {
+    const upperPoints = filterCoordinates(
+        grid,
+        (x, y) => Boolean(grid[x][y] === 0 && grid[x][y + 1] !== 0),
+        'row-first'
+    ).map(point => ({ ...point, dx: 1, dy: 0 }))
+    const lowerPoints = filterCoordinates(
+        grid,
+        (x, y) => Boolean(grid[x][y] === 0 && grid[x][y - 1] !== 0),
+        'row-first'
+    ).map(point => ({ ...point, dx: 1, dy: 0 }))
+    const rightPoints = filterCoordinates(
+        grid,
+        (x, y) => Boolean(grid[x][y] === 0 && grid[x - 1]?.[y] !== 0),
+        'column-first'
+    ).map(point => ({ ...point, dx: 0, dy: 1 }))
+    const leftPoints = filterCoordinates(
+        grid,
+        (x, y) => Boolean(grid[x][y] === 0 && grid[x + 1]?.[y] !== 0),
+        'column-first'
+    ).map(point => ({ ...point, dx: 0, dy: 1 }))
+    upperPoints.forEach(vector => vector.y++)
+    leftPoints.forEach(vector => vector.x++)
+    const verticalLineSegments = group([...rightPoints, ...leftPoints], (current, previous) => {
+        return current.x === previous.x && current.y - 1 === previous.y
+    })
+    const horizontalLineSegments = group([...lowerPoints, ...upperPoints], (current, previous) => {
+        return current.y === previous.y && current.x - 1 === previous.x
+    })
+    return [...verticalLineSegments, ...horizontalLineSegments]
+        .map(group => ({
+            start: group[0],
+            end: last(group)
+        }))
+        .map(line => ({
+            start: multiplyPoint(line.start, tileSize),
+            end: multiplyPoint(addPoint(line.end, { x: line.start.dx, y: line.start.dy }), tileSize)
+        }))
+}
+
+function getAngleInRadians(origin, target) {
+    return Math.atan2(target.y - origin.y, target.x - origin.x)
+}
+
+function getSortedRayAngles(origin, corners) {
+    return corners.map(corner => getAngleInRadians(origin, corner)).sort((a, b) => a - b)
+}
+
+function getLineIntersectionPoint(line1Start, line1End, line2Start, line2End) {
+    const denominator =
+        (line2End.y - line2Start.y) * (line1End.x - line1Start.x) -
+        (line2End.x - line2Start.x) * (line1End.y - line1Start.y)
+    if (denominator === 0) {
+        return null
+    }
+    let a = line1Start.y - line2Start.y
+    let b = line1Start.x - line2Start.x
+    const numerator1 = (line2End.x - line2Start.x) * a - (line2End.y - line2Start.y) * b
+    const numerator2 = (line1End.x - line1Start.x) * a - (line1End.y - line1Start.y) * b
+    a = numerator1 / denominator
+    b = numerator2 / denominator
+    if (a > 0 && a < 1 && b > 0 && b < 1) {
+        return {
+            x: line1Start.x + a * (line1End.x - line1Start.x),
+            y: line1Start.y + a * (line1End.y - line1Start.y)
+        }
+    }
+    return null
+}
+
+function raycast(origin, lines, angle) {
+    const matches = []
+    const target = pushPoint(origin, angle, 10000)
+    for (const line of lines) {
+        const intersectionPoint = getLineIntersectionPoint(origin, target, line.start, line.end)
+        if (intersectionPoint) {
+            matches.push(intersectionPoint)
+        }
+    }
+    if (!matches.length) {
+        return null
+    }
+    return matches.reduce((closest, current) => {
+        const currentDistance = getDistanceBetweenPoints(origin, current)
+        const closestDistance = getDistanceBetweenPoints(origin, closest)
+        return currentDistance < closestDistance ? current : closest
+    })
+}
+
+function raycastCircle(origin, lines, corners) {
+    const OFFSET = 0.001
+    const angles = getSortedRayAngles(origin, corners)
+    const collisionPoints = []
+    for (const angle of angles) {
+        const intersectionA = raycast(origin, lines, angle - OFFSET)
+        const intersectionB = raycast(origin, lines, angle + OFFSET)
+        if (intersectionA) {
+            collisionPoints.push(intersectionA)
+        }
+        if (intersectionB) {
+            collisionPoints.push(intersectionB)
+        }
+    }
+    return collisionPoints
+}
+
 exports.Random = {
     inclusiveInt: randomIntInclusive,
     between: randomBetween,
@@ -1859,7 +1899,6 @@ exports.Random = {
     signed: signedRandom,
     makeSeededRng
 }
-
 exports.Arrays = {
     countUnique,
     makeUnique,
@@ -1890,20 +1929,16 @@ exports.Arrays = {
     empty,
     pushToBucket,
     unshiftAndLimit,
-    atRolling
+    atRolling,
+    group
 }
-
 exports.System = {
     sleepMillis,
     forever,
     scheduleMany,
     waitFor,
-    execAsync,
-    getHeapMegabytes,
-    expandError,
-    runProcess
+    expandError
 }
-
 exports.Numbers = {
     sum,
     average,
@@ -1914,16 +1949,16 @@ exports.Numbers = {
     increment,
     decrement,
     format: formatNumber,
-    parseIntOrThrow
+    parseIntOrThrow,
+    asMegabytes,
+    convertBytes
 }
-
 exports.Promises = {
     raceFulfilled,
     invert: invertPromise,
     runInParallelBatches,
     makeAsyncQueue
 }
-
 exports.Dates = {
     getAgo,
     isoDate,
@@ -1943,7 +1978,6 @@ exports.Dates = {
     minutes,
     hours
 }
-
 exports.Objects = {
     safeParse,
     deleteDeep,
@@ -1987,31 +2021,10 @@ exports.Objects = {
     pushToFastIndexWithExpiracy,
     getFromFastIndexWithExpiracy
 }
-
 exports.Pagination = {
     asPageNumber,
     pageify
 }
-
-exports.Files = {
-    existsAsync,
-    writeJsonAsync,
-    readdirDeepAsync,
-    readUtf8FileAsync,
-    readJsonAsync,
-    readLinesAsync,
-    readMatchingLines,
-    readNonEmptyLines,
-    readCsv,
-    walkTreeAsync,
-    getFileSize,
-    asMegabytes,
-    getDirectorySize,
-    convertBytes,
-    getChecksum: getChecksumOfFile,
-    mkdirp
-}
-
 exports.Types = {
     isFunction,
     isObject,
@@ -2034,7 +2047,6 @@ exports.Types = {
     asArray,
     asObject
 }
-
 exports.Strings = {
     tokenizeByCount,
     tokenizeByLength,
@@ -2061,7 +2073,6 @@ exports.Strings = {
     joinUrl,
     getFuzzyMatchScore,
     sortByFuzzyScore,
-    getChecksum,
     splitOnce,
     randomize,
     shrinkTrim,
@@ -2086,7 +2097,6 @@ exports.Strings = {
     insert: insertString,
     linesMatchOrdered
 }
-
 exports.Assertions = {
     asEqual,
     asTrue,
@@ -2095,12 +2105,19 @@ exports.Assertions = {
     asFalsy,
     asEither
 }
-
 exports.Cache = {
     get: getCached
 }
-
-exports.Logger = {
-    create: createLogger,
-    enableFileLogging
+exports.Vector = {
+    addPoint,
+    subtractPoint,
+    multiplyPoint,
+    normalizePoint,
+    pushPoint,
+    filterCoordinates,
+    findCorners,
+    findLines,
+    raycast,
+    raycastCircle,
+    getLineIntersectionPoint
 }

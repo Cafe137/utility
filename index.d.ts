@@ -1,6 +1,3 @@
-/// <reference types="node" />
-import * as ChildProcess from 'child_process';
-import { ExecOptions } from 'child_process';
 declare type Indexable = number | string;
 declare type CafeObject<T = unknown> = Record<string, T>;
 declare function invertPromise<T>(promise: Promise<T>): Promise<unknown>;
@@ -36,22 +33,8 @@ declare function deleteDeep(object: CafeObject, path: string): void;
 declare function replaceDeep(object: CafeObject, path: string, value: unknown): unknown;
 declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAnyKey?: boolean): unknown;
 declare function forever(callable: (() => Promise<void>) | (() => void), millis: number): Promise<never>;
-declare function readUtf8FileAsync(path: string): Promise<string>;
-declare function readJsonAsync(path: string): Promise<CafeObject>;
-declare function writeJsonAsync(path: string, object: CafeObject, prettify?: boolean): Promise<void>;
-declare function readLinesAsync(path: string): Promise<string[]>;
-declare function readMatchingLines(path: string, filterFn: (matcher: string) => boolean): Promise<string[]>;
-declare function readNonEmptyLines(path: string): Promise<string[]>;
-declare function readCsv(path: string, skip?: number, delimiter?: string, quote?: string): Promise<string[][]>;
-declare function walkTreeAsync(path: string): AsyncIterable<string>;
-declare function readdirDeepAsync(path: string, cwd?: string): Promise<string[]>;
-declare function existsAsync(path: string): Promise<boolean>;
-declare function getFileSize(path: string): Promise<number>;
 declare function asMegabytes(number: number): number;
-declare function getDirectorySize(path: string): Promise<number>;
 declare function convertBytes(bytes: number): string;
-declare function getChecksum(data: string): string;
-declare function getChecksumOfFile(path: string): Promise<string>;
 declare function isObject(value: any): value is object;
 declare function isStrictlyObject(value: any): value is object;
 declare function isEmptyArray(value: any): boolean;
@@ -77,14 +60,6 @@ declare function asNullableString(string: any): string | null;
 declare function asId(value: any): number;
 declare function asArray(value: any): unknown[];
 declare function asObject(value: any): Record<string, unknown>;
-declare function createLogger(module: string): {
-    trace: (...pieces: any[]) => void;
-    info: (...pieces: any[]) => void;
-    warn: (...pieces: any[]) => void;
-    error: (...pieces: any[]) => void;
-    errorObject: (error: any, stackTrace?: boolean) => void;
-};
-declare function enableFileLogging(path: string): void;
 declare function expandError(error: any, stackTrace?: boolean): string;
 declare function mergeDeep(target: CafeObject, source: CafeObject): CafeObject;
 declare function zip<T>(objects: CafeObject<T>[], reducer: (a: T, b: T) => T): CafeObject<T>;
@@ -166,14 +141,7 @@ declare function extractBlock(string: string, options: BlockExtractionOptions): 
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
 declare function waitFor(predicate: () => Promise<boolean>, waitLength: number, maxWaits: number): Promise<boolean>;
-declare function mkdirp(path: string): Promise<void>;
 declare function filterAndRemove<T>(array: T[], predicate: (item: T) => boolean): T[];
-declare function execAsync(command: string, resolveWithErrors?: boolean, inherit?: boolean, options?: ExecOptions): Promise<{
-    stdout: string | Buffer;
-    stderr: string | Buffer;
-    error?: string | Error;
-}>;
-declare function runProcess(command: string, args?: string[], options?: ChildProcess.SpawnOptions, onStdout?: (chunk: string | Buffer | Error) => void, onStderr?: (chunk: string | Buffer | Error) => void): Promise<number>;
 declare function cloneWithJson<T>(a: T): T;
 declare function unixTimestamp(optionalTimestamp?: number): number;
 declare function isoDate(optionalDate?: Date): string;
@@ -231,12 +199,6 @@ declare function parseIntOrThrow(numberOrString: any): number;
 declare function clamp(value: number, lower: number, upper: number): number;
 declare function increment(value: number, change: number, maximum: number): number;
 declare function decrement(value: number, change: number, minimum: number): number;
-interface HeapMegabytes {
-    used: string;
-    total: string;
-    rss: string;
-}
-declare function getHeapMegabytes(): HeapMegabytes;
 declare function runOn<T>(object: T, callable: (object: T) => void): T;
 declare function ifPresent<T>(object: T, callable: (object: T) => void): void;
 declare function mergeArrays(target: CafeObject<unknown[]>, source: CafeObject<unknown[]>): void;
@@ -266,6 +228,7 @@ declare function sortObjectValues<T>(object: CafeObject<T>, compareFn: (a: [stri
 declare function transformToArray<T>(objectOfArrays: CafeObject<T[]>): CafeObject[];
 declare function incrementMulti<T>(objects: T[], key: keyof T, step?: number): void;
 declare function setMulti<T, K extends keyof T>(objects: T[], key: K, value: T[K]): void;
+declare function group<T>(array: T[], groupFn: (current: T, previous: T) => boolean): T[][];
 interface Index<T> {
     index: CafeObject<T>;
     keys: string[];
@@ -292,6 +255,26 @@ export declare class Maybe<T> {
     bind<K>(fn: (value: T) => K): Maybe<Awaited<K>>;
     valueOf(): Promise<T | null>;
 }
+declare type Point = {
+    x: number;
+    y: number;
+};
+declare type Line = {
+    start: Point;
+    end: Point;
+};
+declare type Truthy = boolean | number;
+declare function addPoint(a: Point, b: Point): Point;
+declare function subtractPoint(a: Point, b: Point): Point;
+declare function multiplyPoint(point: Point, scalar: number): Point;
+declare function normalizePoint(point: Point): Point;
+declare function pushPoint(point: Point, angle: number, length: number): Point;
+declare function filterCoordinates(grid: Truthy[][], predicate: (x: number, y: number) => boolean, direction?: 'row-first' | 'column-first'): Point[];
+declare function findCorners(tiles: Truthy[][], tileSize: number, columns: number, rows: number): Point[];
+declare function findLines(grid: Truthy[][], tileSize: number): Line[];
+declare function getLineIntersectionPoint(line1Start: Point, line1End: Point, line2Start: Point, line2End: Point): Point | null;
+declare function raycast(origin: Point, lines: Line[], angle: number): Point | null;
+declare function raycastCircle(origin: Point, lines: Line[], corners: Point[]): Point[];
 export declare const Random: {
     inclusiveInt: typeof randomIntInclusive;
     between: typeof randomBetween;
@@ -330,16 +313,14 @@ export declare const Arrays: {
     pushToBucket: typeof pushToBucket;
     unshiftAndLimit: typeof unshiftAndLimit;
     atRolling: typeof atRolling;
+    group: typeof group;
 };
 export declare const System: {
     sleepMillis: typeof sleepMillis;
     forever: typeof forever;
     scheduleMany: typeof scheduleMany;
     waitFor: typeof waitFor;
-    execAsync: typeof execAsync;
-    getHeapMegabytes: typeof getHeapMegabytes;
     expandError: typeof expandError;
-    runProcess: typeof runProcess;
 };
 export declare const Numbers: {
     sum: typeof sum;
@@ -354,6 +335,8 @@ export declare const Numbers: {
     decrement: typeof decrement;
     format: typeof formatNumber;
     parseIntOrThrow: typeof parseIntOrThrow;
+    asMegabytes: typeof asMegabytes;
+    convertBytes: typeof convertBytes;
 };
 export declare const Promises: {
     raceFulfilled: typeof raceFulfilled;
@@ -427,24 +410,6 @@ export declare const Pagination: {
     asPageNumber: typeof asPageNumber;
     pageify: typeof pageify;
 };
-export declare const Files: {
-    existsAsync: typeof existsAsync;
-    writeJsonAsync: typeof writeJsonAsync;
-    readdirDeepAsync: typeof readdirDeepAsync;
-    readUtf8FileAsync: typeof readUtf8FileAsync;
-    readJsonAsync: typeof readJsonAsync;
-    readLinesAsync: typeof readLinesAsync;
-    readMatchingLines: typeof readMatchingLines;
-    readNonEmptyLines: typeof readNonEmptyLines;
-    readCsv: typeof readCsv;
-    walkTreeAsync: typeof walkTreeAsync;
-    getFileSize: typeof getFileSize;
-    asMegabytes: typeof asMegabytes;
-    getDirectorySize: typeof getDirectorySize;
-    convertBytes: typeof convertBytes;
-    getChecksum: typeof getChecksumOfFile;
-    mkdirp: typeof mkdirp;
-};
 export declare const Types: {
     isFunction: typeof isFunction;
     isObject: typeof isObject;
@@ -493,7 +458,6 @@ export declare const Strings: {
     joinUrl: typeof joinUrl;
     getFuzzyMatchScore: typeof getFuzzyMatchScore;
     sortByFuzzyScore: typeof sortByFuzzyScore;
-    getChecksum: typeof getChecksum;
     splitOnce: typeof splitOnce;
     randomize: typeof randomize;
     shrinkTrim: typeof shrinkTrim;
@@ -529,8 +493,17 @@ export declare const Assertions: {
 export declare const Cache: {
     get: typeof getCached;
 };
-export declare const Logger: {
-    create: typeof createLogger;
-    enableFileLogging: typeof enableFileLogging;
+export declare const Vector: {
+    addPoint: typeof addPoint;
+    subtractPoint: typeof subtractPoint;
+    multiplyPoint: typeof multiplyPoint;
+    normalizePoint: typeof normalizePoint;
+    pushPoint: typeof pushPoint;
+    filterCoordinates: typeof filterCoordinates;
+    findCorners: typeof findCorners;
+    findLines: typeof findLines;
+    raycast: typeof raycast;
+    raycastCircle: typeof raycastCircle;
+    getLineIntersectionPoint: typeof getLineIntersectionPoint;
 };
 export {};
