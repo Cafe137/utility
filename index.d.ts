@@ -189,6 +189,12 @@ declare function sortArray<T>(array: T[]): T[];
 declare function sortAny(any: unknown): unknown;
 declare function deepEquals(a: unknown, b: unknown): boolean;
 declare function safeParse(stringable: string): CafeObject | null;
+declare function createSequence(): {
+    next: () => number;
+};
+declare function createOscillator<T>(values: T[]): {
+    next: () => T;
+};
 interface NumberFormatOptions {
     precision?: number;
     longForm?: boolean;
@@ -314,6 +320,7 @@ export declare const Arrays: {
     unshiftAndLimit: typeof unshiftAndLimit;
     atRolling: typeof atRolling;
     group: typeof group;
+    createOscillator: typeof createOscillator;
 };
 export declare const System: {
     sleepMillis: typeof sleepMillis;
@@ -328,9 +335,7 @@ export declare const Numbers: {
     clamp: typeof clamp;
     range: typeof range;
     interpolate: typeof interpolate;
-    createSequence: () => {
-        next: () => number;
-    };
+    createSequence: typeof createSequence;
     increment: typeof increment;
     decrement: typeof decrement;
     format: typeof formatNumber;

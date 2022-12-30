@@ -1186,10 +1186,16 @@ function safeParse(stringable) {
     }
 }
 
-const createSequence = () => {
+function createSequence() {
     let value = 0
     return { next: () => value++ }
 }
+
+function createOscillator(values) {
+    let index = 0
+    return { next: () => values[index++ % values.length] }
+}
+
 const thresholds = [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e33]
 const longNumberUnits = [
     'thousand',
@@ -1930,7 +1936,8 @@ exports.Arrays = {
     pushToBucket,
     unshiftAndLimit,
     atRolling,
-    group
+    group,
+    createOscillator
 }
 exports.System = {
     sleepMillis,
