@@ -1,10 +1,10 @@
 declare type Indexable = number | string;
 declare type CafeObject<T = unknown> = Record<string, T>;
 declare function invertPromise<T>(promise: Promise<T>): Promise<unknown>;
-declare function raceFulfilled<T>(promises: Promise<T>[]): Promise<void>;
+declare function raceFulfilled<T>(promises: Promise<T>[]): Promise<unknown>;
 declare function runInParallelBatches<T>(promises: (() => Promise<T>)[], concurrency?: number): Promise<T[]>;
 declare function sleepMillis(millis: number): Promise<unknown>;
-declare function shuffle<T>(array: T[]): T[];
+declare function shuffle<T>(array: T[], generator?: () => number): T[];
 declare function onlyOrThrow<T>(array: T[]): T;
 declare function onlyOrNull<T>(array: T[]): T | null;
 declare function firstOrNull<T>(array: T[]): T | null;
@@ -12,18 +12,18 @@ declare function initializeArray<T>(count: number, initializer: (index: number) 
 declare function rotate2DArray<T>(array: T[][]): T[][];
 declare function initialize2DArray<T>(width: number, height: number, initialValue: T): T[][];
 declare function containsShape<T>(array2D: T[][], shape: T[][], x: number, y: number): boolean;
-declare function takeRandomly<T>(array: T[], count: number): T[];
+declare function takeRandomly<T>(array: T[], count: number, generator?: () => number): T[];
 declare function pickRandomIndices<T>(array: T[], count: number): number[];
 declare function pluck<T, K extends keyof T>(array: T[], key: K): T[K][];
 declare function makeSeededRng(seed: number): () => number;
-declare function randomIntInclusive(min: number, max: number): number;
-declare function randomBetween(min: number, max: number): number;
+declare function intBetween(min: number, max: number): number;
+declare function floatBetween(min: number, max: number): number;
 declare function signedRandom(): number;
 declare function chance(threshold: number): boolean;
 declare function pick<T>(array: T[], generator?: () => number): T;
 declare function last<T>(array: T[]): T;
 declare function pickWeighted<T>(array: T[], weights: number[], randomNumber?: number): T;
-declare function sortWeighted<T>(array: T[], weights: number[]): T[];
+declare function sortWeighted<T>(array: T[], weights: number[], generator?: () => number): T[];
 declare function getDeep(object: CafeObject, path: string): unknown;
 declare function getDeepOrElse(object: CafeObject, path: string, fallback: unknown): unknown;
 declare function setDeep<T>(object: CafeObject, path: string, value: T): T;
@@ -60,6 +60,7 @@ declare function asNullableString(string: any): string | null;
 declare function asId(value: any): number;
 declare function asArray(value: any): unknown[];
 declare function asObject(value: any): Record<string, unknown>;
+declare function represent(value: any): string;
 declare function expandError(error: any, stackTrace?: boolean): string;
 declare function mergeDeep(target: CafeObject, source: CafeObject): CafeObject;
 declare function zip<T>(objects: CafeObject<T>[], reducer: (a: T, b: T) => T): CafeObject<T>;
@@ -195,6 +196,7 @@ declare function createSequence(): {
 declare function createOscillator<T>(values: T[]): {
     next: () => T;
 };
+declare function createStatefulToggle(desiredValue: unknown): (value: unknown) => boolean;
 interface NumberFormatOptions {
     precision?: number;
     longForm?: boolean;
@@ -282,8 +284,8 @@ declare function getLineIntersectionPoint(line1Start: Point, line1End: Point, li
 declare function raycast(origin: Point, lines: Line[], angle: number): Point | null;
 declare function raycastCircle(origin: Point, lines: Line[], corners: Point[]): Point[];
 export declare const Random: {
-    inclusiveInt: typeof randomIntInclusive;
-    between: typeof randomBetween;
+    intBetween: typeof intBetween;
+    floatBetween: typeof floatBetween;
     chance: typeof chance;
     signed: typeof signedRandom;
     makeSeededRng: typeof makeSeededRng;
@@ -410,6 +412,7 @@ export declare const Objects: {
     pushToFastIndex: typeof pushToFastIndex;
     pushToFastIndexWithExpiracy: typeof pushToFastIndexWithExpiracy;
     getFromFastIndexWithExpiracy: typeof getFromFastIndexWithExpiracy;
+    createStatefulToggle: typeof createStatefulToggle;
 };
 export declare const Pagination: {
     asPageNumber: typeof asPageNumber;
@@ -486,6 +489,7 @@ export declare const Strings: {
     isLetterOrDigit: typeof isLetterOrDigit;
     insert: typeof insertString;
     linesMatchOrdered: typeof linesMatchOrdered;
+    represent: typeof represent;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;

@@ -3,7 +3,7 @@ async function invertPromise(promise) {
 }
 
 async function raceFulfilled(promises) {
-    invertPromise(Promise.all(promises.map(invertPromise)))
+    return invertPromise(Promise.all(promises.map(invertPromise)))
 }
 
 async function runInParallelBatches(promises, concurrency = 1) {
@@ -26,9 +26,9 @@ async function sleepMillis(millis) {
     )
 }
 
-function shuffle(array) {
+function shuffle(array, generator = Math.random) {
     for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1))
+        const j = Math.floor(generator() * (i + 1))
         const swap = array[i]
         array[i] = array[j]
         array[j] = swap
@@ -54,7 +54,7 @@ function onlyOrNull(array) {
 }
 
 function firstOrNull(array) {
-    return array.length > 0 ? array[0] : null
+    return array && array.length > 0 ? array[0] : null
 }
 
 function initializeArray(count, initializer) {
@@ -104,8 +104,8 @@ function containsShape(array2D, shape, x, y) {
     return true
 }
 
-function takeRandomly(array, count) {
-    return shuffle(array).slice(0, count)
+function takeRandomly(array, count, generator = Math.random) {
+    return shuffle(array, generator).slice(0, count)
 }
 
 function pickRandomIndices(array, count) {
@@ -130,11 +130,11 @@ function makeSeededRng(seed) {
     }
 }
 
-function randomIntInclusive(min, max) {
+function intBetween(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-function randomBetween(min, max) {
+function floatBetween(min, max) {
     return Math.random() * (max - min) + min
 }
 
@@ -172,13 +172,13 @@ function pickWeighted(array, weights, randomNumber) {
     return last(array)
 }
 
-function sortWeighted(array, weights) {
-    const rolls = weights.map(weight => Math.random() * weight)
+function sortWeighted(array, weights, generator = Math.random) {
+    const rolls = weights.map(weight => generator() * weight)
     const results = []
     for (let i = 0; i < array.length; i++) {
         results.push([array[i], rolls[i]])
     }
-    return results.sort((a, b) => a[1] - b[1]).map(a => a[0])
+    return results.sort((a, b) => b[1] - a[1]).map(a => a[0])
 }
 
 function getDeep(object, path) {
@@ -279,13 +279,16 @@ function asMegabytes(number) {
 }
 
 function convertBytes(bytes) {
-    if (bytes > 1000000) {
-        return (bytes / 1000000).toFixed(3) + 'MB'
+    if (bytes >= 1024 * 1024 * 1024) {
+        return (bytes / 1024 / 1024 / 1024).toFixed(3) + ' GB'
     }
-    if (bytes > 1000) {
-        return (bytes / 1000).toFixed(3) + 'KB'
+    if (bytes >= 1024 * 1024) {
+        return (bytes / 1024 / 1024).toFixed(3) + ' MB'
     }
-    return bytes + ''
+    if (bytes >= 1024) {
+        return (bytes / 1024).toFixed(3) + ' KB'
+    }
+    return bytes + ' B'
 }
 
 function isObject(value) {
@@ -444,7 +447,7 @@ function asObject(value) {
 
 function represent(value) {
     if (isObject(value)) {
-        return JSON.stringify(value, null, 4)
+        return JSON.stringify(value)
     }
     if (value === null) {
         return 'null'
@@ -504,12 +507,7 @@ function zipSum(objects) {
 }
 
 function asPageNumber(value) {
-    let number
-    try {
-        number = parseInt(value, 10)
-    } catch (error) {
-        return 1
-    }
+    const number = parseInt(value, 10)
     if (!number) {
         return 1
     }
@@ -595,35 +593,35 @@ function asEqual(a, b) {
 
 function asTrue(data) {
     if (data !== true) {
-        throw Error(`Expected [true], got [${data}]`)
+        throw Error(`Expected [true], got: [${data}]`)
     }
     return data
 }
 
 function asTruthy(data) {
     if (!data) {
-        throw Error(`Expected truthy value, got [${data}]`)
+        throw Error(`Expected truthy value, got: [${data}]`)
     }
     return data
 }
 
 function asFalse(data) {
     if (data !== false) {
-        throw Error(`Expected [false], got [${data}]`)
+        throw Error(`Expected [false], got: [${data}]`)
     }
     return data
 }
 
 function asFalsy(data) {
     if (data) {
-        throw Error(`Expected falsy value, got [${data}]`)
+        throw Error(`Expected falsy value, got: [${data}]`)
     }
     return data
 }
 
 function asEither(data, values) {
     if (!values.includes(data)) {
-        throw Error(`Expected any of [${values.join(', ')}], got [${data}]`)
+        throw Error(`Expected any of [${values.join(', ')}], got: [${data}]`)
     }
     return data
 }
@@ -747,6 +745,7 @@ const htmlEntityMap = {
     '&gt;': '>',
     '&lt;': '<'
 }
+
 function decodeHtmlEntities(string) {
     let buffer = string
         .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec))
@@ -1038,6 +1037,7 @@ const timeUnits = {
     h: 3600000,
     d: 86400000
 }
+
 function timeSince(unit, a, optionalB) {
     a = isDate(a) ? a.getTime() : a
     optionalB = optionalB ? (isDate(optionalB) ? optionalB.getTime() : optionalB) : Date.now()
@@ -1071,6 +1071,7 @@ const dayNumberIndex = {
     5: 'friday',
     6: 'saturday'
 }
+
 function mapDayNumber(zeroBasedIndex) {
     return {
         zeroBasedIndex,
@@ -1194,6 +1195,15 @@ function createSequence() {
 function createOscillator(values) {
     let index = 0
     return { next: () => values[index++ % values.length] }
+}
+
+function createStatefulToggle(desiredValue) {
+    let lastValue = undefined
+    return value => {
+        const result = value === desiredValue && lastValue !== desiredValue
+        lastValue = value
+        return result
+    }
 }
 
 const thresholds = [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e33]
@@ -1899,12 +1909,13 @@ function raycastCircle(origin, lines, corners) {
 }
 
 exports.Random = {
-    inclusiveInt: randomIntInclusive,
-    between: randomBetween,
+    intBetween,
+    floatBetween,
     chance,
     signed: signedRandom,
     makeSeededRng
 }
+
 exports.Arrays = {
     countUnique,
     makeUnique,
@@ -1939,6 +1950,7 @@ exports.Arrays = {
     group,
     createOscillator
 }
+
 exports.System = {
     sleepMillis,
     forever,
@@ -1946,6 +1958,7 @@ exports.System = {
     waitFor,
     expandError
 }
+
 exports.Numbers = {
     sum,
     average,
@@ -1960,12 +1973,14 @@ exports.Numbers = {
     asMegabytes,
     convertBytes
 }
+
 exports.Promises = {
     raceFulfilled,
     invert: invertPromise,
     runInParallelBatches,
     makeAsyncQueue
 }
+
 exports.Dates = {
     getAgo,
     isoDate,
@@ -1985,6 +2000,7 @@ exports.Dates = {
     minutes,
     hours
 }
+
 exports.Objects = {
     safeParse,
     deleteDeep,
@@ -2026,12 +2042,15 @@ exports.Objects = {
     createFastIndex,
     pushToFastIndex,
     pushToFastIndexWithExpiracy,
-    getFromFastIndexWithExpiracy
+    getFromFastIndexWithExpiracy,
+    createStatefulToggle
 }
+
 exports.Pagination = {
     asPageNumber,
     pageify
 }
+
 exports.Types = {
     isFunction,
     isObject,
@@ -2054,6 +2073,7 @@ exports.Types = {
     asArray,
     asObject
 }
+
 exports.Strings = {
     tokenizeByCount,
     tokenizeByLength,
@@ -2102,8 +2122,10 @@ exports.Strings = {
     isDigit,
     isLetterOrDigit,
     insert: insertString,
-    linesMatchOrdered
+    linesMatchOrdered,
+    represent
 }
+
 exports.Assertions = {
     asEqual,
     asTrue,
@@ -2112,9 +2134,11 @@ exports.Assertions = {
     asFalsy,
     asEither
 }
+
 exports.Cache = {
     get: getCached
 }
+
 exports.Vector = {
     addPoint,
     subtractPoint,
