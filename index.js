@@ -979,6 +979,10 @@ function fromUtcString(string) {
     return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
 }
 
+function fromMillis(millis) {
+    return new Date(millis)
+}
+
 function createTimeDigits(value) {
     return String(Math.floor(value)).padStart(2, '0')
 }
@@ -1989,6 +1993,7 @@ exports.Dates = {
     dateTimeSlug,
     unixTimestamp,
     fromUtcString,
+    fromMillis,
     getProgress,
     humanizeTime,
     humanizeProgress,

@@ -148,6 +148,7 @@ declare function unixTimestamp(optionalTimestamp?: number): number;
 declare function isoDate(optionalDate?: Date): string;
 declare function dateTimeSlug(optionalDate?: Date): string;
 declare function fromUtcString(string: string): Date;
+declare function fromMillis(millis: number): Date;
 declare function createTimeDigits(value: number): string;
 declare function humanizeTime(millis: number): string;
 declare function getAgo(date: Date, now?: number): string;
@@ -359,6 +360,7 @@ export declare const Dates: {
     dateTimeSlug: typeof dateTimeSlug;
     unixTimestamp: typeof unixTimestamp;
     fromUtcString: typeof fromUtcString;
+    fromMillis: typeof fromMillis;
     getProgress: typeof getProgress;
     humanizeTime: typeof humanizeTime;
     humanizeProgress: typeof humanizeProgress;
