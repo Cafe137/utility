@@ -139,6 +139,7 @@ interface BlockExtractionOptions {
     exclusive?: boolean;
 }
 declare function extractBlock(string: string, options: BlockExtractionOptions): string | null;
+declare function extractAllBlocks(string: string, options: BlockExtractionOptions): string[];
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
 declare function waitFor(predicate: () => Promise<boolean>, waitLength: number, maxWaits: number): Promise<boolean>;
@@ -486,6 +487,7 @@ export declare const Strings: {
     joinHumanly: typeof joinHumanly;
     findWeightedPair: typeof findWeightedPair;
     extractBlock: typeof extractBlock;
+    extractAllBlocks: typeof extractAllBlocks;
     isLetter: typeof isLetter;
     isDigit: typeof isDigit;
     isLetterOrDigit: typeof isLetterOrDigit;

@@ -909,6 +909,22 @@ function extractBlock(string, options) {
         : string.slice(opensAt, closesAt + 1)
 }
 
+function extractAllBlocks(string, options) {
+    const blocks = []
+    let start = string.indexOf(options.opening)
+    while (true) {
+        if (start === -1) {
+            return blocks
+        }
+        const block = extractBlock(string, { ...options, start })
+        if (!block) {
+            return blocks
+        }
+        blocks.push(block)
+        start = string.indexOf(options.opening, start + block.length)
+    }
+}
+
 function parseCsv(string, delimiter = ',', quote = '"') {
     const items = []
     let buffer = ''
@@ -2123,6 +2139,7 @@ exports.Strings = {
     joinHumanly,
     findWeightedPair,
     extractBlock,
+    extractAllBlocks,
     isLetter,
     isDigit,
     isLetterOrDigit,
