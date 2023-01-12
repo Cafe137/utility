@@ -211,7 +211,7 @@ declare function increment(value: number, change: number, maximum: number): numb
 declare function decrement(value: number, change: number, minimum: number): number;
 declare function runOn<T>(object: T, callable: (object: T) => void): T;
 declare function ifPresent<T>(object: T, callable: (object: T) => void): void;
-declare function mergeArrays(target: CafeObject<unknown[]>, source: CafeObject<unknown[]>): void;
+declare function mergeArrays(target: CafeObject<unknown | unknown[]>, source: CafeObject<unknown | unknown[]>): void;
 declare function empty<T>(array: T[]): T[];
 declare function removeEmptyArrays(object: CafeObject): CafeObject;
 declare function removeEmptyValues(object: CafeObject): CafeObject;

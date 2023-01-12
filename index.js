@@ -885,11 +885,11 @@ function csvEscape(string) {
 function findWeightedPair(string, start = 0, opening = '{', closing = '}') {
     let weight = 1
     for (let i = start; i < string.length; i++) {
-        if (string[i] === closing) {
+        if (string.slice(i, i + closing.length) === closing) {
             if (--weight === 0) {
                 return i
             }
-        } else if (string[i] === opening) {
+        } else if (string.slice(i, i + opening.length) === opening) {
             weight++
         }
     }
@@ -901,12 +901,12 @@ function extractBlock(string, options) {
     if (opensAt === -1) {
         return null
     }
-    const closesAt = findWeightedPair(string, opensAt + 1, options.opening, options.closing)
+    const closesAt = findWeightedPair(string, opensAt + options.opening.length, options.opening, options.closing)
     return closesAt === -1
         ? null
         : options.exclusive
-        ? string.slice(opensAt + 1, closesAt)
-        : string.slice(opensAt, closesAt + 1)
+        ? string.slice(opensAt + options.opening.length, closesAt)
+        : string.slice(opensAt, closesAt + options.closing.length)
 }
 
 function extractAllBlocks(string, options) {
