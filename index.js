@@ -690,7 +690,7 @@ function slugToCamel(string) {
 
 function joinHumanly(parts, separator = ', ', lastSeparator = ' and ') {
     if (!parts || !parts.length) {
-        return null
+        return ''
     }
     if (parts.length === 1) {
         return parts[0]
@@ -776,10 +776,6 @@ function afterLast(string, searchString) {
     return position === -1 ? string : string.slice(position + searchString.length)
 }
 
-function between(string, start, end) {
-    return before(after(string, start), end)
-}
-
 function betweenWide(string, start, end) {
     return after(beforeLast(string, end), start)
 }
@@ -822,6 +818,21 @@ function parseFilename(string) {
 
 function randomize(string) {
     return string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
+}
+
+function expand(string) {
+    const matches = string.match(/\{(.+?)\}/g)
+    if (!matches) {
+        return [string]
+    }
+    const result = []
+    for (const match of matches) {
+        const group = match.slice(1, match.length - 1)
+        for (const option of group.split(',')) {
+            result.push(string.replace(match, option))
+        }
+    }
+    return result
 }
 
 function shrinkTrim(string) {
@@ -1260,23 +1271,23 @@ function formatNumber(number, options) {
 }
 
 function parseIntOrThrow(numberOrString) {
-    if (typeof numberOrString === 'number') {
-        if (isNaN(numberOrString)) {
+    let parsed = numberOrString
+    if (typeof numberOrString === 'string') {
+        if (!numberOrString.match(/^-?[0-9.]+$/)) {
+            throw Error('parseIntOrThrow got illegal characters for input: ' + numberOrString)
+        }
+        parsed = parseInt(numberOrString, 10)
+    }
+    if (typeof parsed === 'number') {
+        if (isNaN(parsed)) {
             throw Error('parseIntOrThrow got NaN for input')
         }
-        if (!isFinite(numberOrString)) {
+        if (!isFinite(parsed)) {
             throw Error('parseIntOrThrow got infinite for input')
         }
-        return Math.trunc(numberOrString)
+        return Math.trunc(parsed)
     }
-    if (typeof numberOrString === 'string') {
-        const parsed = parseInt(numberOrString, 10)
-        if (isNaN(parsed)) {
-            throw Error('parseIntOrThrow parsed NaN for input: ' + numberOrString)
-        }
-        return parsed
-    }
-    throw Error('parseIntOrThrow got unsupported input type: ' + typeof numberOrString)
+    throw Error('parseIntOrThrow got unsupported input type: ' + typeof parsed)
 }
 
 function clamp(value, lower, upper) {
@@ -1320,7 +1331,10 @@ function empty(array) {
 
 function removeEmptyArrays(object) {
     for (const key of Object.keys(object)) {
-        if (isEmptyArray(object[key])) {
+        if (
+            isEmptyArray(object[key]) ||
+            (Array.isArray(object[key]) && object[key].every(x => x === null || x === undefined))
+        ) {
             delete object[key]
         }
     }
@@ -2112,7 +2126,6 @@ exports.Strings = {
     afterLast,
     before,
     beforeLast,
-    between,
     betweenWide,
     betweenNarrow,
     getPreLine,
@@ -2123,6 +2136,7 @@ exports.Strings = {
     sortByFuzzyScore,
     splitOnce,
     randomize,
+    expand,
     shrinkTrim,
     capitalize,
     decapitalize,

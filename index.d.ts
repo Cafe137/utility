@@ -97,7 +97,7 @@ declare function slugify(string: string): string;
 declare function camelToTitle(string: string): string;
 declare function slugToTitle(string: string): string;
 declare function slugToCamel(string: string): string;
-declare function joinHumanly(parts: string[], separator?: string, lastSeparator?: string): null | string;
+declare function joinHumanly(parts: string[], separator?: string, lastSeparator?: string): string;
 declare function surroundInOut(string: string, filler: string): string;
 declare function enumify(string: string): string;
 declare function getFuzzyMatchScore(string: string, input: string): number;
@@ -108,7 +108,6 @@ declare function before(string: string, searchString: string): string;
 declare function after(string: string, searchString: string): string;
 declare function beforeLast(string: string, searchString: string): string;
 declare function afterLast(string: string, searchString: string): string;
-declare function between(string: string, start: string, end: string): string;
 declare function betweenWide(string: string, start: string, end: string): string;
 declare function betweenNarrow(string: string, start: string, end: string): string;
 declare function splitOnce(string: string, separator: string): [string, string];
@@ -122,6 +121,7 @@ interface ParsedFilename {
 }
 declare function parseFilename(string: string): ParsedFilename;
 declare function randomize(string: string): string;
+declare function expand(string: string): string[];
 declare function shrinkTrim(string: string): string;
 declare function capitalize(string: string): string;
 declare function decapitalize(string: string): string;
@@ -239,21 +239,17 @@ declare function transformToArray<T>(objectOfArrays: CafeObject<T[]>): CafeObjec
 declare function incrementMulti<T>(objects: T[], key: keyof T, step?: number): void;
 declare function setMulti<T, K extends keyof T>(objects: T[], key: K, value: T[K]): void;
 declare function group<T>(array: T[], groupFn: (current: T, previous: T) => boolean): T[][];
-interface Index<T> {
-    index: CafeObject<T>;
-    keys: string[];
-}
 interface FastIndexItem<T> {
     validUntil: number;
     data: T;
 }
 interface FastIndex<T> {
-    index: CafeObject<FastIndexItem<T>>;
+    index: CafeObject<T>;
     keys: string[];
 }
 declare function createFastIndex<T>(): FastIndex<T>;
-declare function pushToFastIndex<T>(object: Index<T>, key: string, item: T, limit?: number): void;
-declare function pushToFastIndexWithExpiracy<T>(object: FastIndex<T>, key: string, item: unknown, expiration: number, limit?: number): void;
+declare function pushToFastIndex<T>(object: FastIndex<T>, key: string, item: T, limit?: number): void;
+declare function pushToFastIndexWithExpiracy<T>(object: FastIndex<FastIndexItem<T>>, key: string, item: T, expiration: number, limit?: number): void;
 declare function getFromFastIndexWithExpiracy<T>(object: FastIndex<T>, key: string): T | null;
 declare function makeAsyncQueue(concurrency?: number): {
     enqueue(fn: () => Promise<void>): void;
@@ -460,7 +456,6 @@ export declare const Strings: {
     afterLast: typeof afterLast;
     before: typeof before;
     beforeLast: typeof beforeLast;
-    between: typeof between;
     betweenWide: typeof betweenWide;
     betweenNarrow: typeof betweenNarrow;
     getPreLine: typeof getPreLine;
@@ -471,6 +466,7 @@ export declare const Strings: {
     sortByFuzzyScore: typeof sortByFuzzyScore;
     splitOnce: typeof splitOnce;
     randomize: typeof randomize;
+    expand: typeof expand;
     shrinkTrim: typeof shrinkTrim;
     capitalize: typeof capitalize;
     decapitalize: typeof decapitalize;
