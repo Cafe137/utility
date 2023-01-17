@@ -936,6 +936,18 @@ function extractAllBlocks(string, options) {
     }
 }
 
+function parseHtmlAttributes(string) {
+    const attributes = {}
+    const matches = string.match(/([a-z\-]+)="([^"]+)"/g)
+    if (matches) {
+        for (const match of matches) {
+            const [name, value] = match.split('=')
+            attributes[name] = value.slice(1, value.length - 1)
+        }
+    }
+    return attributes
+}
+
 function parseCsv(string, delimiter = ',', quote = '"') {
     const items = []
     let buffer = ''
@@ -2154,6 +2166,7 @@ exports.Strings = {
     findWeightedPair,
     extractBlock,
     extractAllBlocks,
+    parseHtmlAttributes,
     isLetter,
     isDigit,
     isLetterOrDigit,
