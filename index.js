@@ -893,6 +893,17 @@ function csvEscape(string) {
     return string.match(/"|,/) ? `"${string.replace(/"/g, '""')}"` : string
 }
 
+function indexOfEarliest(string, searchStrings, start = 0) {
+    let earliest = -1
+    for (const searchString of searchStrings) {
+        const index = string.indexOf(searchString, start)
+        if (index !== -1 && (earliest === -1 || index < earliest)) {
+            earliest = index
+        }
+    }
+    return earliest
+}
+
 function findWeightedPair(string, start = 0, opening = '{', closing = '}') {
     let weight = 1
     for (let i = start; i < string.length; i++) {
@@ -908,7 +919,9 @@ function findWeightedPair(string, start = 0, opening = '{', closing = '}') {
 }
 
 function extractBlock(string, options) {
-    const opensAt = string.indexOf(options.opening, options.start || 0)
+    const opensAt = options.wordBoundary
+        ? indexOfEarliest(string, [`${options.opening} `, `${options.opening}\n`], options.start || 0)
+        : string.indexOf(options.opening, options.start || 0)
     if (opensAt === -1) {
         return null
     }
@@ -922,7 +935,9 @@ function extractBlock(string, options) {
 
 function extractAllBlocks(string, options) {
     const blocks = []
-    let start = string.indexOf(options.opening)
+    let start = options.wordBoundary
+        ? indexOfEarliest(string, [`${options.opening} `, `${options.opening}\n`], options.start || 0)
+        : string.indexOf(options.opening, options.start || 0)
     while (true) {
         if (start === -1) {
             return blocks
@@ -932,7 +947,9 @@ function extractAllBlocks(string, options) {
             return blocks
         }
         blocks.push(block)
-        start = string.indexOf(options.opening, start + block.length)
+        start = options.wordBoundary
+            ? indexOfEarliest(string, [`${options.opening} `, `${options.opening}\n`], start + block.length)
+            : string.indexOf(options.opening, start + block.length)
     }
 }
 
@@ -2166,6 +2183,7 @@ exports.Strings = {
     findWeightedPair,
     extractBlock,
     extractAllBlocks,
+    indexOfEarliest,
     parseHtmlAttributes,
     isLetter,
     isDigit,

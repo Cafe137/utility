@@ -131,12 +131,14 @@ declare function isLetterOrDigit(character: string): boolean;
 declare function insertString(string: string, index: number, length: number, before: string, after: string): string;
 declare function linesMatchOrdered(lines: string[], expectedLines: string[]): boolean;
 declare function csvEscape(string: string): string;
+declare function indexOfEarliest(string: string, searchStrings: string[], start?: number): number;
 declare function findWeightedPair(string: string, start?: number, opening?: string, closing?: string): number;
 interface BlockExtractionOptions {
     start?: number;
     opening: string;
     closing: string;
     exclusive?: boolean;
+    wordBoundary?: boolean;
 }
 declare function extractBlock(string: string, options: BlockExtractionOptions): string | null;
 declare function extractAllBlocks(string: string, options: BlockExtractionOptions): string[];
@@ -236,7 +238,7 @@ declare function tokenizeByCount(string: string, count: number): string[];
 declare function makeUnique<T>(array: T[], fn: (item: T) => string): T[];
 declare function countUnique(array: string[], mapper?: (item: string) => string, plain?: boolean, sort?: boolean, reverse?: boolean): CafeObject<number> | string[];
 declare function sortObjectValues<T>(object: CafeObject<T>, compareFn: (a: [string, T], b: [string, T]) => number): CafeObject<T>;
-declare function transformToArray<T>(objectOfArrays: CafeObject<T[]>): CafeObject[];
+declare function transformToArray(objectOfArrays: CafeObject<unknown[]>): CafeObject[];
 declare function incrementMulti<T>(objects: T[], key: keyof T, step?: number): void;
 declare function setMulti<T, K extends keyof T>(objects: T[], key: K, value: T[K]): void;
 declare function group<T>(array: T[], groupFn: (current: T, previous: T) => boolean): T[][];
@@ -485,6 +487,7 @@ export declare const Strings: {
     findWeightedPair: typeof findWeightedPair;
     extractBlock: typeof extractBlock;
     extractAllBlocks: typeof extractAllBlocks;
+    indexOfEarliest: typeof indexOfEarliest;
     parseHtmlAttributes: typeof parseHtmlAttributes;
     isLetter: typeof isLetter;
     isDigit: typeof isDigit;
