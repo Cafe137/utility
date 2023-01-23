@@ -110,7 +110,7 @@ declare function beforeLast(string: string, searchString: string): string;
 declare function afterLast(string: string, searchString: string): string;
 declare function betweenWide(string: string, start: string, end: string): string;
 declare function betweenNarrow(string: string, start: string, end: string): string;
-declare function splitOnce(string: string, separator: string): [string, string];
+declare function splitOnce(string: string, separator: string, last?: boolean): [string | null, string | null];
 declare function getExtension(path: string): string;
 declare function getBasename(path: string): string;
 declare function normalizeFilename(path: string): string;

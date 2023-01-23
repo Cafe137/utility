@@ -784,8 +784,13 @@ function betweenNarrow(string, start, end) {
     return before(after(string, start), end)
 }
 
-function splitOnce(string, separator) {
-    return string.includes(separator) ? [before(string, separator), after(string, separator)] : [string, '']
+function splitOnce(string, separator, last = false) {
+    const position = last ? string.lastIndexOf(separator) : string.indexOf(separator)
+    return position === -1
+        ? last
+            ? [null, string]
+            : [string, null]
+        : [string.slice(0, position), string.slice(position + separator.length)]
 }
 
 function getExtension(path) {
