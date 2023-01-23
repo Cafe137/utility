@@ -976,21 +976,39 @@ function parseHtmlAttributes(string) {
     return attributes
 }
 
-function resolveHtmlAttribute(string, key, value, prefix = '$') {
-    const blocks = extractAllBlocks(string, { opening: `="${prefix}${key}`, closing: '"' })
-    const set = new Set(blocks)
-    for (const block of set) {
-        string = string.replace(block, `="${value}"`)
+function readNextWord(string, index, allowedCharacters = []) {
+    let word = ''
+    while (index < string.length && (isLetterOrDigit(string[index]) || allowedCharacters.includes(string[index]))) {
+        word += string[index++]
+    }
+    return word
+}
+
+function resolveVariableWithDefaultSyntax(string, key, value, prefix = '$', separator = ':') {
+    let index = string.indexOf(`${prefix}${key}`)
+    while (index !== -1) {
+        const nextCharacter = string[index + key.length + 1]
+        if (nextCharacter === separator) {
+            const nextWord = readNextWord(string, index + key.length + 2)
+            string = string.replace(`${prefix}${key}${separator}${nextWord}`, value)
+        } else {
+            string = string.replace(`${prefix}${key}`, value)
+        }
+        index = string.indexOf(`${prefix}${key}`, index + 1)
     }
     return string
 }
 
-function replaceUnresolvedHtmlAttributesWithDefaults(string, prefix = '$', separator = ':') {
-    const blocks = extractAllBlocks(string, { opening: `="${prefix}`, closing: '"' }).filter(x => x.includes(separator))
-    for (const block of blocks) {
-        let [_, value] = block.split(separator)
-        value = value.slice(0, value.length - 1)
-        string = string.replace(block, `="${value}"`)
+function resolveRemainingVariablesWithDefaults(string, prefix = '$', separator = ':') {
+    let index = string.indexOf(prefix)
+    while (index !== -1) {
+        const variableName = readNextWord(string, index + 1)
+        const nextCharacter = string[index + variableName.length + 1]
+        if (nextCharacter === separator) {
+            const nextWord = readNextWord(string, index + variableName.length + 2)
+            string = string.replace(`${prefix}${variableName}${separator}${nextWord}`, nextWord)
+        }
+        index = string.indexOf(prefix, index + 1)
     }
     return string
 }
@@ -2215,8 +2233,9 @@ exports.Strings = {
     extractAllBlocks,
     indexOfEarliest,
     parseHtmlAttributes,
-    resolveHtmlAttribute,
-    replaceUnresolvedHtmlAttributesWithDefaults,
+    readNextWord,
+    resolveVariableWithDefaultSyntax,
+    resolveRemainingVariablesWithDefaults,
     isLetter,
     isDigit,
     isLetterOrDigit,
