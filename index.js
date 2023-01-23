@@ -976,6 +976,25 @@ function parseHtmlAttributes(string) {
     return attributes
 }
 
+function resolveHtmlAttribute(string, key, value, prefix = '$') {
+    const blocks = extractAllBlocks(string, { opening: `="${prefix}${key}`, closing: '"' })
+    const set = new Set(blocks)
+    for (const block of set) {
+        string = string.replace(block, `="${value}"`)
+    }
+    return string
+}
+
+function replaceUnresolvedHtmlAttributesWithDefaults(string, prefix = '$', separator = ':') {
+    const blocks = extractAllBlocks(string, { opening: `="${prefix}`, closing: '"' }).filter(x => x.includes(separator))
+    for (const block of blocks) {
+        let [_, value] = block.split(separator)
+        value = value.slice(0, value.length - 1)
+        string = string.replace(block, `="${value}"`)
+    }
+    return string
+}
+
 function parseCsv(string, delimiter = ',', quote = '"') {
     const items = []
     let buffer = ''
@@ -2196,6 +2215,8 @@ exports.Strings = {
     extractAllBlocks,
     indexOfEarliest,
     parseHtmlAttributes,
+    resolveHtmlAttribute,
+    replaceUnresolvedHtmlAttributesWithDefaults,
     isLetter,
     isDigit,
     isLetterOrDigit,

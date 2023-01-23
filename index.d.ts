@@ -144,6 +144,8 @@ interface BlockExtractionOptions {
 declare function extractBlock(string: string, options: BlockExtractionOptions): string | null;
 declare function extractAllBlocks(string: string, options: BlockExtractionOptions): string[];
 declare function parseHtmlAttributes(string: string): Record<string, string>;
+declare function resolveHtmlAttribute(string: string, key: string, value: string, prefix?: string): string;
+declare function replaceUnresolvedHtmlAttributesWithDefaults(string: string, prefix?: string, separator?: string): string;
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
 declare function waitFor(predicate: () => Promise<boolean>, waitLength: number, maxWaits: number): Promise<boolean>;
@@ -490,6 +492,8 @@ export declare const Strings: {
     extractAllBlocks: typeof extractAllBlocks;
     indexOfEarliest: typeof indexOfEarliest;
     parseHtmlAttributes: typeof parseHtmlAttributes;
+    resolveHtmlAttribute: typeof resolveHtmlAttribute;
+    replaceUnresolvedHtmlAttributesWithDefaults: typeof replaceUnresolvedHtmlAttributesWithDefaults;
     isLetter: typeof isLetter;
     isDigit: typeof isDigit;
     isLetterOrDigit: typeof isLetterOrDigit;
