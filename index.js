@@ -872,6 +872,12 @@ function isLetterOrDigit(character) {
     return isLetter(character) || isDigit(character)
 }
 
+function isValidObjectPathCharacter(character) {
+    return (
+        isLetterOrDigit(character) || character === '.' || character === '[' || character === ']' || character === '_'
+    )
+}
+
 function insertString(string, index, length, before, after) {
     return string.slice(0, index) + before + string.slice(index, index + length) + after + string.slice(index + length)
 }
@@ -2193,6 +2199,7 @@ exports.Strings = {
     isLetter,
     isDigit,
     isLetterOrDigit,
+    isValidObjectPathCharacter,
     insert: insertString,
     linesMatchOrdered,
     represent

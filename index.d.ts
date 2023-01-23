@@ -128,6 +128,7 @@ declare function decapitalize(string: string): string;
 declare function isLetter(character: string): boolean;
 declare function isDigit(character: string): boolean;
 declare function isLetterOrDigit(character: string): boolean;
+declare function isValidObjectPathCharacter(character: string): boolean;
 declare function insertString(string: string, index: number, length: number, before: string, after: string): string;
 declare function linesMatchOrdered(lines: string[], expectedLines: string[]): boolean;
 declare function csvEscape(string: string): string;
@@ -492,6 +493,7 @@ export declare const Strings: {
     isLetter: typeof isLetter;
     isDigit: typeof isDigit;
     isLetterOrDigit: typeof isLetterOrDigit;
+    isValidObjectPathCharacter: typeof isValidObjectPathCharacter;
     insert: typeof insertString;
     linesMatchOrdered: typeof linesMatchOrdered;
     represent: typeof represent;
