@@ -888,7 +888,9 @@ function linesMatchOrdered(lines, expectedLines) {
         const expectedLine = expectedLines[i]
         let found = false
         while (!found && lineIndex < lines.length) {
-            if (lines[lineIndex].includes(expectedLine)) {
+            if (expectedLine instanceof RegExp) {
+                found = expectedLine.test(lines[lineIndex])
+            } else if (lines[lineIndex].includes(expectedLine)) {
                 found = true
             }
             lineIndex++

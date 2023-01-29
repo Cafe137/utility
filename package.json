@@ -1,13 +1,13 @@
 {
     "name": "cafe-utility",
-    "version": "6.8.1",
+    "version": "6.9.0",
     "description": "",
     "main": "index.js",
     "exports": {
         ".": {
             "require": "./index.js",
-            "default": "./module.mjs",
-            "types": "./index.d.ts"
+            "types": "./index.d.ts",
+            "default": "./module.mjs"
         },
         "./package.json": "./package.json"
     },
