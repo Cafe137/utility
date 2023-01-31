@@ -130,7 +130,13 @@ declare function isDigit(character: string): boolean;
 declare function isLetterOrDigit(character: string): boolean;
 declare function isValidObjectPathCharacter(character: string): boolean;
 declare function insertString(string: string, index: number, length: number, before: string, after: string): string;
-declare function linesMatchOrdered(lines: string[], expectedLines: (string | RegExp)[]): boolean;
+interface RegexMatch {
+    index: number;
+    match: string;
+}
+declare function indexOfRegex(string: string, regex: RegExp, start?: number): RegexMatch | null;
+declare function lineMatches(haystack: string, needles: (string | RegExp)[], orderMatters?: boolean): boolean;
+declare function linesMatchInOrder(lines: string[], expectations: (string[] | RegExp[])[], orderMatters?: boolean): boolean;
 declare function csvEscape(string: string): string;
 declare function indexOfEarliest(string: string, searchStrings: string[], start?: number): number;
 declare function findWeightedPair(string: string, start?: number, opening?: string, closing?: string): number;
@@ -501,7 +507,9 @@ export declare const Strings: {
     isLetterOrDigit: typeof isLetterOrDigit;
     isValidObjectPathCharacter: typeof isValidObjectPathCharacter;
     insert: typeof insertString;
-    linesMatchOrdered: typeof linesMatchOrdered;
+    indexOfRegex: typeof indexOfRegex;
+    lineMatches: typeof lineMatches;
+    linesMatchInOrder: typeof linesMatchInOrder;
     represent: typeof represent;
 };
 export declare const Assertions: {

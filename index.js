@@ -882,15 +882,49 @@ function insertString(string, index, length, before, after) {
     return string.slice(0, index) + before + string.slice(index, index + length) + after + string.slice(index + length)
 }
 
-function linesMatchOrdered(lines, expectedLines) {
+function indexOfRegex(string, regex, start = 0) {
+    const match = regex.exec(string.slice(start))
+    return match ? { index: match.index, match: match[0] } : null
+}
+
+function lineMatches(haystack, needles, orderMatters = true) {
+    if (!orderMatters) {
+        return needles.every(needle => {
+            if (needle instanceof RegExp) {
+                return needle.test(haystack)
+            }
+            const position = haystack.indexOf(needle, 0)
+            if (position === -1) {
+                return false
+            }
+            return true
+        })
+    }
+    let index = 0
+    for (const needle of needles) {
+        if (needle instanceof RegExp) {
+            const match = indexOfRegex(haystack, needle, index)
+            if (!match) {
+                return false
+            }
+            index = match.index + match.match.length
+        } else {
+            const position = haystack.indexOf(needle, index)
+            if (position === -1) {
+                return false
+            }
+            index = position + needle.length
+        }
+    }
+    return true
+}
+
+function linesMatchInOrder(lines, expectations, orderMatters = true) {
     let lineIndex = 0
-    for (let i = 0; i < expectedLines.length; i++) {
-        const expectedLine = expectedLines[i]
+    for (const expectation of expectations) {
         let found = false
         while (!found && lineIndex < lines.length) {
-            if (expectedLine instanceof RegExp) {
-                found = expectedLine.test(lines[lineIndex])
-            } else if (lines[lineIndex].includes(expectedLine)) {
+            if (lineMatches(lines[lineIndex], expectation, orderMatters)) {
                 found = true
             }
             lineIndex++
@@ -2243,7 +2277,9 @@ exports.Strings = {
     isLetterOrDigit,
     isValidObjectPathCharacter,
     insert: insertString,
-    linesMatchOrdered,
+    indexOfRegex,
+    lineMatches,
+    linesMatchInOrder,
     represent
 }
 
