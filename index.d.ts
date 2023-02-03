@@ -136,7 +136,7 @@ interface RegexMatch {
 }
 declare function indexOfRegex(string: string, regex: RegExp, start?: number): RegexMatch | null;
 declare function lineMatches(haystack: string, needles: (string | RegExp)[], orderMatters?: boolean): boolean;
-declare function linesMatchInOrder(lines: string[], expectations: (string[] | RegExp[])[], orderMatters?: boolean): boolean;
+declare function linesMatchInOrder(lines: string[], expectations: (string | RegExp)[][], orderMatters?: boolean): boolean;
 declare function csvEscape(string: string): string;
 declare function indexOfEarliest(string: string, searchStrings: string[], start?: number): number;
 declare function findWeightedPair(string: string, start?: number, opening?: string, closing?: string): number;

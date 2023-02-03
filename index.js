@@ -989,7 +989,7 @@ function extractAllBlocks(string, options) {
         if (start === -1) {
             return blocks
         }
-        const block = extractBlock(string, { ...options, start })
+        const block = extractBlock(string, Object.assign(Object.assign({}, options), { start }))
         if (!block) {
             return blocks
         }
@@ -1366,10 +1366,13 @@ const longNumberUnits = [
 ]
 const shortNumberUnits = ['K', 'M', 'B', 't', 'q', 'Q', 's', 'S', 'o', 'n', 'd']
 function formatNumber(number, options) {
-    const longFormat = options?.longForm ?? false
-    const unitString = options?.unit ? ` ${options.unit}` : ''
+    var _a, _b
+    const longFormat =
+        (_a = options === null || options === void 0 ? void 0 : options.longForm) !== null && _a !== void 0 ? _a : false
+    const unitString = (options === null || options === void 0 ? void 0 : options.unit) ? ` ${options.unit}` : ''
     const table = longFormat ? longNumberUnits : shortNumberUnits
-    const precision = options?.precision ?? 1
+    const precision =
+        (_b = options === null || options === void 0 ? void 0 : options.precision) !== null && _b !== void 0 ? _b : 1
     if (number < thresholds[0]) {
         return `${number}${unitString}`
     }
@@ -1801,7 +1804,7 @@ class Maybe {
     async valueOf() {
         try {
             return await this.value
-        } catch {
+        } catch (_a) {
             return null
         }
     }
@@ -1871,19 +1874,33 @@ function filterCoordinates(grid, predicate, direction = 'row-first') {
 }
 
 function isHorizontalLine(tiles, x, y) {
-    return tiles[x + 1]?.[y] && tiles[x - 1]?.[y] && !tiles[x][y - 1] && !tiles[x][y + 1]
+    var _a, _b
+    return (
+        ((_a = tiles[x + 1]) === null || _a === void 0 ? void 0 : _a[y]) &&
+        ((_b = tiles[x - 1]) === null || _b === void 0 ? void 0 : _b[y]) &&
+        !tiles[x][y - 1] &&
+        !tiles[x][y + 1]
+    )
 }
 
 function isVerticalLine(tiles, x, y) {
-    return tiles[x][y + 1] && tiles[x][y - 1] && !tiles[x - 1]?.[y] && !tiles[x + 1]?.[y]
+    var _a, _b
+    return (
+        tiles[x][y + 1] &&
+        tiles[x][y - 1] &&
+        !((_a = tiles[x - 1]) === null || _a === void 0 ? void 0 : _a[y]) &&
+        !((_b = tiles[x + 1]) === null || _b === void 0 ? void 0 : _b[y])
+    )
 }
 
 function isLeftmost(tiles, x, y) {
-    return !tiles[x - 1]?.[y]
+    var _a
+    return !((_a = tiles[x - 1]) === null || _a === void 0 ? void 0 : _a[y])
 }
 
 function isRightmost(tiles, x, y) {
-    return !tiles[x + 1]?.[y]
+    var _a
+    return !((_a = tiles[x + 1]) === null || _a === void 0 ? void 0 : _a[y])
 }
 
 function isTopmost(tiles, x, y) {
@@ -1895,18 +1912,19 @@ function isBottommost(tiles, x, y) {
 }
 
 function getCorners(tiles, x, y) {
+    var _a, _b, _c, _d, _e, _f, _g, _h
     const corners = []
     if (!tiles[x][y]) {
-        if (tiles[x - 1]?.[y] && tiles[x][y - 1]) {
+        if (((_a = tiles[x - 1]) === null || _a === void 0 ? void 0 : _a[y]) && tiles[x][y - 1]) {
             corners.push({ x, y })
         }
-        if (tiles[x + 1]?.[y] && tiles[x][y - 1]) {
+        if (((_b = tiles[x + 1]) === null || _b === void 0 ? void 0 : _b[y]) && tiles[x][y - 1]) {
             corners.push({ x: x + 1, y })
         }
-        if (tiles[x - 1]?.[y] && tiles[x][y + 1]) {
+        if (((_c = tiles[x - 1]) === null || _c === void 0 ? void 0 : _c[y]) && tiles[x][y + 1]) {
             corners.push({ x, y: y + 1 })
         }
-        if (tiles[x + 1]?.[y] && tiles[x][y + 1]) {
+        if (((_d = tiles[x + 1]) === null || _d === void 0 ? void 0 : _d[y]) && tiles[x][y + 1]) {
             corners.push({ x: x + 1, y: y + 1 })
         }
         return corners
@@ -1914,16 +1932,32 @@ function getCorners(tiles, x, y) {
     if (isHorizontalLine(tiles, x, y) || isVerticalLine(tiles, x, y)) {
         return []
     }
-    if (!tiles[x - 1]?.[y - 1] && isLeftmost(tiles, x, y) && isTopmost(tiles, x, y)) {
+    if (
+        !((_e = tiles[x - 1]) === null || _e === void 0 ? void 0 : _e[y - 1]) &&
+        isLeftmost(tiles, x, y) &&
+        isTopmost(tiles, x, y)
+    ) {
         corners.push({ x, y })
     }
-    if (!tiles[x + 1]?.[y - 1] && isRightmost(tiles, x, y) && isTopmost(tiles, x, y)) {
+    if (
+        !((_f = tiles[x + 1]) === null || _f === void 0 ? void 0 : _f[y - 1]) &&
+        isRightmost(tiles, x, y) &&
+        isTopmost(tiles, x, y)
+    ) {
         corners.push({ x: x + 1, y })
     }
-    if (!tiles[x - 1]?.[y + 1] && isLeftmost(tiles, x, y) && isBottommost(tiles, x, y)) {
+    if (
+        !((_g = tiles[x - 1]) === null || _g === void 0 ? void 0 : _g[y + 1]) &&
+        isLeftmost(tiles, x, y) &&
+        isBottommost(tiles, x, y)
+    ) {
         corners.push({ x, y: y + 1 })
     }
-    if (!tiles[x + 1]?.[y + 1] && isRightmost(tiles, x, y) && isBottommost(tiles, x, y)) {
+    if (
+        !((_h = tiles[x + 1]) === null || _h === void 0 ? void 0 : _h[y + 1]) &&
+        isRightmost(tiles, x, y) &&
+        isBottommost(tiles, x, y)
+    ) {
         corners.push({ x: x + 1, y: y + 1 })
     }
     return corners
@@ -1954,22 +1988,28 @@ function findLines(grid, tileSize) {
         grid,
         (x, y) => Boolean(grid[x][y] === 0 && grid[x][y + 1] !== 0),
         'row-first'
-    ).map(point => ({ ...point, dx: 1, dy: 0 }))
+    ).map(point => Object.assign(Object.assign({}, point), { dx: 1, dy: 0 }))
     const lowerPoints = filterCoordinates(
         grid,
         (x, y) => Boolean(grid[x][y] === 0 && grid[x][y - 1] !== 0),
         'row-first'
-    ).map(point => ({ ...point, dx: 1, dy: 0 }))
+    ).map(point => Object.assign(Object.assign({}, point), { dx: 1, dy: 0 }))
     const rightPoints = filterCoordinates(
         grid,
-        (x, y) => Boolean(grid[x][y] === 0 && grid[x - 1]?.[y] !== 0),
+        (x, y) => {
+            var _a
+            return Boolean(grid[x][y] === 0 && ((_a = grid[x - 1]) === null || _a === void 0 ? void 0 : _a[y]) !== 0)
+        },
         'column-first'
-    ).map(point => ({ ...point, dx: 0, dy: 1 }))
+    ).map(point => Object.assign(Object.assign({}, point), { dx: 0, dy: 1 }))
     const leftPoints = filterCoordinates(
         grid,
-        (x, y) => Boolean(grid[x][y] === 0 && grid[x + 1]?.[y] !== 0),
+        (x, y) => {
+            var _a
+            return Boolean(grid[x][y] === 0 && ((_a = grid[x + 1]) === null || _a === void 0 ? void 0 : _a[y]) !== 0)
+        },
         'column-first'
-    ).map(point => ({ ...point, dx: 0, dy: 1 }))
+    ).map(point => Object.assign(Object.assign({}, point), { dx: 0, dy: 1 }))
     upperPoints.forEach(vector => vector.y++)
     leftPoints.forEach(vector => vector.x++)
     const verticalLineSegments = group([...rightPoints, ...leftPoints], (current, previous) => {
