@@ -951,6 +951,10 @@ function indexOfEarliest(string, searchStrings, start = 0) {
     return earliest
 }
 
+function lastIndexOfBefore(string, searchString, start = 0) {
+    return string.slice(0, start).lastIndexOf(searchString)
+}
+
 function findWeightedPair(string, start = 0, opening = '{', closing = '}') {
     let weight = 1
     for (let i = start; i < string.length; i++) {
@@ -1005,7 +1009,7 @@ function parseHtmlAttributes(string) {
     const matches = string.match(/([a-z\-]+)="([^"]+)"/g)
     if (matches) {
         for (const match of matches) {
-            const [name, value] = match.split('=')
+            const [name, value] = splitOnce(match, '=')
             attributes[name] = value.slice(1, value.length - 1)
         }
     }
@@ -1021,12 +1025,19 @@ function readNextWord(string, index, allowedCharacters = []) {
 }
 
 function resolveVariableWithDefaultSyntax(string, key, value, prefix = '$', separator = ':') {
+    if (value === '') {
+        return string
+    }
     let index = string.indexOf(`${prefix}${key}`)
     while (index !== -1) {
         const nextCharacter = string[index + key.length + 1]
         if (nextCharacter === separator) {
-            const nextWord = readNextWord(string, index + key.length + 2)
-            string = string.replace(`${prefix}${key}${separator}${nextWord}`, value)
+            if (string[index + key.length + 2] === separator) {
+                string = string.replace(`${prefix}${key}${separator}${separator}`, value)
+            } else {
+                const nextWord = readNextWord(string, index + key.length + 2)
+                string = string.replace(`${prefix}${key}${separator}${nextWord}`, value)
+            }
         } else {
             string = string.replace(`${prefix}${key}`, value)
         }
@@ -1041,10 +1052,29 @@ function resolveRemainingVariablesWithDefaults(string, prefix = '$', separator =
         const variableName = readNextWord(string, index + 1)
         const nextCharacter = string[index + variableName.length + 1]
         if (nextCharacter === separator) {
-            const nextWord = readNextWord(string, index + variableName.length + 2)
-            string = string.replace(`${prefix}${variableName}${separator}${nextWord}`, nextWord)
+            if (string[index + variableName.length + 2] === separator) {
+                string = string.replace(`${prefix}${variableName}${separator}${separator}`, '')
+            } else {
+                const nextWord = readNextWord(string, index + variableName.length + 2)
+                string = string.replace(`${prefix}${variableName}${separator}${nextWord}`, nextWord)
+            }
         }
         index = string.indexOf(prefix, index + 1)
+    }
+    return string
+}
+
+function resolveMarkdownLinks(string, transformer) {
+    let index = string.indexOf('](')
+    while (index !== -1) {
+        const start = lastIndexOfBefore(string, '[', index)
+        const end = string.indexOf(')', index)
+        if (start !== -1 && end !== -1) {
+            const [label, link] = string.slice(start + 1, end).split('](')
+            const result = transformer(label, link)
+            string = string.slice(0, start) + result + string.slice(end + 1)
+        }
+        index = string.indexOf('](', index + 1)
     }
     return string
 }
@@ -2308,6 +2338,7 @@ exports.Strings = {
     extractBlock,
     extractAllBlocks,
     indexOfEarliest,
+    lastIndexOfBefore,
     parseHtmlAttributes,
     readNextWord,
     resolveVariableWithDefaultSyntax,
@@ -2320,7 +2351,8 @@ exports.Strings = {
     indexOfRegex,
     lineMatches,
     linesMatchInOrder,
-    represent
+    represent,
+    resolveMarkdownLinks
 }
 
 exports.Assertions = {

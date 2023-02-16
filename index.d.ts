@@ -139,6 +139,7 @@ declare function lineMatches(haystack: string, needles: (string | RegExp)[], ord
 declare function linesMatchInOrder(lines: string[], expectations: (string | RegExp)[][], orderMatters?: boolean): boolean;
 declare function csvEscape(string: string): string;
 declare function indexOfEarliest(string: string, searchStrings: string[], start?: number): number;
+declare function lastIndexOfBefore(string: string, searchString: string, start?: number): number;
 declare function findWeightedPair(string: string, start?: number, opening?: string, closing?: string): number;
 interface BlockExtractionOptions {
     start?: number;
@@ -153,6 +154,7 @@ declare function parseHtmlAttributes(string: string): Record<string, string>;
 declare function readNextWord(string: string, index: number, allowedCharacters?: string[]): string;
 declare function resolveVariableWithDefaultSyntax(string: string, key: string, value: string, prefix?: string, separator?: string): string;
 declare function resolveRemainingVariablesWithDefaults(string: string, prefix?: string, separator?: string): string;
+declare function resolveMarkdownLinks(string: string, transformer: (label: string, link: string) => string): string;
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
 declare function waitFor(predicate: () => Promise<boolean>, waitLength: number, maxWaits: number): Promise<boolean>;
@@ -498,6 +500,7 @@ export declare const Strings: {
     extractBlock: typeof extractBlock;
     extractAllBlocks: typeof extractAllBlocks;
     indexOfEarliest: typeof indexOfEarliest;
+    lastIndexOfBefore: typeof lastIndexOfBefore;
     parseHtmlAttributes: typeof parseHtmlAttributes;
     readNextWord: typeof readNextWord;
     resolveVariableWithDefaultSyntax: typeof resolveVariableWithDefaultSyntax;
@@ -511,6 +514,7 @@ export declare const Strings: {
     lineMatches: typeof lineMatches;
     linesMatchInOrder: typeof linesMatchInOrder;
     represent: typeof represent;
+    resolveMarkdownLinks: typeof resolveMarkdownLinks;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;
