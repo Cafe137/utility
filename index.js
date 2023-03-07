@@ -292,7 +292,12 @@ function convertBytes(bytes) {
 }
 
 function isObject(value) {
-    return value !== null && typeof value === 'object'
+    return (
+        value !== null &&
+        typeof value === 'object' &&
+        !value.constructor.isBuffer &&
+        value.constructor.name !== 'Uint8Array'
+    )
 }
 
 function isStrictlyObject(value) {
@@ -470,14 +475,14 @@ function expandError(error, stackTrace) {
     return stackTrace && error.stack ? joined + '\n' + error.stack : joined
 }
 
-function mergeDeep(target, source) {
+function deepMergeInPlace(target, source) {
     if (isStrictlyObject(target) && isStrictlyObject(source)) {
         for (const key in source) {
             if (isStrictlyObject(source[key])) {
                 if (!target[key]) {
                     target[key] = {}
                 }
-                mergeDeep(target[key], source[key])
+                deepMergeInPlace(target[key], source[key])
             } else if (Array.isArray(source[key])) {
                 target[key] = [...source[key]]
             } else {
@@ -486,6 +491,21 @@ function mergeDeep(target, source) {
         }
     }
     return target
+}
+
+function deepMerge2(target, source) {
+    const result = {}
+    deepMergeInPlace(result, target)
+    deepMergeInPlace(result, source)
+    return result
+}
+
+function deepMerge3(target, sourceA, sourceB) {
+    const result = {}
+    deepMergeInPlace(result, target)
+    deepMergeInPlace(result, sourceA)
+    deepMergeInPlace(result, sourceB)
+    return result
 }
 
 function zip(objects, reducer) {
@@ -2229,7 +2249,9 @@ exports.Objects = {
     ensureDeep,
     replaceDeep,
     getFirstDeep,
-    mergeDeep,
+    deepMergeInPlace,
+    deepMerge2,
+    deepMerge3,
     mapAllAsync,
     cloneWithJson,
     sortObject,

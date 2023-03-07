@@ -1,6 +1,6 @@
 {
     "name": "cafe-utility",
-    "version": "7.2.0",
+    "version": "8.0.0",
     "description": "",
     "main": "index.js",
     "exports": {
@@ -14,5 +14,5 @@
     "scripts": {},
     "keywords": [],
     "author": "",
-    "license": "ISC"
+    "license": "MIT"
 }
