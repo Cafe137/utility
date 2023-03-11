@@ -1061,7 +1061,7 @@ function resolveVariableWithDefaultSyntax(string, key, value, prefix = '$', sepa
         } else {
             string = string.replace(`${prefix}${key}`, value)
         }
-        index = string.indexOf(`${prefix}${key}`, index + 1)
+        index = string.indexOf(`${prefix}${key}`, index + value.length)
     }
     return string
 }
