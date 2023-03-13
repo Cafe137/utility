@@ -1055,7 +1055,7 @@ function resolveVariableWithDefaultSyntax(string, key, value, prefix = '$', sepa
             if (string[index + key.length + 2] === separator) {
                 string = string.replace(`${prefix}${key}${separator}${separator}`, value)
             } else {
-                const nextWord = readNextWord(string, index + key.length + 2)
+                const nextWord = readNextWord(string, index + key.length + 2, ['_'])
                 string = string.replace(`${prefix}${key}${separator}${nextWord}`, value)
             }
         } else {
