@@ -104,12 +104,8 @@ function containsShape(array2D, shape, x, y) {
     return true
 }
 
-function takeRandomly(array, count, generator = Math.random) {
-    return shuffle(array, generator).slice(0, count)
-}
-
-function pickRandomIndices(array, count) {
-    return shuffle(range(0, array.length - 1)).slice(0, count)
+function pickRandomIndices(array, count, generator = Math.random) {
+    return shuffle(range(0, array.length - 1), generator).slice(0, count)
 }
 
 function pluck(array, key) {
@@ -148,6 +144,29 @@ function chance(threshold) {
 
 function pick(array, generator = Math.random) {
     return array[Math.floor(array.length * generator())]
+}
+
+function pickMany(array, count, generator = Math.random) {
+    if (count > array.length) {
+        throw new Error(`Count (${count}) is greater than array length (${array.length})`)
+    }
+    const indices = pickRandomIndices(array, count, generator)
+    return indices.map(index => array[index])
+}
+
+function pickManyUnique(array, count, equalityFunction, generator = Math.random) {
+    if (count > array.length) {
+        throw new Error(`Count (${count}) is greater than array length (${array.length})`)
+    }
+    const results = []
+    while (results.length < count) {
+        const candidate = pick(array, generator)
+        if (results.some(result => equalityFunction(result, candidate))) {
+            continue
+        }
+        results.push(candidate)
+    }
+    return results
 }
 
 function last(array) {
@@ -2164,8 +2183,6 @@ exports.Arrays = {
     onlyOrNull,
     firstOrNull,
     shuffle,
-    takeRandomly,
-    pickRandomIndices,
     initialize: initializeArray,
     initialize2D: initialize2DArray,
     rotate2D: rotate2DArray,
@@ -2173,8 +2190,11 @@ exports.Arrays = {
     glue,
     pluck,
     pick,
-    last,
+    pickMany,
+    pickManyUnique,
     pickWeighted,
+    pickRandomIndices,
+    last,
     sortWeighted,
     pushAll,
     unshiftAll,
