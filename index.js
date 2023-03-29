@@ -311,12 +311,16 @@ function convertBytes(bytes) {
 }
 
 function isObject(value) {
-    return (
-        value !== null &&
-        typeof value === 'object' &&
-        !value.constructor.isBuffer &&
-        value.constructor.name !== 'Uint8Array'
-    )
+    if (!value) {
+        return false
+    }
+    if (value._readableState) {
+        return false
+    }
+    if (value.constructor && (value.constructor.isBuffer || value.constructor.name == 'Uint8Array')) {
+        return false
+    }
+    return typeof value === 'object'
 }
 
 function isStrictlyObject(value) {
