@@ -1239,6 +1239,27 @@ function getAgo(date, now) {
     return delta.toFixed(0) + ' days ago'
 }
 
+function getAgoStructured(date, now) {
+    if (!now) {
+        now = Date.now()
+    }
+    const then = date.getTime()
+    let delta = (now - then) / 1000
+    if (delta < 120) {
+        return { value: delta, unit: 'second' }
+    }
+    delta /= 60
+    if (delta < 120) {
+        return { value: delta, unit: 'minute' }
+    }
+    delta /= 60
+    if (delta < 48) {
+        return { value: delta, unit: 'hour' }
+    }
+    delta /= 24
+    return { value: delta, unit: 'day' }
+}
+
 const throttleTimers = {}
 function throttle(identifier, millis) {
     if (!throttleTimers[identifier] || Date.now() > throttleTimers[identifier]) {
@@ -1421,6 +1442,28 @@ function createStatefulToggle(desiredValue) {
         lastValue = value
         return result
     }
+}
+
+function diffKeys(objectA, objectB) {
+    const keysA = Object.keys(objectA)
+    const keysB = Object.keys(objectB)
+    const uniqueToA = keysA.filter(key => !keysB.includes(key))
+    const uniqueToB = keysB.filter(key => !keysA.includes(key))
+    return {
+        uniqueToA,
+        uniqueToB
+    }
+}
+
+function pickRandomKey(object) {
+    const keys = Object.keys(object)
+    return keys[Math.floor(Math.random() * keys.length)]
+}
+
+function mapRandomKey(object, mapFunction) {
+    const key = pickRandomKey(object)
+    object[key] = mapFunction(object[key])
+    return key
 }
 
 const thresholds = [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e33]
@@ -2244,6 +2287,7 @@ exports.Promises = {
 
 exports.Dates = {
     getAgo,
+    getAgoStructured,
     isoDate,
     throttle,
     timeSince,
@@ -2307,7 +2351,10 @@ exports.Objects = {
     pushToFastIndex,
     pushToFastIndexWithExpiracy,
     getFromFastIndexWithExpiracy,
-    createStatefulToggle
+    createStatefulToggle,
+    diffKeys,
+    pickRandomKey,
+    mapRandomKey
 }
 
 exports.Pagination = {

@@ -171,6 +171,10 @@ declare function fromMillis(millis: number): Date;
 declare function createTimeDigits(value: number): string;
 declare function humanizeTime(millis: number): string;
 declare function getAgo(date: Date, now?: number): string;
+declare function getAgoStructured(date: Date, now?: number): {
+    value: number;
+    unit: string;
+};
 declare function throttle(identifier: string, millis: number): boolean;
 declare function timeSince(unit: 's' | 'm' | 'h' | 'd', a: Date | number, optionalB?: Date | number): number;
 interface Progress {
@@ -217,6 +221,12 @@ declare function createOscillator<T>(values: T[]): {
     next: () => T;
 };
 declare function createStatefulToggle(desiredValue: unknown): (value: unknown) => boolean;
+declare function diffKeys(objectA: CafeObject, objectB: CafeObject): {
+    uniqueToA: string[];
+    uniqueToB: string[];
+};
+declare function pickRandomKey(object: CafeObject): string;
+declare function mapRandomKey<T>(object: CafeObject<T>, mapFunction: (value: T) => T): string;
 interface NumberFormatOptions {
     precision?: number;
     longForm?: boolean;
@@ -370,6 +380,7 @@ export declare const Promises: {
 };
 export declare const Dates: {
     getAgo: typeof getAgo;
+    getAgoStructured: typeof getAgoStructured;
     isoDate: typeof isoDate;
     throttle: typeof throttle;
     timeSince: typeof timeSince;
@@ -433,6 +444,9 @@ export declare const Objects: {
     pushToFastIndexWithExpiracy: typeof pushToFastIndexWithExpiracy;
     getFromFastIndexWithExpiracy: typeof getFromFastIndexWithExpiracy;
     createStatefulToggle: typeof createStatefulToggle;
+    diffKeys: typeof diffKeys;
+    pickRandomKey: typeof pickRandomKey;
+    mapRandomKey: typeof mapRandomKey;
 };
 export declare const Pagination: {
     asPageNumber: typeof asPageNumber;
