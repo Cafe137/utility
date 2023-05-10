@@ -213,6 +213,7 @@ declare function sortObject<T>(object: CafeObject<T>): CafeObject<T>;
 declare function sortArray<T>(array: T[]): T[];
 declare function sortAny(any: unknown): unknown;
 declare function deepEquals(a: unknown, b: unknown): boolean;
+declare function deepEqualsEvery(...values: unknown[]): boolean;
 declare function safeParse(stringable: string): CafeObject | null;
 declare function createSequence(): {
     next: () => number;
@@ -418,6 +419,7 @@ export declare const Objects: {
     sortArray: typeof sortArray;
     sortAny: typeof sortAny;
     deepEquals: typeof deepEquals;
+    deepEqualsEvery: typeof deepEqualsEvery;
     runOn: typeof runOn;
     ifPresent: typeof ifPresent;
     zip: typeof zip;

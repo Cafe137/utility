@@ -1417,6 +1417,15 @@ function deepEquals(a, b) {
     return JSON.stringify(sortAny(a)) === JSON.stringify(sortAny(b))
 }
 
+function deepEqualsEvery(...values) {
+    for (let i = 1; i < values.length; i++) {
+        if (!deepEquals(values[i - 1], values[i])) {
+            return false
+        }
+    }
+    return true
+}
+
 function safeParse(stringable) {
     try {
         return JSON.parse(stringable)
@@ -2326,6 +2335,7 @@ exports.Objects = {
     sortArray,
     sortAny,
     deepEquals,
+    deepEqualsEvery,
     runOn,
     ifPresent,
     zip,
