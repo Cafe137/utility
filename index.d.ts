@@ -155,6 +155,7 @@ declare function extractBlock(string: string, options: BlockExtractionOptions): 
 declare function extractAllBlocks(string: string, options: BlockExtractionOptions): string[];
 declare function parseHtmlAttributes(string: string): Record<string, string>;
 declare function readNextWord(string: string, index: number, allowedCharacters?: string[]): string;
+declare function resolveVariables(string: string, variables: Record<string, string>, prefix?: string, separator?: string): string;
 declare function resolveVariableWithDefaultSyntax(string: string, key: string, value: string, prefix?: string, separator?: string): string;
 declare function resolveRemainingVariablesWithDefaults(string: string, prefix?: string, separator?: string): string;
 declare function resolveMarkdownLinks(string: string, transformer: (label: string, link: string) => string): string;
@@ -525,6 +526,7 @@ export declare const Strings: {
     lastIndexOfBefore: typeof lastIndexOfBefore;
     parseHtmlAttributes: typeof parseHtmlAttributes;
     readNextWord: typeof readNextWord;
+    resolveVariables: typeof resolveVariables;
     resolveVariableWithDefaultSyntax: typeof resolveVariableWithDefaultSyntax;
     resolveRemainingVariablesWithDefaults: typeof resolveRemainingVariablesWithDefaults;
     isLetter: typeof isLetter;

@@ -1067,6 +1067,14 @@ function readNextWord(string, index, allowedCharacters = []) {
     return word
 }
 
+function resolveVariables(string, variables, prefix = '$', separator = ':') {
+    for (const key in variables) {
+        string = resolveVariableWithDefaultSyntax(string, key, variables[key], prefix, separator)
+    }
+    string = resolveRemainingVariablesWithDefaults(string)
+    return string
+}
+
 function resolveVariableWithDefaultSyntax(string, key, value, prefix = '$', separator = ':') {
     if (value === '') {
         return string
@@ -2444,6 +2452,7 @@ exports.Strings = {
     lastIndexOfBefore,
     parseHtmlAttributes,
     readNextWord,
+    resolveVariables,
     resolveVariableWithDefaultSyntax,
     resolveRemainingVariablesWithDefaults,
     isLetter,
