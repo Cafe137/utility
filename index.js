@@ -868,17 +868,19 @@ function randomize(string) {
     return string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
 }
 
-function expand(string) {
-    const matches = string.match(/\{(.+?)\}/g)
-    if (!matches) {
-        return [string]
+function expand(input) {
+    const regex = /\{(.+?)\}/
+    const match = input.match(regex)
+    if (!match || !match.index) {
+        return [input]
     }
-    const result = []
-    for (const match of matches) {
-        const group = match.slice(1, match.length - 1)
-        for (const option of group.split(',')) {
-            result.push(string.replace(match, option))
-        }
+    const group = match[1].split(',')
+    const prefix = input.slice(0, match.index)
+    const suffix = input.slice(match.index + match[0].length)
+    let result = []
+    for (const option of group) {
+        const expanded = expand(prefix + option + suffix)
+        result = result.concat(expanded)
     }
     return result
 }

@@ -124,7 +124,7 @@ interface ParsedFilename {
 }
 declare function parseFilename(string: string): ParsedFilename;
 declare function randomize(string: string): string;
-declare function expand(string: string): string[];
+declare function expand(input: string): string[];
 declare function shrinkTrim(string: string): string;
 declare function capitalize(string: string): string;
 declare function decapitalize(string: string): string;
