@@ -1485,6 +1485,25 @@ function mapRandomKey(object, mapFunction) {
     return key
 }
 
+function fromObjectString(string) {
+    string = string.replace(/(\w+)\((.+)\)/g, (match, $1, $2) => {
+        return `${$1}(${$2.replaceAll(',', '&comma;')})`
+    })
+    string = string.replace(/(,)(\s+})/g, '$2')
+    string = string.replace(/\.\.\..+?,/g, '')
+    string = string.replace(/(,\s+)([a-zA-Z]\w+),/g, "$1$2: '$2',")
+    string = string.replace(/:(.+)\?(.+):/g, (match, $1, $2) => {
+        return `: (${$1.trim()} && ${$2.trim()}) ||`
+    })
+    string = string.replace(/([a-zA-Z0-9]+)( ?: ?{)/g, '"$1"$2')
+    string = string.replace(/([a-zA-Z0-9]+) ?: ?(.+?)(,|\n|})/g, (match, $1, $2, $3) => {
+        return `"${$1}":"${$2.trim()}"${$3}`
+    })
+    string = string.replace(/("'|'")/g, '"')
+    string = string.replaceAll('&comma;', ',')
+    return JSON.parse(string)
+}
+
 const thresholds = [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e33]
 const longNumberUnits = [
     'thousand',
@@ -2374,7 +2393,8 @@ exports.Objects = {
     createStatefulToggle,
     diffKeys,
     pickRandomKey,
-    mapRandomKey
+    mapRandomKey,
+    fromObjectString
 }
 
 exports.Pagination = {

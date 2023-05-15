@@ -229,6 +229,7 @@ declare function diffKeys(objectA: CafeObject, objectB: CafeObject): {
 };
 declare function pickRandomKey(object: CafeObject): string;
 declare function mapRandomKey<T>(object: CafeObject<T>, mapFunction: (value: T) => T): string;
+declare function fromObjectString<T>(string: string): T;
 interface NumberFormatOptions {
     precision?: number;
     longForm?: boolean;
@@ -450,6 +451,7 @@ export declare const Objects: {
     diffKeys: typeof diffKeys;
     pickRandomKey: typeof pickRandomKey;
     mapRandomKey: typeof mapRandomKey;
+    fromObjectString: typeof fromObjectString;
 };
 export declare const Pagination: {
     asPageNumber: typeof asPageNumber;
