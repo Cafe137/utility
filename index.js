@@ -1486,6 +1486,7 @@ function mapRandomKey(object, mapFunction) {
 }
 
 function fromObjectString(string) {
+    string = string.replace(/\r\n/g, '\n')
     string = string.replace(/(\w+)\((.+)\)/g, (match, $1, $2) => {
         return `${$1}(${$2.replaceAll(',', '&comma;')})`
     })
