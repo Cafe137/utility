@@ -1132,6 +1132,14 @@ function resolveMarkdownLinks(string, transformer) {
     return string
 }
 
+function toQueryString(object, questionMark = true) {
+    const queryString = Object.entries(object)
+        .filter(([_, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .join('&')
+    return queryString ? (questionMark ? '?' : '') + queryString : ''
+}
+
 function parseCsv(string, delimiter = ',', quote = '"') {
     const items = []
     let buffer = ''
@@ -2395,7 +2403,8 @@ exports.Objects = {
     diffKeys,
     pickRandomKey,
     mapRandomKey,
-    fromObjectString
+    fromObjectString,
+    toQueryString
 }
 
 exports.Pagination = {

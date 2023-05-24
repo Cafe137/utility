@@ -159,6 +159,7 @@ declare function resolveVariables(string: string, variables: Record<string, stri
 declare function resolveVariableWithDefaultSyntax(string: string, key: string, value: string, prefix?: string, separator?: string): string;
 declare function resolveRemainingVariablesWithDefaults(string: string, prefix?: string, separator?: string): string;
 declare function resolveMarkdownLinks(string: string, transformer: (label: string, link: string) => string): string;
+declare function toQueryString(object: Record<string, any>, questionMark?: boolean): string;
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
 declare function waitFor(predicate: () => Promise<boolean>, waitLength: number, maxWaits: number): Promise<boolean>;
@@ -452,6 +453,7 @@ export declare const Objects: {
     pickRandomKey: typeof pickRandomKey;
     mapRandomKey: typeof mapRandomKey;
     fromObjectString: typeof fromObjectString;
+    toQueryString: typeof toQueryString;
 };
 export declare const Pagination: {
     asPageNumber: typeof asPageNumber;
