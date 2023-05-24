@@ -1390,16 +1390,10 @@ async function getCached(key, ttlMillis, handler) {
 }
 
 function joinUrl(...parts) {
-    let url = parts[0][parts[0].length - 1] === '/' ? parts[0].slice(0, -1) : parts[0]
-    for (let i = 1; i < parts.length; i++) {
-        const part = parts[i]
-        if (part === '/') {
-            continue
-        }
-        const starts = part[0] === '/'
-        const ends = part[part.length - 1] === '/'
-        url += '/' + part.slice(starts ? 1 : 0, ends ? -1 : undefined)
-    }
+    const url = parts
+        .filter(part => part && isString(part))
+        .join('/')
+        .replace(/([^:]\/)\/+/g, '$1')
     return url
 }
 
