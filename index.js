@@ -1140,6 +1140,10 @@ function toQueryString(object, questionMark = true) {
     return queryString ? (questionMark ? '?' : '') + queryString : ''
 }
 
+function buildUrl(baseUrl, path, query) {
+    return joinUrl(baseUrl, path) + toQueryString(query || {})
+}
+
 function parseCsv(string, delimiter = ',', quote = '"') {
     const items = []
     let buffer = ''
@@ -2490,7 +2494,8 @@ exports.Strings = {
     lineMatches,
     linesMatchInOrder,
     represent,
-    resolveMarkdownLinks
+    resolveMarkdownLinks,
+    buildUrl
 }
 
 exports.Assertions = {

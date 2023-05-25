@@ -160,6 +160,7 @@ declare function resolveVariableWithDefaultSyntax(string: string, key: string, v
 declare function resolveRemainingVariablesWithDefaults(string: string, prefix?: string, separator?: string): string;
 declare function resolveMarkdownLinks(string: string, transformer: (label: string, link: string) => string): string;
 declare function toQueryString(object: Record<string, any>, questionMark?: boolean): string;
+declare function buildUrl(baseUrl?: string | null, path?: string | null, query?: Record<string, any> | null): string;
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
 declare function waitFor(predicate: () => Promise<boolean>, waitLength: number, maxWaits: number): Promise<boolean>;
@@ -543,6 +544,7 @@ export declare const Strings: {
     linesMatchInOrder: typeof linesMatchInOrder;
     represent: typeof represent;
     resolveMarkdownLinks: typeof resolveMarkdownLinks;
+    buildUrl: typeof buildUrl;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;
