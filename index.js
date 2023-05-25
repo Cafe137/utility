@@ -1469,6 +1469,28 @@ function createStatefulToggle(desiredValue) {
     }
 }
 
+function organiseWithLimits(items, limits, property, defaultValue, sortFn) {
+    const result = {}
+    for (const key of Object.keys(limits)) {
+        result[key] = []
+    }
+    result[defaultValue] = []
+    if (sortFn) {
+        items = items.sort(sortFn)
+    }
+    for (const item of items) {
+        const value = item[property]
+        const key = limits[value] ? value : defaultValue
+        const isFull = result[key].length >= limits[key]
+        if (isFull) {
+            result[defaultValue].push(item)
+        } else {
+            result[key].push(item)
+        }
+    }
+    return result
+}
+
 function diffKeys(objectA, objectB) {
     const keysA = Object.keys(objectA)
     const keysB = Object.keys(objectB)
@@ -2297,7 +2319,8 @@ exports.Arrays = {
     unshiftAndLimit,
     atRolling,
     group,
-    createOscillator
+    createOscillator,
+    organiseWithLimits
 }
 
 exports.System = {

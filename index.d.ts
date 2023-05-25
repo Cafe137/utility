@@ -225,6 +225,7 @@ declare function createOscillator<T>(values: T[]): {
     next: () => T;
 };
 declare function createStatefulToggle(desiredValue: unknown): (value: unknown) => boolean;
+declare function organiseWithLimits<T>(items: T[], limits: Record<string, number>, property: keyof T, defaultValue: string, sortFn?: (a: T, b: T) => number): Record<string, T[]>;
 declare function diffKeys(objectA: CafeObject, objectB: CafeObject): {
     uniqueToA: string[];
     uniqueToB: string[];
@@ -355,6 +356,7 @@ export declare const Arrays: {
     atRolling: typeof atRolling;
     group: typeof group;
     createOscillator: typeof createOscillator;
+    organiseWithLimits: typeof organiseWithLimits;
 };
 export declare const System: {
     sleepMillis: typeof sleepMillis;
