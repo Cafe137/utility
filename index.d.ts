@@ -254,6 +254,7 @@ declare function filterObjectValues<T>(object: CafeObject<T>, predicate: (value:
 declare function mapObject<T, K>(object: CafeObject<T>, mapper: (value: T) => K): CafeObject<K>;
 declare function rethrow<T>(asyncFn: () => Promise<T>, throwable: Error): Promise<T>;
 declare function setSomeOnObject(object: CafeObject, key: string, value: unknown): void;
+declare function setSomeDeep(target: CafeObject, targetPath: string, source: CafeObject, sourcePath: string): void;
 declare function flip(object: Record<string, Indexable>): CafeObject;
 declare function getAllPermutations(object: CafeObject<unknown[]>): CafeObject[];
 declare function countTruthyValues(object: CafeObject): number;
@@ -441,6 +442,7 @@ export declare const Objects: {
     filterValues: typeof filterObjectValues;
     rethrow: typeof rethrow;
     setSomeOnObject: typeof setSomeOnObject;
+    setSomeDeep: typeof setSomeDeep;
     flip: typeof flip;
     getAllPermutations: typeof getAllPermutations;
     countTruthyValues: typeof countTruthyValues;

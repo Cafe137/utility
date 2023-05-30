@@ -1692,6 +1692,14 @@ function setSomeOnObject(object, key, value) {
     }
 }
 
+function setSomeDeep(target, targetPath, source, sourcePath) {
+    const value = getDeep(source, sourcePath)
+    if (typeof value === 'undefined' || value === null) {
+        return
+    }
+    setDeep(target, targetPath, value)
+}
+
 function flip(object) {
     const result = {}
     for (const [key, value] of Object.entries(object)) {
@@ -2410,6 +2418,7 @@ exports.Objects = {
     filterValues: filterObjectValues,
     rethrow,
     setSomeOnObject,
+    setSomeDeep,
     flip,
     getAllPermutations,
     countTruthyValues,
