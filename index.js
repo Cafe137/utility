@@ -459,6 +459,22 @@ function asId(value) {
     return typeof value === 'string' ? parseInt(value, 10) : value
 }
 
+function asTime(value) {
+    if (!isString(value)) {
+        throw new TypeError('Expected time, got: ' + value)
+    }
+    const parts = value.split(':')
+    if (parts.length !== 2) {
+        throw new TypeError('Expected time, got: ' + value)
+    }
+    const hours = parseInt(parts[0], 10)
+    const minutes = parseInt(parts[1], 10)
+    if (!isNumber(hours) || !isNumber(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+        throw new TypeError('Expected time, got: ' + value)
+    }
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
+}
+
 function asArray(value) {
     if (!Array.isArray(value)) {
         throw new TypeError('Expected array, got: ' + value)
@@ -2461,6 +2477,7 @@ exports.Types = {
     asDate,
     asNullableString,
     asId,
+    asTime,
     asArray,
     asObject
 }

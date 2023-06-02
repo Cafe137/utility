@@ -59,6 +59,7 @@ declare function asBoolean(bool: any): boolean;
 declare function asDate(date: any): Date;
 declare function asNullableString(string: any): string | null;
 declare function asId(value: any): number;
+declare function asTime(value: any): string;
 declare function asArray(value: any): unknown[];
 declare function asObject(value: any): Record<string, unknown>;
 declare function represent(value: any): string;
@@ -483,6 +484,7 @@ export declare const Types: {
     asDate: typeof asDate;
     asNullableString: typeof asNullableString;
     asId: typeof asId;
+    asTime: typeof asTime;
     asArray: typeof asArray;
     asObject: typeof asObject;
 };
