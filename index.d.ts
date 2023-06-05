@@ -97,7 +97,8 @@ declare function sum(array: number[]): number;
 declare function average(array: number[]): number;
 declare function range(start: number, end: number): number[];
 declare function includesAny(string: string, substrings: string[]): boolean;
-declare function slugify(string: string): string;
+declare function isChinese(string: string): boolean;
+declare function slugify(string: string, shouldAllowToken?: (character: string) => boolean): string;
 declare function camelToTitle(string: string): string;
 declare function slugToTitle(string: string): string;
 declare function slugToCamel(string: string): string;
@@ -553,6 +554,7 @@ export declare const Strings: {
     represent: typeof represent;
     resolveMarkdownLinks: typeof resolveMarkdownLinks;
     buildUrl: typeof buildUrl;
+    isChinese: typeof isChinese;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;

@@ -723,13 +723,17 @@ function includesAny(string, substrings) {
     return false
 }
 
-function slugify(string) {
+function isChinese(string) {
+    return /^[\u4E00-\u9FA5]+$/.test(string)
+}
+
+function slugify(string, shouldAllowToken = () => false) {
     return string
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .split('')
-        .map(character => (/[a-z0-9]/.test(character) ? character : '-'))
+        .map(character => (/[a-z0-9]/.test(character) || shouldAllowToken(character) ? character : '-'))
         .join('')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '')
@@ -2555,7 +2559,8 @@ exports.Strings = {
     linesMatchInOrder,
     represent,
     resolveMarkdownLinks,
-    buildUrl
+    buildUrl,
+    isChinese
 }
 
 exports.Assertions = {
