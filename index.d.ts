@@ -240,6 +240,7 @@ interface NumberFormatOptions {
     unit?: null | string;
 }
 declare function formatNumber(number: number, options?: NumberFormatOptions): string;
+declare function makeNumber(numberWithUnit: string): number;
 declare function parseIntOrThrow(numberOrString: any): number;
 declare function clamp(value: number, lower: number, upper: number): number;
 declare function increment(value: number, change: number, maximum: number): number;
@@ -368,6 +369,7 @@ export declare const System: {
     expandError: typeof expandError;
 };
 export declare const Numbers: {
+    make: typeof makeNumber;
     sum: typeof sum;
     average: typeof average;
     clamp: typeof clamp;

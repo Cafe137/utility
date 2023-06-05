@@ -1563,7 +1563,7 @@ const longNumberUnits = [
     'nonillion',
     'decillion'
 ]
-const shortNumberUnits = ['K', 'M', 'B', 't', 'q', 'Q', 's', 'S', 'o', 'n', 'd']
+const shortNumberUnits = ['K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'O', 'N', 'D']
 function formatNumber(number, options) {
     var _a, _b
     const longFormat =
@@ -1583,6 +1583,16 @@ function formatNumber(number, options) {
     return `${(number / thresholds[thresholds.length - 1]).toFixed(precision)}${longFormat ? ' ' : ''}${
         table[thresholds.length - 1]
     }${unitString}`
+}
+
+function makeNumber(numberWithUnit) {
+    const number = parseFloat(numberWithUnit)
+    const unit = numberWithUnit.replace(/^-?[0-9.]+/, '')
+    const index = shortNumberUnits.findIndex(value => value.toLowerCase() === unit.toLowerCase())
+    if (index === -1) {
+        return number
+    }
+    return number * thresholds[index]
 }
 
 function parseIntOrThrow(numberOrString) {
@@ -2356,6 +2366,7 @@ exports.System = {
 }
 
 exports.Numbers = {
+    make: makeNumber,
     sum,
     average,
     clamp,
