@@ -1421,6 +1421,18 @@ function joinUrl(...parts) {
     return url
 }
 
+function replaceBetweenStrings(string, start, end, replacement, keepBoundaries = true) {
+    const startsAt = string.indexOf(start)
+    const endsAt = string.indexOf(end, startsAt + start.length)
+    if (startsAt === -1 || endsAt === -1) {
+        throw Error('Start or end not found')
+    }
+    if (keepBoundaries) {
+        return string.substring(0, startsAt + start.length) + replacement + string.substring(endsAt)
+    }
+    return string.substring(0, startsAt) + replacement + string.substring(endsAt + end.length)
+}
+
 function sortObject(object) {
     const keys = Object.keys(object)
     const orderedKeys = keys.sort((a, b) => a.localeCompare(b))
@@ -2560,7 +2572,8 @@ exports.Strings = {
     represent,
     resolveMarkdownLinks,
     buildUrl,
-    isChinese
+    isChinese,
+    replaceBetweenStrings
 }
 
 exports.Assertions = {

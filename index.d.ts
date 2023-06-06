@@ -214,6 +214,7 @@ declare function containsWord(string: string, word: string): boolean;
 declare function containsWords(string: string, words: string[]): boolean;
 declare function getCached<T>(key: string, ttlMillis: number, handler: () => Promise<T>): Promise<T>;
 declare function joinUrl(...parts: unknown[]): string;
+declare function replaceBetweenStrings(string: string, start: string, end: string, replacement: string, keepBoundaries?: boolean): string;
 declare function sortObject<T>(object: CafeObject<T>): CafeObject<T>;
 declare function sortArray<T>(array: T[]): T[];
 declare function sortAny(any: unknown): unknown;
@@ -555,6 +556,7 @@ export declare const Strings: {
     resolveMarkdownLinks: typeof resolveMarkdownLinks;
     buildUrl: typeof buildUrl;
     isChinese: typeof isChinese;
+    replaceBetweenStrings: typeof replaceBetweenStrings;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;
