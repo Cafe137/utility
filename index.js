@@ -2049,10 +2049,15 @@ function tickPlaybook(playbook) {
         return null
     }
     const item = playbook[0]
-    if (--item.ttl <= 0) {
+    if (!item.ttlMax) {
+        item.ttlMax = item.ttl
+    } else if (--item.ttl <= 0) {
         playbook.shift()
     }
-    return item.data
+    return {
+        progress: (item.ttlMax - item.ttl) / item.ttlMax,
+        data: item.data
+    }
 }
 
 function addPoint(a, b) {

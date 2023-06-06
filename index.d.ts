@@ -302,9 +302,13 @@ export declare class Maybe<T> {
 }
 declare type Playbook<T> = {
     ttl: number;
+    ttlMax?: number;
     data: T;
 }[];
-declare function tickPlaybook<T>(playbook: Playbook<T>): T | null;
+declare function tickPlaybook<T>(playbook: Playbook<T>): {
+    progress: number;
+    data: T;
+} | null;
 declare type Point = {
     x: number;
     y: number;
