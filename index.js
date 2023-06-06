@@ -2044,6 +2044,17 @@ class Maybe {
 }
 
 exports.Maybe = Maybe
+function tickPlaybook(playbook) {
+    if (playbook.length === 0) {
+        return null
+    }
+    const item = playbook[0]
+    if (--item.ttl <= 0) {
+        playbook.shift()
+    }
+    return item.data
+}
+
 function addPoint(a, b) {
     return {
         x: a.x + b.x,
@@ -2370,7 +2381,8 @@ exports.Arrays = {
     atRolling,
     group,
     createOscillator,
-    organiseWithLimits
+    organiseWithLimits,
+    tickPlaybook
 }
 
 exports.System = {

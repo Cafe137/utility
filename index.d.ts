@@ -300,6 +300,11 @@ export declare class Maybe<T> {
     bind<K>(fn: (value: T) => K): Maybe<Awaited<K>>;
     valueOf(): Promise<T | null>;
 }
+declare type Playbook<T> = {
+    ttl: number;
+    data: T;
+}[];
+declare function tickPlaybook<T>(playbook: Playbook<T>): T | null;
 declare type Point = {
     x: number;
     y: number;
@@ -362,6 +367,7 @@ export declare const Arrays: {
     group: typeof group;
     createOscillator: typeof createOscillator;
     organiseWithLimits: typeof organiseWithLimits;
+    tickPlaybook: typeof tickPlaybook;
 };
 export declare const System: {
     sleepMillis: typeof sleepMillis;
