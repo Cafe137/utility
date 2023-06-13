@@ -15,8 +15,8 @@ declare function containsShape<T>(array2D: T[][], shape: T[][], x: number, y: nu
 declare function pickRandomIndices<T>(array: T[], count: number, generator?: () => number): number[];
 declare function pluck<T, K extends keyof T>(array: T[], key: K): T[K][];
 declare function makeSeededRng(seed: number): () => number;
-declare function intBetween(min: number, max: number): number;
-declare function floatBetween(min: number, max: number): number;
+declare function intBetween(min: number, max: number, generator?: () => number): number;
+declare function floatBetween(min: number, max: number, generator?: () => number): number;
 declare function signedRandom(): number;
 declare function chance(threshold: number): boolean;
 declare function pick<T>(array: T[], generator?: () => number): T;
@@ -309,6 +309,9 @@ declare function tickPlaybook<T>(playbook: Playbook<T>): {
     progress: number;
     data: T;
 } | null;
+declare function getArgument(args: string[], key: string): string | null;
+declare function requireStringArgument(args: string[], key: string): string;
+declare function requireNumberArgument(args: string[], key: string): number;
 declare type Point = {
     x: number;
     y: number;
@@ -372,6 +375,9 @@ export declare const Arrays: {
     createOscillator: typeof createOscillator;
     organiseWithLimits: typeof organiseWithLimits;
     tickPlaybook: typeof tickPlaybook;
+    getArgument: typeof getArgument;
+    requireStringArgument: typeof requireStringArgument;
+    requireNumberArgument: typeof requireNumberArgument;
 };
 export declare const System: {
     sleepMillis: typeof sleepMillis;

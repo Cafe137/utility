@@ -126,12 +126,12 @@ function makeSeededRng(seed) {
     }
 }
 
-function intBetween(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
+function intBetween(min, max, generator = Math.random) {
+    return Math.floor(generator() * (max - min + 1)) + min
 }
 
-function floatBetween(min, max) {
-    return Math.random() * (max - min) + min
+function floatBetween(min, max, generator = Math.random) {
+    return generator() * (max - min) + min
 }
 
 function signedRandom() {
@@ -1607,6 +1607,9 @@ function formatNumber(number, options) {
 
 function makeNumber(numberWithUnit) {
     const number = parseFloat(numberWithUnit)
+    if (isNaN(number)) {
+        throw 'makeNumber got NaN for input'
+    }
     const unit = numberWithUnit.replace(/^-?[0-9.]+/, '')
     const index = shortNumberUnits.findIndex(value => value.toLowerCase() === unit.toLowerCase())
     if (index === -1) {
@@ -2064,6 +2067,39 @@ function tickPlaybook(playbook) {
     }
 }
 
+function getArgument(args, key) {
+    const index = args.findIndex(arg => arg.endsWith('-' + key) || arg.includes('-' + key + '='))
+    const arg = args[index]
+    if (!arg) {
+        return null
+    }
+    if (arg.includes('=')) {
+        return arg.split('=')[1]
+    }
+    const next = args[index + 1]
+    if (next && !next.startsWith('-')) {
+        return next
+    }
+    return null
+}
+
+function requireStringArgument(args, key) {
+    const value = getArgument(args, key)
+    if (!value) {
+        throw new Error(`Missing argument ${key}`)
+    }
+    return value
+}
+
+function requireNumberArgument(args, key) {
+    const value = requireStringArgument(args, key)
+    try {
+        return makeNumber(value)
+    } catch (_a) {
+        throw new Error(`Invalid argument ${key}: ${value}`)
+    }
+}
+
 function addPoint(a, b) {
     return {
         x: a.x + b.x,
@@ -2391,7 +2427,10 @@ exports.Arrays = {
     group,
     createOscillator,
     organiseWithLimits,
-    tickPlaybook
+    tickPlaybook,
+    getArgument,
+    requireStringArgument,
+    requireNumberArgument
 }
 
 exports.System = {
