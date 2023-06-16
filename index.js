@@ -310,6 +310,18 @@ function convertBytes(bytes) {
     return bytes + ' B'
 }
 
+function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.toLowerCase())
+    if (!result) {
+        throw new Error('Invalid hex color: ' + hex)
+    }
+    return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
+}
+
+function rgbToHex(rgb) {
+    return '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('')
+}
+
 function isObject(value) {
     if (!value) {
         return false
@@ -2454,7 +2466,9 @@ exports.Numbers = {
     format: formatNumber,
     parseIntOrThrow,
     asMegabytes,
-    convertBytes
+    convertBytes,
+    hexToRgb,
+    rgbToHex
 }
 
 exports.Promises = {

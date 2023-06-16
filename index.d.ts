@@ -36,6 +36,8 @@ declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAny
 declare function forever(callable: (() => Promise<void>) | (() => void), millis: number): Promise<never>;
 declare function asMegabytes(number: number): number;
 declare function convertBytes(bytes: number): string;
+declare function hexToRgb(hex: string): [number, number, number];
+declare function rgbToHex(rgb: [number, number, number]): string;
 declare function isObject(value: any): value is object;
 declare function isStrictlyObject(value: any): value is object;
 declare function isEmptyArray(value: any): boolean;
@@ -400,6 +402,8 @@ export declare const Numbers: {
     parseIntOrThrow: typeof parseIntOrThrow;
     asMegabytes: typeof asMegabytes;
     convertBytes: typeof convertBytes;
+    hexToRgb: typeof hexToRgb;
+    rgbToHex: typeof rgbToHex;
 };
 export declare const Promises: {
     raceFulfilled: typeof raceFulfilled;
