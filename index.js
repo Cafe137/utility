@@ -1577,7 +1577,7 @@ function fromObjectString(string) {
     return JSON.parse(string)
 }
 
-const thresholds = [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e16, 1e18, 1e18, 1e18, 1e33]
+const thresholds = [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e9, 1e16, 1e18, 1e18, 1e18, 1e33]
 const longNumberUnits = [
     'thousand',
     'million',
@@ -1589,13 +1589,14 @@ const longNumberUnits = [
     'septillion',
     'octillion',
     'nonillion',
+    'gwei',
     'bzz',
     'btc',
     'eth',
     'dai',
     'decillion'
 ]
-const shortNumberUnits = ['K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'O', 'N', 'bzz', 'eth', 'btc', 'dai', 'D']
+const shortNumberUnits = ['K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'O', 'N', 'gwei', 'bzz', 'eth', 'btc', 'dai', 'D']
 function formatNumber(number, options) {
     var _a, _b
     const longFormat =
