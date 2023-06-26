@@ -211,6 +211,7 @@ declare function getDayInfoFromDateTimeString(dateTimeString: string): DayInfo;
 declare function seconds(value: number): number;
 declare function minutes(value: number): number;
 declare function hours(value: number): number;
+declare function makeDate(numberWithUnit: string): number;
 declare function getPreLine(string: string): string;
 declare function containsWord(string: string, word: string): boolean;
 declare function containsWords(string: string, words: string[]): boolean;
@@ -431,6 +432,7 @@ export declare const Dates: {
     seconds: typeof seconds;
     minutes: typeof minutes;
     hours: typeof hours;
+    make: typeof makeDate;
 };
 export declare const Objects: {
     safeParse: typeof safeParse;

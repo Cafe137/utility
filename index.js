@@ -1391,6 +1391,43 @@ function hours(value) {
     return value * 3600000
 }
 
+const dateUnits = [
+    ['ms', 1],
+    ['milli', 1],
+    ['millis', 1],
+    ['millisecond', 1],
+    ['milliseconds', 1],
+    ['s', 1000],
+    ['sec', 1000],
+    ['second', 1000],
+    ['seconds', 1000],
+    ['m', 60000],
+    ['min', 60000],
+    ['minute', 60000],
+    ['minutes', 60000],
+    ['h', 3600000],
+    ['hour', 3600000],
+    ['hours', 3600000],
+    ['d', 86400000],
+    ['day', 86400000],
+    ['days', 86400000],
+    ['w', 604800000],
+    ['week', 604800000],
+    ['weeks', 604800000]
+]
+function makeDate(numberWithUnit) {
+    const number = parseFloat(numberWithUnit)
+    if (isNaN(number)) {
+        throw 'makeDate got NaN for input'
+    }
+    const unit = numberWithUnit.replace(/^-?[0-9.]+/, '').trim()
+    const index = dateUnits.findIndex(value => value[0] === unit.toLowerCase())
+    if (index === -1) {
+        return number
+    }
+    return number * dateUnits[index][1]
+}
+
 function getPreLine(string) {
     return string.replace(/ +/g, ' ').replace(/^ /gm, '')
 }
@@ -1623,7 +1660,7 @@ function makeNumber(numberWithUnit) {
     if (isNaN(number)) {
         throw 'makeNumber got NaN for input'
     }
-    const unit = numberWithUnit.replace(/^-?[0-9.]+/, '')
+    const unit = numberWithUnit.replace(/^-?[0-9.]+/, '').trim()
     const index = shortNumberUnits.findIndex(value => value.toLowerCase() === unit.toLowerCase())
     if (index === -1) {
         return number
@@ -2498,7 +2535,8 @@ exports.Dates = {
     getDayInfoFromDateTimeString,
     seconds,
     minutes,
-    hours
+    hours,
+    make: makeDate
 }
 
 exports.Objects = {
