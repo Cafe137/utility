@@ -1293,25 +1293,25 @@ function getAgo(date, now) {
     return delta.toFixed(0) + ' days ago'
 }
 
-function getAgoStructured(date, now) {
+function getAgoStructured(dateOrTimestamp, now) {
     if (!now) {
         now = Date.now()
     }
-    const then = date.getTime()
+    const then = typeof dateOrTimestamp === 'number' ? dateOrTimestamp : dateOrTimestamp.getTime()
     let delta = (now - then) / 1000
     if (delta < 120) {
-        return { value: delta, unit: 'second' }
+        return { value: Math.floor(delta), unit: 'second' }
     }
     delta /= 60
     if (delta < 120) {
-        return { value: delta, unit: 'minute' }
+        return { value: Math.floor(delta), unit: 'minute' }
     }
     delta /= 60
     if (delta < 48) {
-        return { value: delta, unit: 'hour' }
+        return { value: Math.floor(delta), unit: 'hour' }
     }
     delta /= 24
-    return { value: delta, unit: 'day' }
+    return { value: Math.floor(delta), unit: 'day' }
 }
 
 const throttleTimers = {}

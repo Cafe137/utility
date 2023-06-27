@@ -178,7 +178,7 @@ declare function fromMillis(millis: number): Date;
 declare function createTimeDigits(value: number): string;
 declare function humanizeTime(millis: number): string;
 declare function getAgo(date: Date, now?: number): string;
-declare function getAgoStructured(date: Date, now?: number): {
+declare function getAgoStructured(dateOrTimestamp: Date | number, now?: number): {
     value: number;
     unit: string;
 };
