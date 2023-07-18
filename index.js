@@ -1601,6 +1601,7 @@ function fromObjectString(string) {
     })
     string = string.replace(/(,)(\s+})/g, '$2')
     string = string.replace(/\.\.\..+?,/g, '')
+    string = string.replace(/({\s+)([a-zA-Z]\w+),/g, "$1$2: '$2',")
     string = string.replace(/(,\s+)([a-zA-Z]\w+),/g, "$1$2: '$2',")
     string = string.replace(/:(.+)\?(.+):/g, (match, $1, $2) => {
         return `: (${$1.trim()} && ${$2.trim()}) ||`
@@ -2150,6 +2151,18 @@ function requireNumberArgument(args, key) {
     }
 }
 
+function bringToFrontInPlace(array, index) {
+    const item = array[index]
+    array.splice(index, 1)
+    array.unshift(item)
+}
+
+function bringToFront(array, index) {
+    const newArray = [...array]
+    bringToFrontInPlace(newArray, index)
+    return newArray
+}
+
 function addPoint(a, b) {
     return {
         x: a.x + b.x,
@@ -2480,7 +2493,9 @@ exports.Arrays = {
     tickPlaybook,
     getArgument,
     requireStringArgument,
-    requireNumberArgument
+    requireNumberArgument,
+    bringToFront,
+    bringToFrontInPlace
 }
 
 exports.System = {

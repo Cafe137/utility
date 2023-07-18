@@ -315,6 +315,8 @@ declare function tickPlaybook<T>(playbook: Playbook<T>): {
 declare function getArgument(args: string[], key: string): string | null;
 declare function requireStringArgument(args: string[], key: string): string;
 declare function requireNumberArgument(args: string[], key: string): number;
+declare function bringToFrontInPlace<T>(array: T[], index: number): void;
+declare function bringToFront<T>(array: T[], index: number): T[];
 declare type Point = {
     x: number;
     y: number;
@@ -381,6 +383,8 @@ export declare const Arrays: {
     getArgument: typeof getArgument;
     requireStringArgument: typeof requireStringArgument;
     requireNumberArgument: typeof requireNumberArgument;
+    bringToFront: typeof bringToFront;
+    bringToFrontInPlace: typeof bringToFrontInPlace;
 };
 export declare const System: {
     sleepMillis: typeof sleepMillis;
