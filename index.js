@@ -536,7 +536,11 @@ function deepMergeInPlace(target, source) {
                 deepMergeInPlace(target[key], source[key])
             } else if (Array.isArray(source[key])) {
                 target[key] = [...source[key]]
-            } else {
+            } else if (
+                (source[key] !== null && source[key] !== undefined) ||
+                target[key] === null ||
+                target[key] === undefined
+            ) {
                 target[key] = source[key]
             }
         }
