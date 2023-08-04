@@ -1319,17 +1319,22 @@ function getAgoStructured(dateOrTimestamp, now) {
 }
 
 function countCycles(since, cycleLength, options) {
-    var _a, _b
+    var _a, _b, _c
     const now =
         (_a = options === null || options === void 0 ? void 0 : options.now) !== null && _a !== void 0 ? _a : Date.now()
     const delta = now - since
     const cycles = Math.floor(delta / cycleLength)
-    const remaining = Math.ceil(
-        (delta % cycleLength) /
+    const remaining =
+        cycleLength /
             ((_b = options === null || options === void 0 ? void 0 : options.precision) !== null && _b !== void 0
                 ? _b
-                : 1)
-    )
+                : 1) -
+        Math.ceil(
+            (delta % cycleLength) /
+                ((_c = options === null || options === void 0 ? void 0 : options.precision) !== null && _c !== void 0
+                    ? _c
+                    : 1)
+        )
     return { cycles, remaining }
 }
 
