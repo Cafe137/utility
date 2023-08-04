@@ -1318,6 +1318,21 @@ function getAgoStructured(dateOrTimestamp, now) {
     return { value: Math.floor(delta), unit: 'day' }
 }
 
+function countCycles(since, cycleLength, options) {
+    var _a, _b
+    const now =
+        (_a = options === null || options === void 0 ? void 0 : options.now) !== null && _a !== void 0 ? _a : Date.now()
+    const delta = now - since
+    const cycles = Math.floor(delta / cycleLength)
+    const remaining = Math.ceil(
+        (delta % cycleLength) /
+            ((_b = options === null || options === void 0 ? void 0 : options.precision) !== null && _b !== void 0
+                ? _b
+                : 1)
+    )
+    return { cycles, remaining }
+}
+
 const throttleTimers = {}
 function throttle(identifier, millis) {
     if (!throttleTimers[identifier] || Date.now() > throttleTimers[identifier]) {
@@ -2538,6 +2553,7 @@ exports.Promises = {
 exports.Dates = {
     getAgo,
     getAgoStructured,
+    countCycles,
     isoDate,
     throttle,
     timeSince,

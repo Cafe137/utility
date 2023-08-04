@@ -182,6 +182,14 @@ declare function getAgoStructured(dateOrTimestamp: Date | number, now?: number):
     value: number;
     unit: string;
 };
+declare type CountCyclesOptions = {
+    precision?: number;
+    now?: number;
+};
+declare function countCycles(since: number, cycleLength: number, options?: CountCyclesOptions): {
+    cycles: number;
+    remaining: number;
+};
 declare function throttle(identifier: string, millis: number): boolean;
 declare function timeSince(unit: 's' | 'm' | 'h' | 'd', a: Date | number, optionalB?: Date | number): number;
 interface Progress {
@@ -281,17 +289,13 @@ declare function transformToArray(objectOfArrays: CafeObject<unknown[]>): CafeOb
 declare function incrementMulti<T>(objects: T[], key: keyof T, step?: number): void;
 declare function setMulti<T, K extends keyof T>(objects: T[], key: K, value: T[K]): void;
 declare function group<T>(array: T[], groupFn: (current: T, previous: T) => boolean): T[][];
-interface FastIndexItem<T> {
-    validUntil: number;
-    data: T;
-}
 interface FastIndex<T> {
     index: CafeObject<T>;
     keys: string[];
 }
 declare function createFastIndex<T>(): FastIndex<T>;
 declare function pushToFastIndex<T>(object: FastIndex<T>, key: string, item: T, limit?: number): void;
-declare function pushToFastIndexWithExpiracy<T>(object: FastIndex<FastIndexItem<T>>, key: string, item: T, expiration: number, limit?: number): void;
+declare function pushToFastIndexWithExpiracy<T>(object: FastIndex<T>, key: string, item: T, expiration: number, limit?: number): void;
 declare function getFromFastIndexWithExpiracy<T>(object: FastIndex<T>, key: string): T | null;
 declare function makeAsyncQueue(concurrency?: number): {
     enqueue(fn: () => Promise<void>): void;
@@ -419,6 +423,7 @@ export declare const Promises: {
 export declare const Dates: {
     getAgo: typeof getAgo;
     getAgoStructured: typeof getAgoStructured;
+    countCycles: typeof countCycles;
     isoDate: typeof isoDate;
     throttle: typeof throttle;
     timeSince: typeof timeSince;
