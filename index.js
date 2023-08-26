@@ -1506,6 +1506,52 @@ function replaceBetweenStrings(string, start, end, replacement, keepBoundaries =
     return string.substring(0, startsAt) + replacement + string.substring(endsAt + end.length)
 }
 
+function describeMarkdown(string) {
+    let type = 'p'
+    if (string.startsWith('#')) {
+        type = 'h1'
+        string = string.slice(1).trim()
+    } else if (string.startsWith('-')) {
+        type = 'li'
+        string = string.slice(1).trim()
+    }
+    const isCapitalized = string[0] === string[0].toUpperCase()
+    const hasPunctuation = /[.?!]$/.test(string)
+    const endsWithColon = /:$/.test(string)
+    return { type, isCapitalized, hasPunctuation, endsWithColon }
+}
+
+function isBalanced(string, opening = '(', closing = ')') {
+    let weight = 0
+    for (const character of string) {
+        if (character === opening) {
+            weight++
+        } else if (character === closing) {
+            weight--
+        }
+        if (weight < 0) {
+            return false
+        }
+    }
+    return opening === closing ? weight % 2 === 0 : weight === 0
+}
+
+function textToFormat(text) {
+    text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    let length = text.length
+    while (true) {
+        text = text.replace(/(\w+)[\s,]+\w+/g, '$1')
+        if (text.length === length) {
+            break
+        }
+        length = text.length
+    }
+    text = text.replaceAll(/[A-Z][a-zA-Z0-9]+/g, 'A')
+    text = text.replaceAll(/[a-z][a-zA-Z0-9]+/g, 'a')
+    text = text.replaceAll(/[\u4E00-\u9FA5]+/g, 'Z')
+    return text
+}
+
 function sortObject(object) {
     const keys = Object.keys(object)
     const orderedKeys = keys.sort((a, b) => a.localeCompare(b))
@@ -2726,7 +2772,10 @@ exports.Strings = {
     resolveMarkdownLinks,
     buildUrl,
     isChinese,
-    replaceBetweenStrings
+    replaceBetweenStrings,
+    describeMarkdown,
+    isBalanced,
+    textToFormat
 }
 
 exports.Assertions = {

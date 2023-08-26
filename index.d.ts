@@ -226,6 +226,15 @@ declare function containsWords(string: string, words: string[]): boolean;
 declare function getCached<T>(key: string, ttlMillis: number, handler: () => Promise<T>): Promise<T>;
 declare function joinUrl(...parts: unknown[]): string;
 declare function replaceBetweenStrings(string: string, start: string, end: string, replacement: string, keepBoundaries?: boolean): string;
+declare type MarkdownDescription = {
+    type: 'p' | 'h1' | 'li';
+    isCapitalized: boolean;
+    hasPunctuation: boolean;
+    endsWithColon: boolean;
+};
+declare function describeMarkdown(string: string): MarkdownDescription;
+declare function isBalanced(string: string, opening?: string, closing?: string): boolean;
+declare function textToFormat(text: string): string;
 declare function sortObject<T>(object: CafeObject<T>): CafeObject<T>;
 declare function sortArray<T>(array: T[]): T[];
 declare function sortAny(any: unknown): unknown;
@@ -588,6 +597,9 @@ export declare const Strings: {
     buildUrl: typeof buildUrl;
     isChinese: typeof isChinese;
     replaceBetweenStrings: typeof replaceBetweenStrings;
+    describeMarkdown: typeof describeMarkdown;
+    isBalanced: typeof isBalanced;
+    textToFormat: typeof textToFormat;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;
