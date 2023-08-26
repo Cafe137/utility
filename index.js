@@ -1540,14 +1540,14 @@ function textToFormat(text) {
     text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     let length = text.length
     while (true) {
-        text = text.replace(/(\w+)[\s,]+\w+/g, '$1')
+        text = text.replace(/(\w+)[\s,']+\w+/g, '$1')
         if (text.length === length) {
             break
         }
         length = text.length
     }
-    text = text.replaceAll(/[A-Z][a-zA-Z0-9]+/g, 'A')
-    text = text.replaceAll(/[a-z][a-zA-Z0-9]+/g, 'a')
+    text = text.replaceAll(/[A-Z][a-zA-Z0-9]*/g, 'A')
+    text = text.replaceAll(/[a-z][a-zA-Z0-9]*/g, 'a')
     text = text.replaceAll(/[\u4E00-\u9FA5]+/g, 'Z')
     return text
 }
