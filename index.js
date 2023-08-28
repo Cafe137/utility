@@ -2207,11 +2207,11 @@ function tickPlaybook(playbook) {
     }
 }
 
-function getArgument(args, key) {
+function getArgument(args, key, env, envKey) {
     const index = args.findIndex(arg => arg.endsWith('-' + key) || arg.includes('-' + key + '='))
     const arg = args[index]
     if (!arg) {
-        return null
+        return (env || {})[envKey || key || ''] || null
     }
     if (arg.includes('=')) {
         return arg.split('=')[1]
@@ -2220,19 +2220,19 @@ function getArgument(args, key) {
     if (next && !next.startsWith('-')) {
         return next
     }
-    return null
+    return (env || {})[envKey || key || ''] || null
 }
 
-function requireStringArgument(args, key) {
-    const value = getArgument(args, key)
+function requireStringArgument(args, key, env, envKey) {
+    const value = getArgument(args, key, env, envKey)
     if (!value) {
         throw new Error(`Missing argument ${key}`)
     }
     return value
 }
 
-function requireNumberArgument(args, key) {
-    const value = requireStringArgument(args, key)
+function requireNumberArgument(args, key, env, envKey) {
+    const value = requireStringArgument(args, key, env, envKey)
     try {
         return makeNumber(value)
     } catch (_a) {

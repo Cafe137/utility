@@ -325,9 +325,9 @@ declare function tickPlaybook<T>(playbook: Playbook<T>): {
     progress: number;
     data: T;
 } | null;
-declare function getArgument(args: string[], key: string): string | null;
-declare function requireStringArgument(args: string[], key: string): string;
-declare function requireNumberArgument(args: string[], key: string): number;
+declare function getArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): string | null;
+declare function requireStringArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): string;
+declare function requireNumberArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): number;
 declare function bringToFrontInPlace<T>(array: T[], index: number): void;
 declare function bringToFront<T>(array: T[], index: number): T[];
 declare type Point = {
