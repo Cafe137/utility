@@ -501,17 +501,36 @@ function asObject(value) {
     return value
 }
 
-function represent(value) {
+function represent(value, strategy = 'json', depth = 0) {
     if (isObject(value)) {
-        return JSON.stringify(value)
-    }
-    if (value === null) {
-        return 'null'
+        if (depth > 1) {
+            return '[object Object]'
+        }
+        if (strategy === 'json') {
+            if (Array.isArray(value)) {
+                const transformed = value.map(element => represent(element, 'json', depth + 1))
+                return depth === 0 ? JSON.stringify(transformed) : transformed
+            }
+            const object = {}
+            if (value.message) {
+                object.message = represent(value.message, 'json', depth + 1)
+            }
+            for (const [key, val] of Object.entries(value)) {
+                object[key] = represent(val, 'json', depth + 1)
+            }
+            return depth === 0 ? JSON.stringify(object) : object
+        } else if (strategy === 'key-value') {
+            const keys = Object.keys(value)
+            if (value.message && !keys.includes('message')) {
+                keys.unshift('message')
+            }
+            return keys.map(key => `${key}=${JSON.stringify(represent(value[key], 'json', depth + 1))}`).join(' ')
+        }
     }
     if (isUndefined(value)) {
-        return 'undefined'
+        value = 'undefined'
     }
-    return value
+    return depth === 0 ? JSON.stringify(value) : value
 }
 
 function expandError(error, stackTrace) {

@@ -64,7 +64,7 @@ declare function asId(value: any): number;
 declare function asTime(value: any): string;
 declare function asArray(value: any): unknown[];
 declare function asObject(value: any): Record<string, unknown>;
-declare function represent(value: any): string;
+declare function represent(value: any, strategy?: 'json' | 'key-value', depth?: number): string;
 declare function expandError(error: any, stackTrace?: boolean): string;
 declare function deepMergeInPlace<X extends object, Y extends object>(target: X, source: Y): X & Y;
 declare function deepMerge2<X extends object, Y extends object>(target: X, source: Y): X & Y;
