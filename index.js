@@ -1461,7 +1461,7 @@ const dateUnits = [
 function makeDate(numberWithUnit) {
     const number = parseFloat(numberWithUnit)
     if (isNaN(number)) {
-        throw 'makeDate got NaN for input'
+        throw Error('makeDate got NaN for input')
     }
     const unit = numberWithUnit.replace(/^-?[0-9.]+/, '').trim()
     const index = dateUnits.findIndex(value => value[0] === unit.toLowerCase())
@@ -1748,7 +1748,7 @@ function formatNumber(number, options) {
 function makeNumber(numberWithUnit) {
     const number = parseFloat(numberWithUnit)
     if (isNaN(number)) {
-        throw 'makeNumber got NaN for input'
+        throw Error('makeNumber got NaN for input')
     }
     const unit = numberWithUnit.replace(/^-?[0-9.]+/, '').trim()
     const index = shortNumberUnits.findIndex(value => value.toLowerCase() === unit.toLowerCase())
@@ -2223,6 +2223,38 @@ function getArgument(args, key, env, envKey) {
     return (env || {})[envKey || key || ''] || null
 }
 
+function getNumberArgument(args, key, env, envKey) {
+    const value = getArgument(args, key, env, envKey)
+    if (!value) {
+        return null
+    }
+    try {
+        return makeNumber(value)
+    } catch (_a) {
+        throw new Error(`Invalid number argument ${key}: ${value}`)
+    }
+}
+
+function getBooleanArgument(args, key, env, envKey) {
+    const isPresent = args.some(arg => arg.endsWith('-' + key))
+    const value = getArgument(args, key, env, envKey)
+    if (!value && isPresent) {
+        return true
+    }
+    if (!value && !isPresent) {
+        return null
+    }
+    const truthy = ['true', '1', 'yes', 'y', 'on']
+    const falsy = ['false', '0', 'no', 'n', 'off']
+    if (truthy.includes(value.toLowerCase())) {
+        return true
+    }
+    if (falsy.includes(value.toLowerCase())) {
+        return false
+    }
+    throw Error(`Invalid boolean argument ${key}: ${value}`)
+}
+
 function requireStringArgument(args, key, env, envKey) {
     const value = getArgument(args, key, env, envKey)
     if (!value) {
@@ -2581,6 +2613,8 @@ exports.Arrays = {
     organiseWithLimits,
     tickPlaybook,
     getArgument,
+    getBooleanArgument,
+    getNumberArgument,
     requireStringArgument,
     requireNumberArgument,
     bringToFront,

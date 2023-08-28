@@ -326,6 +326,8 @@ declare function tickPlaybook<T>(playbook: Playbook<T>): {
     data: T;
 } | null;
 declare function getArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): string | null;
+declare function getNumberArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): number | null;
+declare function getBooleanArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): boolean | null;
 declare function requireStringArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): string;
 declare function requireNumberArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): number;
 declare function bringToFrontInPlace<T>(array: T[], index: number): void;
@@ -394,6 +396,8 @@ export declare const Arrays: {
     organiseWithLimits: typeof organiseWithLimits;
     tickPlaybook: typeof tickPlaybook;
     getArgument: typeof getArgument;
+    getBooleanArgument: typeof getBooleanArgument;
+    getNumberArgument: typeof getNumberArgument;
     requireStringArgument: typeof requireStringArgument;
     requireNumberArgument: typeof requireNumberArgument;
     bringToFront: typeof bringToFront;
