@@ -33,7 +33,7 @@ declare function ensureDeep(object: CafeObject, path: string, value: unknown): u
 declare function deleteDeep(object: CafeObject, path: string): void;
 declare function replaceDeep(object: CafeObject, path: string, value: unknown): unknown;
 declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAnyKey?: boolean): unknown;
-declare function forever(callable: (() => Promise<void>) | (() => void), millis: number): Promise<never>;
+declare function forever(callable: (() => Promise<void>) | (() => void), millis: number, log?: (message: string, metadata: object) => void): Promise<never>;
 declare function asMegabytes(number: number): number;
 declare function convertBytes(bytes: number): string;
 declare function hexToRgb(hex: string): [number, number, number];
@@ -157,6 +157,11 @@ interface BlockExtractionOptions {
 }
 declare function extractBlock(string: string, options: BlockExtractionOptions): string | null;
 declare function extractAllBlocks(string: string, options: BlockExtractionOptions): string[];
+declare type StringSegment = {
+    symbol: string | null;
+    string: string;
+};
+declare function segmentizeString(string: string, symbol: string): StringSegment[];
 declare function parseHtmlAttributes(string: string): Record<string, string>;
 declare function readNextWord(string: string, index: number, allowedCharacters?: string[]): string;
 declare function resolveVariables(string: string, variables: Record<string, string>, prefix?: string, separator?: string): string;
@@ -604,6 +609,7 @@ export declare const Strings: {
     describeMarkdown: typeof describeMarkdown;
     isBalanced: typeof isBalanced;
     textToFormat: typeof textToFormat;
+    segmentize: typeof segmentizeString;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;

@@ -282,12 +282,14 @@ function getFirstDeep(object, paths, fallbackToAnyKey) {
     return null
 }
 
-async function forever(callable, millis) {
+async function forever(callable, millis, log) {
     while (true) {
         try {
             await callable()
         } catch (error) {
-            console.error('Error in forever:', error)
+            if (log) {
+                log('Error in forever', error)
+            }
         }
         await sleepMillis(millis)
     }
@@ -1102,6 +1104,29 @@ function extractAllBlocks(string, options) {
             ? indexOfEarliest(string, [`${options.opening} `, `${options.opening}\n`], start + block.length)
             : string.indexOf(options.opening, start + block.length)
     }
+}
+
+function segmentizeString(string, symbol) {
+    const segments = []
+    let index = 0
+    while (index < string.length) {
+        const start = string.indexOf(symbol, index)
+        if (start === -1) {
+            segments.push({ string: string.slice(index), symbol: null })
+            break
+        }
+        const end = string.indexOf(symbol, start + symbol.length)
+        if (start > index && end !== -1) {
+            segments.push({ string: string.slice(index, start), symbol: null })
+        }
+        if (end === -1) {
+            segments.push({ string: string.slice(index), symbol: null })
+            break
+        }
+        segments.push({ string: string.slice(start + symbol.length, end), symbol })
+        index = end + symbol.length
+    }
+    return segments
 }
 
 function parseHtmlAttributes(string) {
@@ -2828,7 +2853,8 @@ exports.Strings = {
     replaceBetweenStrings,
     describeMarkdown,
     isBalanced,
-    textToFormat
+    textToFormat,
+    segmentize: segmentizeString
 }
 
 exports.Assertions = {
