@@ -1567,11 +1567,16 @@ function describeMarkdown(string) {
 
 function isBalanced(string, opening = '(', closing = ')') {
     let weight = 0
-    for (const character of string) {
-        if (character === opening) {
+    let i = 0
+    while (i < string.length) {
+        if (string.startsWith(opening, i)) {
             weight++
-        } else if (character === closing) {
+            i += opening.length
+        } else if (string.startsWith(closing, i)) {
             weight--
+            i += closing.length
+        } else {
+            i++
         }
         if (weight < 0) {
             return false
