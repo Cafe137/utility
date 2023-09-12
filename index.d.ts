@@ -18,7 +18,7 @@ declare function makeSeededRng(seed: number): () => number;
 declare function intBetween(min: number, max: number, generator?: () => number): number;
 declare function floatBetween(min: number, max: number, generator?: () => number): number;
 declare function signedRandom(): number;
-declare function chance(threshold: number): boolean;
+declare function chance(threshold: number, generator?: () => number): boolean;
 declare function pick<T>(array: T[], generator?: () => number): T;
 declare function pickMany<T>(array: T[], count: number, generator?: () => number): T[];
 declare function pickManyUnique<T>(array: T[], count: number, equalityFunction: (a: T, b: T) => boolean, generator?: () => number): T[];

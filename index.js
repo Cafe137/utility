@@ -138,8 +138,8 @@ function signedRandom() {
     return Math.random() * 2 - 1
 }
 
-function chance(threshold) {
-    return Math.random() < threshold
+function chance(threshold, generator = Math.random) {
+    return generator() < threshold
 }
 
 function pick(array, generator = Math.random) {
