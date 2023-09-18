@@ -97,6 +97,7 @@ declare function scheduleMany<T>(handlers: (() => T)[], dates: Date[]): void;
 declare function interpolate(a: number, b: number, t: number): number;
 declare function sum(array: number[]): number;
 declare function average(array: number[]): number;
+declare function median(array: number[]): number;
 declare function range(start: number, end: number): number[];
 declare function includesAny(string: string, substrings: string[]): boolean;
 declare function isChinese(string: string): boolean;
@@ -419,6 +420,7 @@ export declare const Numbers: {
     make: typeof makeNumber;
     sum: typeof sum;
     average: typeof average;
+    median: typeof median;
     clamp: typeof clamp;
     range: typeof range;
     interpolate: typeof interpolate;

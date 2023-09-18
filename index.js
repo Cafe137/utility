@@ -743,6 +743,12 @@ function average(array) {
     return array.reduce((a, b) => a + b, 0) / array.length
 }
 
+function median(array) {
+    const sorted = [...array].sort((a, b) => a - b)
+    const middle = Math.floor(sorted.length / 2)
+    return sorted.length % 2 === 0 ? (sorted[middle] + sorted[middle - 1]) / 2 : sorted[middle]
+}
+
 function range(start, end) {
     const array = []
     for (let i = start; i <= end; i++) {
@@ -1303,17 +1309,14 @@ function createTimeDigits(value) {
 }
 
 function humanizeTime(millis) {
-    let seconds = Math.floor(millis / 1000)
-    if (seconds < 60) {
-        return `${seconds}s`
-    }
-    let minutes = seconds / 60
-    seconds = seconds % 60
-    if (minutes < 60) {
+    const hours = Math.floor(millis / 3600000)
+    millis = millis % 3600000
+    const minutes = Math.floor(millis / 60000)
+    millis = millis % 60000
+    const seconds = Math.floor(millis / 1000)
+    if (!hours) {
         return `${createTimeDigits(minutes)}:${createTimeDigits(seconds)}`
     }
-    const hours = minutes / 60
-    minutes = minutes % 60
     return `${createTimeDigits(hours)}:${createTimeDigits(minutes)}:${createTimeDigits(seconds)}`
 }
 
@@ -2663,6 +2666,7 @@ exports.Numbers = {
     make: makeNumber,
     sum,
     average,
+    median,
     clamp,
     range,
     interpolate,
