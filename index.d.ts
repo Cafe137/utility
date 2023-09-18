@@ -22,6 +22,10 @@ declare function chance(threshold: number, generator?: () => number): boolean;
 declare function pick<T>(array: T[], generator?: () => number): T;
 declare function pickMany<T>(array: T[], count: number, generator?: () => number): T[];
 declare function pickManyUnique<T>(array: T[], count: number, equalityFunction: (a: T, b: T) => boolean, generator?: () => number): T[];
+declare function pickGuaranteed<T>(array: T[], include: T | null, exclude: T | null, count: number, generator?: () => number): {
+    values: T[];
+    indexOfGuaranteed: number;
+};
 declare function last<T>(array: T[]): T;
 declare function pickWeighted<T>(array: T[], weights: number[], randomNumber?: number): T;
 declare function sortWeighted<T>(array: T[], weights: number[], generator?: () => number): T[];
@@ -387,6 +391,7 @@ export declare const Arrays: {
     pickManyUnique: typeof pickManyUnique;
     pickWeighted: typeof pickWeighted;
     pickRandomIndices: typeof pickRandomIndices;
+    pickGuaranteed: typeof pickGuaranteed;
     last: typeof last;
     sortWeighted: typeof sortWeighted;
     pushAll: typeof pushAll;
