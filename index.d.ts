@@ -22,7 +22,7 @@ declare function chance(threshold: number, generator?: () => number): boolean;
 declare function pick<T>(array: T[], generator?: () => number): T;
 declare function pickMany<T>(array: T[], count: number, generator?: () => number): T[];
 declare function pickManyUnique<T>(array: T[], count: number, equalityFunction: (a: T, b: T) => boolean, generator?: () => number): T[];
-declare function pickGuaranteed<T>(array: T[], include: T | null, exclude: T | null, count: number, generator?: () => number): {
+declare function pickGuaranteed<T>(array: T[], include: T | null, exclude: T | null, count: number, predicate: (value: T, values: T[]) => boolean, generator?: () => number): {
     values: T[];
     indexOfGuaranteed: number;
 };

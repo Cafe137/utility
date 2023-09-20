@@ -169,14 +169,18 @@ function pickManyUnique(array, count, equalityFunction, generator = Math.random)
     return results
 }
 
-function pickGuaranteed(array, include, exclude, count, generator = Math.random) {
-    const picks = pickMany(
-        array.filter(x => x !== include && x !== exclude),
-        include === null ? count : count - 1,
-        generator
-    )
+function pickGuaranteed(array, include, exclude, count, predicate, generator = Math.random) {
+    const choices = array.filter(x => x !== include && x !== exclude)
+    const picks = []
     if (include !== null) {
         picks.push(include)
+    }
+    while (choices.length && picks.length < count) {
+        const index = exports.Random.intBetween(0, choices.length - 1, generator)
+        if (predicate(choices[index], picks)) {
+            picks.push(choices[index])
+        }
+        choices.splice(index, 1)
     }
     shuffle(picks, generator)
     return { values: picks, indexOfGuaranteed: include !== null ? picks.indexOf(include) : -1 }
