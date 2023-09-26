@@ -944,8 +944,8 @@ function parseFilename(string) {
     }
 }
 
-function randomize(string) {
-    return string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|')))
+function randomize(string, generator = Math.random) {
+    return string.replace(/\{(.+?)\}/g, (_, group) => pick(group.split('|'), generator))
 }
 
 function expand(input) {
@@ -1150,6 +1150,47 @@ function segmentizeString(string, symbol) {
         index = end + symbol.length
     }
     return segments
+}
+
+function base64ToUint8Array(base64) {
+    const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+    let padding = 0
+    if (base64.charAt(base64.length - 1) === '=') {
+        padding++
+        if (base64.charAt(base64.length - 2) === '=') {
+            padding++
+        }
+    }
+    const length = (base64.length * 6) / 8 - padding
+    const output = new Uint8Array(length)
+    let p = 0
+    let q = 0
+    while (p < base64.length) {
+        const w = BASE64_CHARS.indexOf(base64.charAt(p++))
+        const x = BASE64_CHARS.indexOf(base64.charAt(p++))
+        const y = BASE64_CHARS.indexOf(base64.charAt(p++))
+        const z = BASE64_CHARS.indexOf(base64.charAt(p++))
+        const first = (w << 2) | (x >> 4)
+        const second = ((x & 15) << 4) | (y >> 2)
+        const third = ((y & 3) << 6) | z
+        output[q++] = first
+        if (q < length) output[q++] = second
+        if (q < length) output[q++] = third
+    }
+    return output
+}
+
+function hexToUint8Array(hex) {
+    if (hex.startsWith('0x')) {
+        hex = hex.slice(2)
+    }
+    const arrayLength = hex.length / 2
+    const result = new Uint8Array(arrayLength)
+    for (let i = 0; i < arrayLength; i++) {
+        const byteValue = parseInt(hex.slice(i * 2, i * 2 + 2), 16)
+        result[i] = byteValue
+    }
+    return result
 }
 
 function parseHtmlAttributes(string) {
@@ -2881,7 +2922,9 @@ exports.Strings = {
     describeMarkdown,
     isBalanced,
     textToFormat,
-    segmentize: segmentizeString
+    segmentize: segmentizeString,
+    hexToUint8Array,
+    base64ToUint8Array
 }
 
 exports.Assertions = {
