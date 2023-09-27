@@ -1193,6 +1193,12 @@ function hexToUint8Array(hex) {
     return result
 }
 
+function uint8ArrayToHex(array) {
+    return Array.from(array)
+        .map(byte => byte.toString(16).padStart(2, '0'))
+        .join('')
+}
+
 function route(pattern, actual) {
     const patternPieces = pattern.split('/').filter(x => x)
     const actualPieces = actual.split('/').filter(x => x)
@@ -2942,6 +2948,7 @@ exports.Strings = {
     textToFormat,
     segmentize: segmentizeString,
     hexToUint8Array,
+    uint8ArrayToHex,
     base64ToUint8Array,
     route
 }
