@@ -1193,6 +1193,24 @@ function hexToUint8Array(hex) {
     return result
 }
 
+function route(pattern, actual) {
+    const patternPieces = pattern.split('/').filter(x => x)
+    const actualPieces = actual.split('/').filter(x => x)
+    if (patternPieces.length !== actualPieces.length) {
+        return null
+    }
+    const parameters = {}
+    for (let i = 0; i < patternPieces.length; i++) {
+        const patternPiece = patternPieces[i]
+        if (patternPiece.startsWith(':')) {
+            parameters[patternPiece.slice(1)] = actualPieces[i]
+        } else if (patternPiece !== actualPieces[i]) {
+            return null
+        }
+    }
+    return parameters
+}
+
 function parseHtmlAttributes(string) {
     const attributes = {}
     const matches = string.match(/([a-z\-]+)="([^"]+)"/g)
@@ -2924,7 +2942,8 @@ exports.Strings = {
     textToFormat,
     segmentize: segmentizeString,
     hexToUint8Array,
-    base64ToUint8Array
+    base64ToUint8Array,
+    route
 }
 
 exports.Assertions = {

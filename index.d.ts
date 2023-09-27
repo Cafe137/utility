@@ -169,6 +169,7 @@ declare type StringSegment = {
 declare function segmentizeString(string: string, symbol: string): StringSegment[];
 declare function base64ToUint8Array(base64: string): Uint8Array;
 declare function hexToUint8Array(hex: string): Uint8Array;
+declare function route(pattern: string, actual: string): Record<string, unknown> | null;
 declare function parseHtmlAttributes(string: string): Record<string, string>;
 declare function readNextWord(string: string, index: number, allowedCharacters?: string[]): string;
 declare function resolveVariables(string: string, variables: Record<string, string>, prefix?: string, separator?: string): string;
@@ -621,6 +622,7 @@ export declare const Strings: {
     segmentize: typeof segmentizeString;
     hexToUint8Array: typeof hexToUint8Array;
     base64ToUint8Array: typeof base64ToUint8Array;
+    route: typeof route;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;
