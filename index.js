@@ -483,6 +483,13 @@ function asNullableString(string) {
     return string
 }
 
+function asEmptiableString(string) {
+    if (!isString(string)) {
+        throw new TypeError('Expected string, got: ' + string)
+    }
+    return string
+}
+
 function asId(value) {
     if (!isId(value)) {
         throw new TypeError('Expected id, got: ' + value)
@@ -2872,6 +2879,7 @@ exports.Types = {
     asBoolean,
     asDate,
     asNullableString,
+    asEmptiableString,
     asId,
     asTime,
     asArray,
