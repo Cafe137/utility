@@ -383,7 +383,7 @@ function isPromise(value) {
 }
 
 function isNumber(value) {
-    return !isNaN(value) && String(value) === String(parseFloat(value))
+    return typeof value === 'number' && !isNaN(value)
 }
 
 function isBoolean(value) {
@@ -399,8 +399,7 @@ function isBlank(value) {
 }
 
 function isId(value) {
-    const numeric = typeof value === 'string' ? parseInt(value, 10) : value
-    return Number.isInteger(numeric) && numeric >= 1
+    return isNumber(value) && Number.isInteger(value) && value >= 1
 }
 
 const alphabet = 'abcdefghijklmnopqrstuvwxyz'
@@ -456,10 +455,14 @@ function asString(string) {
 }
 
 function asNumber(number) {
-    if (!isNumber(number)) {
+    if (isNumber(number)) {
+        return number
+    }
+    const parsed = parseFloat(number)
+    if (!isNumber(parsed)) {
         throw new TypeError('Expected number, got: ' + number)
     }
-    return number
+    return parsed
 }
 
 function asBoolean(bool) {
@@ -491,10 +494,14 @@ function asEmptiableString(string) {
 }
 
 function asId(value) {
-    if (!isId(value)) {
+    if (isId(value)) {
+        return value
+    }
+    const parsed = parseInt(value, 10)
+    if (!isId(parsed)) {
         throw new TypeError('Expected id, got: ' + value)
     }
-    return typeof value === 'string' ? parseInt(value, 10) : value
+    return parsed
 }
 
 function asTime(value) {

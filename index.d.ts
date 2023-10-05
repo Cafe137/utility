@@ -53,7 +53,7 @@ declare function isNumber(value: any): value is number;
 declare function isBoolean(value: any): value is boolean;
 declare function isDate(value: any): value is Date;
 declare function isBlank(value: any): boolean;
-declare function isId(value: any): value is number | string;
+declare function isId(value: any): value is number;
 declare function randomLetterString(length: number): string;
 declare function randomAlphanumericString(length: number): string;
 declare function randomRichAsciiString(length: number): string;
