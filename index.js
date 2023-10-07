@@ -1630,11 +1630,10 @@ async function getCached(key, ttlMillis, handler) {
 }
 
 function joinUrl(...parts) {
-    const url = parts
-        .filter(part => part && isString(part))
+    return parts
+        .filter(x => x)
         .join('/')
-        .replace(/([^:]\/)\/+/g, '$1')
-    return url
+        .replace(/(?<!:)\/+/g, '/')
 }
 
 function replaceBetweenStrings(string, start, end, replacement, keepBoundaries = true) {
