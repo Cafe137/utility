@@ -172,6 +172,12 @@ declare function base64ToUint8Array(base64: string): Uint8Array;
 declare function hexToUint8Array(hex: string): Uint8Array;
 declare function uint8ArrayToHex(array: Uint8Array): string;
 declare function route(pattern: string, actual: string): Record<string, unknown> | null;
+declare type VariantGroup = {
+    variants: string[];
+    avoid: string | null;
+};
+declare function explodeReplace(string: string, substring: string, variants: string[]): string[];
+declare function generateVariants(string: string, groups: VariantGroup[], count: number, generator?: () => number): string[];
 declare function parseHtmlAttributes(string: string): Record<string, string>;
 declare function readNextWord(string: string, index: number, allowedCharacters?: string[]): string;
 declare function resolveVariables(string: string, variables: Record<string, string>, prefix?: string, separator?: string): string;
@@ -627,6 +633,8 @@ export declare const Strings: {
     uint8ArrayToHex: typeof uint8ArrayToHex;
     base64ToUint8Array: typeof base64ToUint8Array;
     route: typeof route;
+    explodeReplace: typeof explodeReplace;
+    generateVariants: typeof generateVariants;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;

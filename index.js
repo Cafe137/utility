@@ -1231,6 +1231,55 @@ function route(pattern, actual) {
     return parameters
 }
 
+function explodeReplace(string, substring, variants) {
+    const results = []
+    for (const variant of variants) {
+        if (variant === substring) {
+            continue
+        }
+        results.push(string.replace(substring, variant))
+    }
+    return results
+}
+
+function generateVariants(string, groups, count, generator) {
+    const shuffledGroups = exports.Arrays.shuffle(
+        groups.map(group => ({
+            variants: exports.Arrays.shuffle(
+                group.variants.map(x => x),
+                generator
+            ),
+            avoid: group.avoid
+        })),
+        generator
+    )
+    const results = []
+    for (const group of shuffledGroups) {
+        const bestVariants = group.variants.filter(x => x !== group.avoid)
+        const matchingCharacter = bestVariants.find(x => string.includes(x))
+        if (!matchingCharacter) {
+            continue
+        }
+        pushAll(results, explodeReplace(string, matchingCharacter, bestVariants))
+        if (results.length >= count) {
+            break
+        }
+    }
+    if (results.length < count) {
+        for (const group of shuffledGroups) {
+            const matchingCharacter = group.variants.find(x => string.includes(x))
+            if (!matchingCharacter) {
+                continue
+            }
+            pushAll(results, explodeReplace(string, matchingCharacter, group.variants))
+            if (results.length >= count) {
+                break
+            }
+        }
+    }
+    return results.slice(0, count)
+}
+
 function parseHtmlAttributes(string) {
     const attributes = {}
     const matches = string.match(/([a-z\-]+)="([^"]+)"/g)
@@ -2964,7 +3013,9 @@ exports.Strings = {
     hexToUint8Array,
     uint8ArrayToHex,
     base64ToUint8Array,
-    route
+    route,
+    explodeReplace,
+    generateVariants
 }
 
 exports.Assertions = {
