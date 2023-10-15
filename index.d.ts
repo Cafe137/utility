@@ -54,11 +54,11 @@ declare function isBoolean(value: any): value is boolean;
 declare function isDate(value: any): value is Date;
 declare function isBlank(value: any): boolean;
 declare function isId(value: any): value is number;
-declare function randomLetterString(length: number): string;
-declare function randomAlphanumericString(length: number): string;
-declare function randomRichAsciiString(length: number): string;
-declare function randomUnicodeString(length: number): string;
-declare function randomHexString(length: number): string;
+declare function randomLetterString(length: number, generator?: () => number): string;
+declare function randomAlphanumericString(length: number, generator?: () => number): string;
+declare function randomRichAsciiString(length: number, generator?: () => number): string;
+declare function randomUnicodeString(length: number, generator?: () => number): string;
+declare function randomHexString(length: number, generator?: () => number): string;
 declare function asString(string: any): string;
 declare function asNumber(number: any): number;
 declare function asBoolean(bool: any): boolean;
@@ -178,6 +178,7 @@ declare type VariantGroup = {
 };
 declare function explodeReplace(string: string, substring: string, variants: string[]): string[];
 declare function generateVariants(string: string, groups: VariantGroup[], count: number, generator?: () => number): string[];
+declare function hashCode(string: string): number;
 declare function parseHtmlAttributes(string: string): Record<string, string>;
 declare function readNextWord(string: string, index: number, allowedCharacters?: string[]): string;
 declare function resolveVariables(string: string, variables: Record<string, string>, prefix?: string, separator?: string): string;
@@ -185,6 +186,7 @@ declare function resolveVariableWithDefaultSyntax(string: string, key: string, v
 declare function resolveRemainingVariablesWithDefaults(string: string, prefix?: string, separator?: string): string;
 declare function resolveMarkdownLinks(string: string, transformer: (label: string, link: string) => string): string;
 declare function toQueryString(object: Record<string, any>, questionMark?: boolean): string;
+declare function hasKey(object: Record<string, any>, key: string): boolean;
 declare function buildUrl(baseUrl?: string | null, path?: string | null, query?: Record<string, any> | null): string;
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
@@ -531,6 +533,7 @@ export declare const Objects: {
     mapRandomKey: typeof mapRandomKey;
     fromObjectString: typeof fromObjectString;
     toQueryString: typeof toQueryString;
+    hasKey: typeof hasKey;
 };
 export declare const Pagination: {
     asPageNumber: typeof asPageNumber;
@@ -635,6 +638,7 @@ export declare const Strings: {
     route: typeof route;
     explodeReplace: typeof explodeReplace;
     generateVariants: typeof generateVariants;
+    hashCode: typeof hashCode;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;

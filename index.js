@@ -407,42 +407,42 @@ const alphanumericAlphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 const richAsciiAlphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=[]{}|;:<>?,./'
 const unicodeTestingAlphabet = ['—', '\\', '東', '京', '都', '𝖆', '𝖇', '𝖈', '👾', '🙇', '💁', '🙅']
 const hexAlphabet = '0123456789abcdef'
-function randomLetterString(length) {
+function randomLetterString(length, generator = Math.random) {
     let buffer = ''
     for (let i = 0; i < length; i++) {
-        buffer += alphabet[Math.floor(Math.random() * alphabet.length)]
+        buffer += alphabet[Math.floor(generator() * alphabet.length)]
     }
     return buffer
 }
 
-function randomAlphanumericString(length) {
+function randomAlphanumericString(length, generator = Math.random) {
     let buffer = ''
     for (let i = 0; i < length; i++) {
-        buffer += alphanumericAlphabet[Math.floor(Math.random() * alphanumericAlphabet.length)]
+        buffer += alphanumericAlphabet[Math.floor(generator() * alphanumericAlphabet.length)]
     }
     return buffer
 }
 
-function randomRichAsciiString(length) {
+function randomRichAsciiString(length, generator = Math.random) {
     let buffer = ''
     for (let i = 0; i < length; i++) {
-        buffer += richAsciiAlphabet[Math.floor(Math.random() * richAsciiAlphabet.length)]
+        buffer += richAsciiAlphabet[Math.floor(generator() * richAsciiAlphabet.length)]
     }
     return buffer
 }
 
-function randomUnicodeString(length) {
+function randomUnicodeString(length, generator = Math.random) {
     let buffer = ''
     for (let i = 0; i < length; i++) {
-        buffer += unicodeTestingAlphabet[Math.floor(Math.random() * unicodeTestingAlphabet.length)]
+        buffer += unicodeTestingAlphabet[Math.floor(generator() * unicodeTestingAlphabet.length)]
     }
     return buffer
 }
 
-function randomHexString(length) {
+function randomHexString(length, generator = Math.random) {
     let buffer = ''
     for (let i = 0; i < length; i++) {
-        buffer += hexAlphabet[Math.floor(Math.random() * hexAlphabet.length)]
+        buffer += hexAlphabet[Math.floor(generator() * hexAlphabet.length)]
     }
     return buffer
 }
@@ -1242,7 +1242,7 @@ function explodeReplace(string, substring, variants) {
     return results
 }
 
-function generateVariants(string, groups, count, generator) {
+function generateVariants(string, groups, count, generator = Math.random) {
     const shuffledGroups = exports.Arrays.shuffle(
         groups.map(group => ({
             variants: exports.Arrays.shuffle(
@@ -1278,6 +1278,15 @@ function generateVariants(string, groups, count, generator) {
         }
     }
     return results.slice(0, count)
+}
+
+function hashCode(string) {
+    let hashCode = 0
+    for (let i = 0; i < string.length; i++) {
+        hashCode = (hashCode << 5) - hashCode + string.charCodeAt(i)
+        hashCode |= 0
+    }
+    return hashCode
 }
 
 function parseHtmlAttributes(string) {
@@ -1369,6 +1378,10 @@ function toQueryString(object, questionMark = true) {
         .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
         .join('&')
     return queryString ? (questionMark ? '?' : '') + queryString : ''
+}
+
+function hasKey(object, key) {
+    return Object.prototype.hasOwnProperty.call(object, key)
 }
 
 function buildUrl(baseUrl, path, query) {
@@ -2908,7 +2921,8 @@ exports.Objects = {
     pickRandomKey,
     mapRandomKey,
     fromObjectString,
-    toQueryString
+    toQueryString,
+    hasKey
 }
 
 exports.Pagination = {
@@ -3015,7 +3029,8 @@ exports.Strings = {
     base64ToUint8Array,
     route,
     explodeReplace,
-    generateVariants
+    generateVariants,
+    hashCode
 }
 
 exports.Assertions = {
