@@ -1166,8 +1166,8 @@ function segmentizeString(string, symbol) {
     return segments
 }
 
+const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
 function base64ToUint8Array(base64) {
-    const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
     let padding = 0
     if (base64.charAt(base64.length - 1) === '=') {
         padding++
@@ -1192,6 +1192,35 @@ function base64ToUint8Array(base64) {
         if (q < length) output[q++] = third
     }
     return output
+}
+
+function uint8ArrayToBase64(array) {
+    let base64 = ''
+    let padding = 0
+    for (let i = 0; i < array.length; i += 3) {
+        const a = array[i]
+        const b = array[i + 1]
+        const c = array[i + 2]
+        const index1 = a >> 2
+        const index2 = ((a & 3) << 4) | (b >> 4)
+        const index3 = ((b & 15) << 2) | (c >> 6)
+        const index4 = c & 63
+        base64 += BASE64_CHARS[index1] + BASE64_CHARS[index2]
+        if (i + 1 < array.length) {
+            base64 += BASE64_CHARS[index3]
+        } else {
+            padding++
+        }
+        if (i + 2 < array.length) {
+            base64 += BASE64_CHARS[index4]
+        } else {
+            padding++
+        }
+    }
+    if (padding) {
+        base64 += padding === 1 ? '=' : '=='
+    }
+    return base64
 }
 
 function hexToUint8Array(hex) {
@@ -3027,6 +3056,7 @@ exports.Strings = {
     hexToUint8Array,
     uint8ArrayToHex,
     base64ToUint8Array,
+    uint8ArrayToBase64,
     route,
     explodeReplace,
     generateVariants,

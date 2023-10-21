@@ -169,6 +169,7 @@ declare type StringSegment = {
 };
 declare function segmentizeString(string: string, symbol: string): StringSegment[];
 declare function base64ToUint8Array(base64: string): Uint8Array;
+declare function uint8ArrayToBase64(array: Uint8Array): string;
 declare function hexToUint8Array(hex: string): Uint8Array;
 declare function uint8ArrayToHex(array: Uint8Array): string;
 declare function route(pattern: string, actual: string): Record<string, unknown> | null;
@@ -635,6 +636,7 @@ export declare const Strings: {
     hexToUint8Array: typeof hexToUint8Array;
     uint8ArrayToHex: typeof uint8ArrayToHex;
     base64ToUint8Array: typeof base64ToUint8Array;
+    uint8ArrayToBase64: typeof uint8ArrayToBase64;
     route: typeof route;
     explodeReplace: typeof explodeReplace;
     generateVariants: typeof generateVariants;
