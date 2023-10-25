@@ -1318,6 +1318,22 @@ function hashCode(string) {
     return hashCode
 }
 
+function replaceWord(string, search, replace) {
+    const regex = new RegExp(`\\b${search}\\b`, 'g')
+    return string.replace(regex, replace)
+}
+
+function containsWord(string, word) {
+    const regex = new RegExp(`\\b${word}\\b`)
+    return regex.test(string)
+}
+
+function containsWords(string, words, mode) {
+    return mode === 'any'
+        ? words.some(word => containsWord(string, word))
+        : words.every(word => containsWord(string, word))
+}
+
 function parseHtmlAttributes(string) {
     const attributes = {}
     const matches = string.match(/([a-z\-]+)="([^"]+)"/g)
@@ -1688,20 +1704,6 @@ function makeDate(numberWithUnit) {
 
 function getPreLine(string) {
     return string.replace(/ +/g, ' ').replace(/^ /gm, '')
-}
-
-function containsWord(string, word) {
-    const slug = slugify(string)
-    return slug.startsWith(word + '-') || slug.endsWith('-' + word) || slug.includes('-' + word + '-') || slug === word
-}
-
-function containsWords(string, words) {
-    for (const word of words) {
-        if (containsWord(string, word)) {
-            return true
-        }
-    }
-    return false
 }
 
 const tinyCache = {}
@@ -3060,7 +3062,8 @@ exports.Strings = {
     route,
     explodeReplace,
     generateVariants,
-    hashCode
+    hashCode,
+    replaceWord
 }
 
 exports.Assertions = {

@@ -180,6 +180,9 @@ declare type VariantGroup = {
 declare function explodeReplace(string: string, substring: string, variants: string[]): string[];
 declare function generateVariants(string: string, groups: VariantGroup[], count: number, generator?: () => number): string[];
 declare function hashCode(string: string): number;
+declare function replaceWord(string: string, search: string, replace: string): string;
+declare function containsWord(string: string, word: string): boolean;
+declare function containsWords(string: string, words: string[], mode: 'any' | 'all'): boolean;
 declare function parseHtmlAttributes(string: string): Record<string, string>;
 declare function readNextWord(string: string, index: number, allowedCharacters?: string[]): string;
 declare function resolveVariables(string: string, variables: Record<string, string>, prefix?: string, separator?: string): string;
@@ -245,8 +248,6 @@ declare function minutes(value: number): number;
 declare function hours(value: number): number;
 declare function makeDate(numberWithUnit: string): number;
 declare function getPreLine(string: string): string;
-declare function containsWord(string: string, word: string): boolean;
-declare function containsWords(string: string, words: string[]): boolean;
 declare function getCached<T>(key: string, ttlMillis: number, handler: () => Promise<T>): Promise<T>;
 declare function joinUrl(...parts: unknown[]): string;
 declare function replaceBetweenStrings(string: string, start: string, end: string, replacement: string, keepBoundaries?: boolean): string;
@@ -641,6 +642,7 @@ export declare const Strings: {
     explodeReplace: typeof explodeReplace;
     generateVariants: typeof generateVariants;
     hashCode: typeof hashCode;
+    replaceWord: typeof replaceWord;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;
