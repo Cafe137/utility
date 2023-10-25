@@ -181,7 +181,7 @@ declare type VariantGroup = {
 declare function explodeReplace(string: string, substring: string, variants: string[]): string[];
 declare function generateVariants(string: string, groups: VariantGroup[], count: number, generator?: () => number): string[];
 declare function hashCode(string: string): number;
-declare function replaceWord(string: string, search: string, replace: string): string;
+declare function replaceWord(string: string, search: string, replace: string, whitespaceOnly?: boolean): string;
 declare function containsWord(string: string, word: string): boolean;
 declare function containsWords(string: string, words: string[], mode: 'any' | 'all'): boolean;
 declare function parseHtmlAttributes(string: string): Record<string, string>;

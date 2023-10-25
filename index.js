@@ -1331,8 +1331,8 @@ function hashCode(string) {
     return hashCode
 }
 
-function replaceWord(string, search, replace) {
-    const regex = new RegExp(`\\b${search}\\b`, 'g')
+function replaceWord(string, search, replace, whitespaceOnly = false) {
+    const regex = new RegExp(whitespaceOnly ? `(?<=\\s|^)${search}(?=\\s|$)` : `\\b${search}\\b`, 'g')
     return string.replace(regex, replace)
 }
 
