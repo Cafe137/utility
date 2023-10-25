@@ -1143,6 +1143,19 @@ function extractAllBlocks(string, options) {
     }
 }
 
+function replaceBlocks(string, replaceFn, options) {
+    let index = 0
+    while (true) {
+        const block = exports.Strings.extractBlock(string, Object.assign(Object.assign({}, options), { start: index }))
+        if (!block) {
+            return string
+        }
+        const replacement = replaceFn(block)
+        index = string.indexOf(block, index) + replacement.length
+        string = string.replace(block, replacement)
+    }
+}
+
 function segmentizeString(string, symbol) {
     const segments = []
     let index = 0
@@ -3031,6 +3044,7 @@ exports.Strings = {
     findWeightedPair,
     extractBlock,
     extractAllBlocks,
+    replaceBlocks,
     indexOfEarliest,
     lastIndexOfBefore,
     parseHtmlAttributes,

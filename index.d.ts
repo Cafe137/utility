@@ -163,6 +163,7 @@ interface BlockExtractionOptions {
 }
 declare function extractBlock(string: string, options: BlockExtractionOptions): string | null;
 declare function extractAllBlocks(string: string, options: BlockExtractionOptions): string[];
+declare function replaceBlocks(string: string, replaceFn: (match: string) => string, options: BlockExtractionOptions): string;
 declare type StringSegment = {
     symbol: string | null;
     string: string;
@@ -610,6 +611,7 @@ export declare const Strings: {
     findWeightedPair: typeof findWeightedPair;
     extractBlock: typeof extractBlock;
     extractAllBlocks: typeof extractAllBlocks;
+    replaceBlocks: typeof replaceBlocks;
     indexOfEarliest: typeof indexOfEarliest;
     lastIndexOfBefore: typeof lastIndexOfBefore;
     parseHtmlAttributes: typeof parseHtmlAttributes;
