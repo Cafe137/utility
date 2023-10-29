@@ -58,6 +58,7 @@ declare function randomLetterString(length: number, generator?: () => number): s
 declare function randomAlphanumericString(length: number, generator?: () => number): string;
 declare function randomRichAsciiString(length: number, generator?: () => number): string;
 declare function randomUnicodeString(length: number, generator?: () => number): string;
+declare function searchHex(string: string, length: number): string | null;
 declare function randomHexString(length: number, generator?: () => number): string;
 declare function asString(string: any): string;
 declare function asNumber(number: any): number;
@@ -569,6 +570,7 @@ export declare const Types: {
 export declare const Strings: {
     tokenizeByCount: typeof tokenizeByCount;
     tokenizeByLength: typeof tokenizeByLength;
+    searchHex: typeof searchHex;
     randomHex: typeof randomHexString;
     randomLetter: typeof randomLetterString;
     randomAlphanumeric: typeof randomAlphanumericString;

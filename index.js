@@ -439,6 +439,12 @@ function randomUnicodeString(length, generator = Math.random) {
     return buffer
 }
 
+function searchHex(string, length) {
+    const regex = new RegExp(`[0-9a-f]{${length}}`, 'i')
+    const match = string.match(regex)
+    return match ? match[0] : null
+}
+
 function randomHexString(length, generator = Math.random) {
     let buffer = ''
     for (let i = 0; i < length; i++) {
@@ -3002,6 +3008,7 @@ exports.Types = {
 exports.Strings = {
     tokenizeByCount,
     tokenizeByLength,
+    searchHex,
     randomHex: randomHexString,
     randomLetter: randomLetterString,
     randomAlphanumeric: randomAlphanumericString,
