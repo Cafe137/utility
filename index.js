@@ -270,6 +270,9 @@ function ensureDeep(object, path, value) {
 function deleteDeep(object, path) {
     const location = beforeLast(path, '.')
     const toDelete = afterLast(path, '.')
+    if (!location || !toDelete) {
+        return
+    }
     const segment = getDeep(object, location)
     delete segment[toDelete]
 }
@@ -901,30 +904,32 @@ function decodeHtmlEntities(string) {
 
 function before(string, searchString) {
     const position = string.indexOf(searchString)
-    return position === -1 ? string : string.slice(0, position)
+    return position === -1 ? null : string.slice(0, position)
 }
 
 function after(string, searchString) {
     const position = string.indexOf(searchString)
-    return position === -1 ? string : string.slice(position + searchString.length)
+    return position === -1 ? null : string.slice(position + searchString.length)
 }
 
 function beforeLast(string, searchString) {
     const position = string.lastIndexOf(searchString)
-    return position === -1 ? string : string.slice(0, position)
+    return position === -1 ? null : string.slice(0, position)
 }
 
 function afterLast(string, searchString) {
     const position = string.lastIndexOf(searchString)
-    return position === -1 ? string : string.slice(position + searchString.length)
+    return position === -1 ? null : string.slice(position + searchString.length)
 }
 
 function betweenWide(string, start, end) {
-    return after(beforeLast(string, end), start)
+    const partial = beforeLast(string, end)
+    return partial ? after(partial, start) : null
 }
 
 function betweenNarrow(string, start, end) {
-    return before(after(string, start), end)
+    const partial = after(string, start)
+    return partial ? before(partial, end) : null
 }
 
 function splitOnce(string, separator, last = false) {
