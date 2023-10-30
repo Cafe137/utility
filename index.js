@@ -344,14 +344,18 @@ function rgbToHex(rgb) {
     return '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('')
 }
 
-function isObject(value) {
+function isObject(value, checkForPlainObject = true) {
     if (!value) {
         return false
     }
-    if (value._readableState) {
+    if (checkForPlainObject && !isUndefined(value._readableState)) {
         return false
     }
-    if (value.constructor && (value.constructor.isBuffer || value.constructor.name == 'Uint8Array')) {
+    if (
+        checkForPlainObject &&
+        value.constructor &&
+        (value.constructor.isBuffer || value.constructor.name == 'Uint8Array')
+    ) {
         return false
     }
     return typeof value === 'object'
@@ -544,7 +548,7 @@ function asObject(value) {
 }
 
 function represent(value, strategy = 'json', depth = 0) {
-    if (isObject(value)) {
+    if (isObject(value, false)) {
         if (depth > 1) {
             return '[object Object]'
         }

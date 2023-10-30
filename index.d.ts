@@ -42,7 +42,7 @@ declare function asMegabytes(number: number): number;
 declare function convertBytes(bytes: number): string;
 declare function hexToRgb(hex: string): [number, number, number];
 declare function rgbToHex(rgb: [number, number, number]): string;
-declare function isObject(value: any): value is object;
+declare function isObject(value: any, checkForPlainObject?: boolean): value is object;
 declare function isStrictlyObject(value: any): value is object;
 declare function isEmptyArray(value: any): boolean;
 declare function isEmptyObject(value: any): boolean;
