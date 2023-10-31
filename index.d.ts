@@ -352,11 +352,11 @@ declare function tickPlaybook<T>(playbook: Playbook<T>): {
     progress: number;
     data: T;
 } | null;
-declare function getArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): string | null;
-declare function getNumberArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): number | null;
-declare function getBooleanArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): boolean | null;
-declare function requireStringArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): string;
-declare function requireNumberArgument(args: string[], key: string, env?: Record<string, string>, envKey?: string): number;
+declare function getArgument(args: string[], key: string, env?: Record<string, string | undefined>, envKey?: string): string | null;
+declare function getNumberArgument(args: string[], key: string, env?: Record<string, string | undefined>, envKey?: string): number | null;
+declare function getBooleanArgument(args: string[], key: string, env?: Record<string, string | undefined>, envKey?: string): boolean | null;
+declare function requireStringArgument(args: string[], key: string, env?: Record<string, string | undefined>, envKey?: string): string;
+declare function requireNumberArgument(args: string[], key: string, env?: Record<string, string | undefined>, envKey?: string): number;
 declare function bringToFrontInPlace<T>(array: T[], index: number): void;
 declare function bringToFront<T>(array: T[], index: number): T[];
 declare type Point = {
