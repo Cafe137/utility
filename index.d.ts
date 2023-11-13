@@ -1,5 +1,5 @@
-declare type Indexable = number | string;
-declare type CafeObject<T = unknown> = Record<string, T>;
+type Indexable = number | string;
+type CafeObject<T = unknown> = Record<string, T>;
 declare function invertPromise<T>(promise: Promise<T>): Promise<unknown>;
 declare function raceFulfilled<T>(promises: Promise<T>[]): Promise<unknown>;
 declare function runInParallelBatches<T>(promises: (() => Promise<T>)[], concurrency?: number): Promise<T[]>;
@@ -165,7 +165,7 @@ interface BlockExtractionOptions {
 declare function extractBlock(string: string, options: BlockExtractionOptions): string | null;
 declare function extractAllBlocks(string: string, options: BlockExtractionOptions): string[];
 declare function replaceBlocks(string: string, replaceFn: (match: string) => string, options: BlockExtractionOptions): string;
-declare type StringSegment = {
+type StringSegment = {
     symbol: string | null;
     string: string;
 };
@@ -175,7 +175,7 @@ declare function uint8ArrayToBase64(array: Uint8Array): string;
 declare function hexToUint8Array(hex: string): Uint8Array;
 declare function uint8ArrayToHex(array: Uint8Array): string;
 declare function route(pattern: string, actual: string): Record<string, unknown> | null;
-declare type VariantGroup = {
+type VariantGroup = {
     variants: string[];
     avoid: string | null;
 };
@@ -183,6 +183,7 @@ declare function explodeReplace(string: string, substring: string, variants: str
 declare function generateVariants(string: string, groups: VariantGroup[], count: number, generator?: () => number): string[];
 declare function hashCode(string: string): number;
 declare function replaceWord(string: string, search: string, replace: string, whitespaceOnly?: boolean): string;
+declare function replacePascalCaseWords(string: string, replacer: (word: string) => string): string;
 declare function containsWord(string: string, word: string): boolean;
 declare function containsWords(string: string, words: string[], mode: 'any' | 'all'): boolean;
 declare function parseHtmlAttributes(string: string): Record<string, string>;
@@ -211,7 +212,7 @@ declare function getAgoStructured(dateOrTimestamp: Date | number, now?: number):
     value: number;
     unit: string;
 };
-declare type CountCyclesOptions = {
+type CountCyclesOptions = {
     precision?: number;
     now?: number;
 };
@@ -253,7 +254,7 @@ declare function getPreLine(string: string): string;
 declare function getCached<T>(key: string, ttlMillis: number, handler: () => Promise<T>): Promise<T>;
 declare function joinUrl(...parts: unknown[]): string;
 declare function replaceBetweenStrings(string: string, start: string, end: string, replacement: string, keepBoundaries?: boolean): string;
-declare type MarkdownDescription = {
+type MarkdownDescription = {
     type: 'p' | 'h1' | 'li';
     isCapitalized: boolean;
     hasPunctuation: boolean;
@@ -343,7 +344,7 @@ export declare class Maybe<T> {
     bind<K>(fn: (value: T) => K): Maybe<Awaited<K>>;
     valueOf(): Promise<T | null>;
 }
-declare type Playbook<T> = {
+type Playbook<T> = {
     ttl: number;
     ttlMax?: number;
     data: T;
@@ -359,15 +360,15 @@ declare function requireStringArgument(args: string[], key: string, env?: Record
 declare function requireNumberArgument(args: string[], key: string, env?: Record<string, string | undefined>, envKey?: string): number;
 declare function bringToFrontInPlace<T>(array: T[], index: number): void;
 declare function bringToFront<T>(array: T[], index: number): T[];
-declare type Point = {
+type Point = {
     x: number;
     y: number;
 };
-declare type Line = {
+type Line = {
     start: Point;
     end: Point;
 };
-declare type Truthy = boolean | number;
+type Truthy = boolean | number;
 declare function addPoint(a: Point, b: Point): Point;
 declare function subtractPoint(a: Point, b: Point): Point;
 declare function multiplyPoint(point: Point, scalar: number): Point;
@@ -647,6 +648,7 @@ export declare const Strings: {
     generateVariants: typeof generateVariants;
     hashCode: typeof hashCode;
     replaceWord: typeof replaceWord;
+    replacePascalCaseWords: typeof replacePascalCaseWords;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;
