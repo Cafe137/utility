@@ -62,6 +62,7 @@ declare function searchHex(string: string, length: number): string | null;
 declare function randomHexString(length: number, generator?: () => number): string;
 declare function asString(string: any): string;
 declare function asNumber(number: any): number;
+declare function asInteger(number: any): number;
 declare function asBoolean(bool: any): boolean;
 declare function asDate(date: any): Date;
 declare function asNullableString(string: any): string | null;
@@ -291,7 +292,6 @@ interface NumberFormatOptions {
 }
 declare function formatNumber(number: number, options?: NumberFormatOptions): string;
 declare function makeNumber(numberWithUnit: string): number;
-declare function parseIntOrThrow(numberOrString: any): number;
 declare function clamp(value: number, lower: number, upper: number): number;
 declare function increment(value: number, change: number, maximum: number): number;
 declare function decrement(value: number, change: number, minimum: number): number;
@@ -451,7 +451,6 @@ export declare const Numbers: {
     increment: typeof increment;
     decrement: typeof decrement;
     format: typeof formatNumber;
-    parseIntOrThrow: typeof parseIntOrThrow;
     asMegabytes: typeof asMegabytes;
     convertBytes: typeof convertBytes;
     hexToRgb: typeof hexToRgb;
@@ -559,6 +558,7 @@ export declare const Types: {
     isId: typeof isId;
     asString: typeof asString;
     asNumber: typeof asNumber;
+    asInteger: typeof asInteger;
     asBoolean: typeof asBoolean;
     asDate: typeof asDate;
     asNullableString: typeof asNullableString;
