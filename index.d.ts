@@ -194,6 +194,7 @@ declare function resolveVariableWithDefaultSyntax(string: string, key: string, v
 declare function resolveRemainingVariablesWithDefaults(string: string, prefix?: string, separator?: string): string;
 declare function resolveMarkdownLinks(string: string, transformer: (label: string, link: string) => string): string;
 declare function toQueryString(object: Record<string, any>, questionMark?: boolean): string;
+declare function parseQueryString(queryString: string): Record<string, string>;
 declare function hasKey(object: Record<string, any>, key: string): boolean;
 declare function buildUrl(baseUrl?: string | null, path?: string | null, query?: Record<string, any> | null): string;
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
@@ -537,6 +538,7 @@ export declare const Objects: {
     mapRandomKey: typeof mapRandomKey;
     fromObjectString: typeof fromObjectString;
     toQueryString: typeof toQueryString;
+    parseQueryString: typeof parseQueryString;
     hasKey: typeof hasKey;
 };
 export declare const Pagination: {
