@@ -185,6 +185,7 @@ declare function generateVariants(string: string, groups: VariantGroup[], count:
 declare function hashCode(string: string): number;
 declare function replaceWord(string: string, search: string, replace: string, whitespaceOnly?: boolean): string;
 declare function replacePascalCaseWords(string: string, replacer: (word: string) => string): string;
+declare function stripHtml(string: string): string;
 declare function containsWord(string: string, word: string): boolean;
 declare function containsWords(string: string, words: string[], mode: 'any' | 'all'): boolean;
 declare function parseHtmlAttributes(string: string): Record<string, string>;
@@ -651,6 +652,7 @@ export declare const Strings: {
     hashCode: typeof hashCode;
     replaceWord: typeof replaceWord;
     replacePascalCaseWords: typeof replacePascalCaseWords;
+    stripHtml: typeof stripHtml;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;
