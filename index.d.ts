@@ -193,6 +193,7 @@ declare function readNextWord(string: string, index: number, allowedCharacters?:
 declare function resolveVariables(string: string, variables: Record<string, string>, prefix?: string, separator?: string): string;
 declare function resolveVariableWithDefaultSyntax(string: string, key: string, value: string, prefix?: string, separator?: string): string;
 declare function resolveRemainingVariablesWithDefaults(string: string, prefix?: string, separator?: string): string;
+declare function resolveHashtags(string: string, transformer: (hashtag: string) => string): string;
 declare function resolveMarkdownLinks(string: string, transformer: (label: string, link: string) => string): string;
 declare function toQueryString(object: Record<string, any>, questionMark?: boolean): string;
 declare function parseQueryString(queryString: string): Record<string, string>;
@@ -635,6 +636,7 @@ export declare const Strings: {
     linesMatchInOrder: typeof linesMatchInOrder;
     represent: typeof represent;
     resolveMarkdownLinks: typeof resolveMarkdownLinks;
+    resolveHashtags: typeof resolveHashtags;
     buildUrl: typeof buildUrl;
     isChinese: typeof isChinese;
     replaceBetweenStrings: typeof replaceBetweenStrings;
