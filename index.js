@@ -790,23 +790,37 @@ function replaceBlocks(n, e, t) {
         ;(r = n.indexOf(o, r) + i.length), (n = n.replace(o, i))
     }
 }
-function segmentizeString(n, e) {
-    const t = []
-    let r = 0
-    for (; r < n.length; ) {
-        const o = n.indexOf(e, r)
-        if (o === -1) {
-            t.push({ string: n.slice(r), symbol: null })
+function segmentizeString(n, e, t = !1) {
+    const r = []
+    let o = 0
+    for (; o < n.length; ) {
+        const i = n.indexOf(e, o)
+        if (i === -1) {
+            r.push({ string: n.slice(o), symbol: null })
             break
         }
-        const i = n.indexOf(e, o + e.length)
-        if ((o > r && i !== -1 && t.push({ string: n.slice(r, o), symbol: null }), i === -1)) {
-            t.push({ string: n.slice(r), symbol: null })
+        const u = t
+            ? indexOfEarliest(
+                  n,
+                  [
+                      ' ',
+                      `
+`
+                  ],
+                  i + e.length
+              )
+            : n.indexOf(e, i + e.length)
+        if (t && u === -1) {
+            r.push({ string: n.slice(o, i), symbol: null }), r.push({ string: n.slice(i + e.length), symbol: e })
             break
         }
-        t.push({ string: n.slice(o + e.length, i), symbol: e }), (r = i + e.length)
+        if ((i > o && u !== -1 && r.push({ string: n.slice(o, i), symbol: null }), u === -1)) {
+            r.push({ string: n.slice(o), symbol: null })
+            break
+        }
+        r.push({ string: n.slice(i + e.length, u), symbol: e }), (o = t ? u : u + e.length)
     }
-    return t
+    return r
 }
 const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
 function base64ToUint8Array(n) {
@@ -968,14 +982,6 @@ function resolveRemainingVariablesWithDefaults(n, e = '$', t = ':') {
                 n = n.replace(`${e}${o}${t}${u}`, u)
             }
         r = n.indexOf(e, r + 1)
-    }
-    return n
-}
-function resolveHashtags(n, e) {
-    let t = n.indexOf('#')
-    for (; t !== -1; ) {
-        const r = readNextWord(n, t + 1)
-        ;(n = n.replace(`#${r}`, e(`#${r}`))), (t = n.indexOf('#', t + 1))
     }
     return n
 }
@@ -2110,7 +2116,6 @@ function raycastCircle(n, e, t) {
         linesMatchInOrder,
         represent,
         resolveMarkdownLinks,
-        resolveHashtags,
         buildUrl,
         isChinese,
         replaceBetweenStrings,
