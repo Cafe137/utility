@@ -277,9 +277,13 @@ function isBlank(n) {
 function isId(n) {
     return isNumber(n) && Number.isInteger(n) && n >= 1
 }
-const alphabet = 'abcdefghijklmnopqrstuvwxyz',
-    alphanumericAlphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
-    richAsciiAlphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=[]{}|;:<>?,./',
+const symbols = '!@#$%^&*()_+-=[]{}|;:<>?,./',
+    symbolsArray = '!@#$%^&*()_+-=[]{}|;:<>?,./'.split(''),
+    lowercaseAlphabet = 'abcdefghijklmnopqrstuvwxyz',
+    uppercaseAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    numericAlphabet = '1234567890',
+    alphanumericAlphabet = lowercaseAlphabet + uppercaseAlphabet + numericAlphabet,
+    richAsciiAlphabet = alphanumericAlphabet + symbols,
     unicodeTestingAlphabet = [
         '\u2014',
         '\\',
@@ -297,7 +301,7 @@ const alphabet = 'abcdefghijklmnopqrstuvwxyz',
     hexAlphabet = '0123456789abcdef'
 function randomLetterString(n, e = Math.random) {
     let t = ''
-    for (let r = 0; r < n; r++) t += alphabet[Math.floor(e() * alphabet.length)]
+    for (let r = 0; r < n; r++) t += lowercaseAlphabet[Math.floor(e() * lowercaseAlphabet.length)]
     return t
 }
 function randomAlphanumericString(n, e = Math.random) {
@@ -319,6 +323,11 @@ function searchHex(n, e) {
     const t = new RegExp(`[0-9a-f]{${e}}`, 'i'),
         r = n.match(t)
     return r ? r[0] : null
+}
+function searchSubstring(n, e, t = symbolsArray) {
+    const r = splitAll(n, t)
+    for (const o of r) if (e(o)) return o
+    return null
 }
 function randomHexString(n, e = Math.random) {
     let t = ''
@@ -618,6 +627,11 @@ function betweenNarrow(n, e, t) {
 function splitOnce(n, e, t = !1) {
     const r = t ? n.lastIndexOf(e) : n.indexOf(e)
     return r === -1 ? (t ? [null, n] : [n, null]) : [n.slice(0, r), n.slice(r + e.length)]
+}
+function splitAll(n, e) {
+    let t = [n]
+    for (const r of e) t = t.flatMap(o => o.split(r))
+    return t.filter(r => r)
 }
 function getExtension(n) {
     const e = last(n.split(/\\|\//g)),
@@ -2056,6 +2070,7 @@ function raycastCircle(n, e, t) {
         tokenizeByCount,
         tokenizeByLength,
         searchHex,
+        searchSubstring,
         randomHex: randomHexString,
         randomLetter: randomLetterString,
         randomAlphanumeric: randomAlphanumericString,
@@ -2079,6 +2094,7 @@ function raycastCircle(n, e, t) {
         getFuzzyMatchScore,
         sortByFuzzyScore,
         splitOnce,
+        splitAll,
         randomize,
         expand,
         shrinkTrim,

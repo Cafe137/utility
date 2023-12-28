@@ -59,6 +59,7 @@ declare function randomAlphanumericString(length: number, generator?: () => numb
 declare function randomRichAsciiString(length: number, generator?: () => number): string;
 declare function randomUnicodeString(length: number, generator?: () => number): string;
 declare function searchHex(string: string, length: number): string | null;
+declare function searchSubstring(string: string, predicate: (string: string) => boolean, separators?: string[]): string | null;
 declare function randomHexString(length: number, generator?: () => number): string;
 declare function asString(string: any): string;
 declare function asNumber(number: any): number;
@@ -126,6 +127,7 @@ declare function afterLast(string: string, searchString: string): string | null;
 declare function betweenWide(string: string, start: string, end: string): string | null;
 declare function betweenNarrow(string: string, start: string, end: string): string | null;
 declare function splitOnce(string: string, separator: string, last?: boolean): [string | null, string | null];
+declare function splitAll(string: string, separators: string[]): string[];
 declare function getExtension(path: string): string;
 declare function getBasename(path: string): string;
 declare function normalizeFilename(path: string): string;
@@ -575,6 +577,7 @@ export declare const Strings: {
     tokenizeByCount: typeof tokenizeByCount;
     tokenizeByLength: typeof tokenizeByLength;
     searchHex: typeof searchHex;
+    searchSubstring: typeof searchSubstring;
     randomHex: typeof randomHexString;
     randomLetter: typeof randomLetterString;
     randomAlphanumeric: typeof randomAlphanumericString;
@@ -598,6 +601,7 @@ export declare const Strings: {
     getFuzzyMatchScore: typeof getFuzzyMatchScore;
     sortByFuzzyScore: typeof sortByFuzzyScore;
     splitOnce: typeof splitOnce;
+    splitAll: typeof splitAll;
     randomize: typeof randomize;
     expand: typeof expand;
     shrinkTrim: typeof shrinkTrim;
