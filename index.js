@@ -385,6 +385,12 @@ function asObject(n) {
     if (!isStrictlyObject(n)) throw new TypeError('Expected object, got: ' + n)
     return n
 }
+function isNullable(n, e) {
+    return isUndefined(e) || e === null ? !0 : n(e)
+}
+function asNullable(n, e) {
+    return e === null || isUndefined(e) ? null : n(e)
+}
 function enforceObjectShape(n, e) {
     for (const [t, r] of Object.entries(e)) if (!r(n[t])) throw TypeError(`${t} in value does not exist or match shape`)
     for (const t of Object.keys(n)) if (!e[t]) throw TypeError(`${t} exists in value but not in shape`)
@@ -2062,6 +2068,7 @@ function raycastCircle(n, e, t) {
         isDate,
         isBlank,
         isId,
+        isNullable,
         asString,
         asNumber,
         asInteger,
@@ -2073,6 +2080,7 @@ function raycastCircle(n, e, t) {
         asTime,
         asArray,
         asObject,
+        asNullable,
         enforceObjectShape,
         enforceArrayShape
     }),

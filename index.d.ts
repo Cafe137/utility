@@ -72,6 +72,8 @@ declare function asId(value: any): number;
 declare function asTime(value: any): string;
 declare function asArray(value: any): unknown[];
 declare function asObject(value: any): Record<string, unknown>;
+declare function isNullable(typeFn: (value: any) => boolean, value: any): boolean;
+declare function asNullable<T>(typeFn: (value: any) => T, value: any): T | null;
 declare function enforceObjectShape(value: Record<string, any>, shape: Record<string, (value: any) => boolean>): boolean;
 declare function enforceArrayShape(value: any[], shape: Record<string, (value: any) => boolean>): boolean;
 declare function represent(value: any, strategy?: 'json' | 'key-value', depth?: number): string;
@@ -563,6 +565,7 @@ export declare const Types: {
     isDate: typeof isDate;
     isBlank: typeof isBlank;
     isId: typeof isId;
+    isNullable: typeof isNullable;
     asString: typeof asString;
     asNumber: typeof asNumber;
     asInteger: typeof asInteger;
@@ -574,6 +577,7 @@ export declare const Types: {
     asTime: typeof asTime;
     asArray: typeof asArray;
     asObject: typeof asObject;
+    asNullable: typeof asNullable;
     enforceObjectShape: typeof enforceObjectShape;
     enforceArrayShape: typeof enforceArrayShape;
 };
