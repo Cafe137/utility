@@ -72,6 +72,8 @@ declare function asId(value: any): number;
 declare function asTime(value: any): string;
 declare function asArray(value: any): unknown[];
 declare function asObject(value: any): Record<string, unknown>;
+declare function enforceObjectShape(value: Record<string, any>, shape: Record<string, (value: any) => boolean>): boolean;
+declare function enforceArrayShape(value: any[], shape: Record<string, (value: any) => boolean>): boolean;
 declare function represent(value: any, strategy?: 'json' | 'key-value', depth?: number): string;
 declare function expandError(error: any, stackTrace?: boolean): string;
 declare function deepMergeInPlace<X extends object, Y extends object>(target: X, source: Y): X & Y;
@@ -572,6 +574,8 @@ export declare const Types: {
     asTime: typeof asTime;
     asArray: typeof asArray;
     asObject: typeof asObject;
+    enforceObjectShape: typeof enforceObjectShape;
+    enforceArrayShape: typeof enforceArrayShape;
 };
 export declare const Strings: {
     tokenizeByCount: typeof tokenizeByCount;

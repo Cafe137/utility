@@ -385,6 +385,14 @@ function asObject(n) {
     if (!isStrictlyObject(n)) throw new TypeError('Expected object, got: ' + n)
     return n
 }
+function enforceObjectShape(n, e) {
+    for (const [t, r] of Object.entries(e)) if (!r(n[t])) throw TypeError(`${t} in value does not exist or match shape`)
+    for (const t of Object.keys(n)) if (!e[t]) throw TypeError(`${t} exists in value but not in shape`)
+    return !0
+}
+function enforceArrayShape(n, e) {
+    return n.every(t => enforceObjectShape(t, e))
+}
 function represent(n, e = 'json', t = 0) {
     if (isObject(n, !1)) {
         if (t > 1) return '[object Object]'
@@ -2064,7 +2072,9 @@ function raycastCircle(n, e, t) {
         asId,
         asTime,
         asArray,
-        asObject
+        asObject,
+        enforceObjectShape,
+        enforceArrayShape
     }),
     (exports.Strings = {
         tokenizeByCount,
