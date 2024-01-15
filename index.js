@@ -1603,24 +1603,37 @@ function group(n, e) {
     for (let o = 1; o < n.length; o++) e(n[o], n[o - 1]) || ((r = []), t.push(r)), r.push(n[o])
     return t
 }
-function createFastIndex() {
-    return { index: {}, keys: [] }
+function createBidirectionalMap() {
+    return { map: {}, keys: [] }
 }
-function pushToFastIndex(n, e, t, r = 100) {
-    if (n.index[e]) {
+function createTemporalBidirectionalMap() {
+    return { map: {}, keys: [] }
+}
+function pushToBidirectionalMap(n, e, t, r = 100) {
+    if (n.map[e]) {
         const o = n.keys.indexOf(e)
         n.keys.splice(o, 1)
     }
-    if (((n.index[e] = t), n.keys.push(e), n.keys.length > r)) {
+    if (((n.map[e] = t), n.keys.push(e), n.keys.length > r)) {
         const o = n.keys.shift()
-        o && delete n.index[o]
+        o && delete n.map[o]
     }
 }
-function pushToFastIndexWithExpiracy(n, e, t, r, o = 100) {
-    pushToFastIndex(n, e, { validUntil: Date.now() + r, data: t }, o)
+function unshiftToBidirectionalMap(n, e, t, r = 100) {
+    if (n.map[e]) {
+        const o = n.keys.indexOf(e)
+        n.keys.splice(o, 1)
+    }
+    if (((n.map[e] = t), n.keys.unshift(e), n.keys.length > r)) {
+        const o = n.keys.shift()
+        o && delete n.map[o]
+    }
 }
-function getFromFastIndexWithExpiracy(n, e) {
-    const t = n.index[e]
+function addToTemporalBidirectionalMap(n, e, t, r, o = 100) {
+    pushToBidirectionalMap(n, e, { validUntil: Date.now() + r, data: t }, o)
+}
+function getFromTemporalBidirectionalMap(n, e) {
+    const t = n.map[e]
     return t && t.validUntil > Date.now() ? t.data : null
 }
 function makeAsyncQueue(n = 1) {
@@ -2041,10 +2054,12 @@ function raycastCircle(n, e, t) {
         transformToArray,
         setMulti,
         incrementMulti,
-        createFastIndex,
-        pushToFastIndex,
-        pushToFastIndexWithExpiracy,
-        getFromFastIndexWithExpiracy,
+        createBidirectionalMap,
+        createTemporalBidirectionalMap,
+        pushToBidirectionalMap,
+        unshiftToBidirectionalMap,
+        addToTemporalBidirectionalMap,
+        getFromTemporalBidirectionalMap,
         createStatefulToggle,
         diffKeys,
         pickRandomKey,

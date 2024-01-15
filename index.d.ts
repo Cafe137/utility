@@ -334,14 +334,20 @@ declare function transformToArray(objectOfArrays: CafeObject<unknown[]>): CafeOb
 declare function incrementMulti<T>(objects: T[], key: keyof T, step?: number): void;
 declare function setMulti<T, K extends keyof T>(objects: T[], key: K, value: T[K]): void;
 declare function group<T>(array: T[], groupFn: (current: T, previous: T) => boolean): T[][];
-interface FastIndex<T> {
-    index: CafeObject<T>;
+interface TemporalData<T> {
+    validUntil: number;
+    data: T;
+}
+interface BidirectionalMap<T> {
+    map: CafeObject<T>;
     keys: string[];
 }
-declare function createFastIndex<T>(): FastIndex<T>;
-declare function pushToFastIndex<T>(object: FastIndex<T>, key: string, item: T, limit?: number): void;
-declare function pushToFastIndexWithExpiracy<T>(object: FastIndex<T>, key: string, item: T, expiration: number, limit?: number): void;
-declare function getFromFastIndexWithExpiracy<T>(object: FastIndex<T>, key: string): T | null;
+declare function createBidirectionalMap<T>(): BidirectionalMap<T>;
+declare function createTemporalBidirectionalMap<T>(): BidirectionalMap<TemporalData<T>>;
+declare function pushToBidirectionalMap<T>(object: BidirectionalMap<T>, key: string, item: T, limit?: number): void;
+declare function unshiftToBidirectionalMap<T>(object: BidirectionalMap<T>, key: string, item: T, limit?: number): void;
+declare function addToTemporalBidirectionalMap<T>(object: BidirectionalMap<TemporalData<T>>, key: string, item: T, expiration: number, limit?: number): void;
+declare function getFromTemporalBidirectionalMap<T>(object: BidirectionalMap<TemporalData<T>>, key: string): T | null;
 declare function makeAsyncQueue(concurrency?: number): {
     enqueue(fn: () => Promise<void>): void;
     drain: () => Promise<void>;
@@ -535,10 +541,12 @@ export declare const Objects: {
     transformToArray: typeof transformToArray;
     setMulti: typeof setMulti;
     incrementMulti: typeof incrementMulti;
-    createFastIndex: typeof createFastIndex;
-    pushToFastIndex: typeof pushToFastIndex;
-    pushToFastIndexWithExpiracy: typeof pushToFastIndexWithExpiracy;
-    getFromFastIndexWithExpiracy: typeof getFromFastIndexWithExpiracy;
+    createBidirectionalMap: typeof createBidirectionalMap;
+    createTemporalBidirectionalMap: typeof createTemporalBidirectionalMap;
+    pushToBidirectionalMap: typeof pushToBidirectionalMap;
+    unshiftToBidirectionalMap: typeof unshiftToBidirectionalMap;
+    addToTemporalBidirectionalMap: typeof addToTemporalBidirectionalMap;
+    getFromTemporalBidirectionalMap: typeof getFromTemporalBidirectionalMap;
     createStatefulToggle: typeof createStatefulToggle;
     diffKeys: typeof diffKeys;
     pickRandomKey: typeof pickRandomKey;
