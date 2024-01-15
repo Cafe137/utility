@@ -338,16 +338,16 @@ interface TemporalData<T> {
     validUntil: number;
     data: T;
 }
-interface BidirectionalMap<T> {
-    map: CafeObject<T>;
-    keys: string[];
+interface BidirectionalMap<K, T> {
+    map: Map<K, T>;
+    keys: K[];
 }
-declare function createBidirectionalMap<T>(): BidirectionalMap<T>;
-declare function createTemporalBidirectionalMap<T>(): BidirectionalMap<TemporalData<T>>;
-declare function pushToBidirectionalMap<T>(object: BidirectionalMap<T>, key: string, item: T, limit?: number): void;
-declare function unshiftToBidirectionalMap<T>(object: BidirectionalMap<T>, key: string, item: T, limit?: number): void;
-declare function addToTemporalBidirectionalMap<T>(object: BidirectionalMap<TemporalData<T>>, key: string, item: T, expiration: number, limit?: number): void;
-declare function getFromTemporalBidirectionalMap<T>(object: BidirectionalMap<TemporalData<T>>, key: string): T | null;
+declare function createBidirectionalMap<K, T>(): BidirectionalMap<K, T>;
+declare function createTemporalBidirectionalMap<K, T>(): BidirectionalMap<K, TemporalData<T>>;
+declare function pushToBidirectionalMap<K, T>(object: BidirectionalMap<K, T>, key: K, item: T, limit?: number): void;
+declare function unshiftToBidirectionalMap<K, T>(object: BidirectionalMap<K, T>, key: K, item: T, limit?: number): void;
+declare function addToTemporalBidirectionalMap<K, T>(object: BidirectionalMap<K, TemporalData<T>>, key: K, item: T, expiration: number, limit?: number): void;
+declare function getFromTemporalBidirectionalMap<K, T>(object: BidirectionalMap<K, TemporalData<T>>, key: K): T | null;
 declare function makeAsyncQueue(concurrency?: number): {
     enqueue(fn: () => Promise<void>): void;
     drain: () => Promise<void>;
