@@ -54,7 +54,6 @@ declare function isBoolean(value: any): value is boolean;
 declare function isDate(value: any): value is Date;
 declare function isBlank(value: any): boolean;
 declare function isId(value: any): value is number;
-declare function isNumbool(value: any): value is 0 | 1;
 declare function randomLetterString(length: number, generator?: () => number): string;
 declare function randomAlphanumericString(length: number, generator?: () => number): string;
 declare function randomRichAsciiString(length: number, generator?: () => number): string;
@@ -70,7 +69,6 @@ declare function asDate(date: any): Date;
 declare function asNullableString(string: any): string | null;
 declare function asEmptiableString(string: any): string;
 declare function asId(value: any): number;
-declare function asNumbool(value: any): 0 | 1;
 declare function asTime(value: any): string;
 declare function asArray(value: any): unknown[];
 declare function asObject(value: any): Record<string, unknown>;
@@ -112,6 +110,7 @@ declare function interpolate(a: number, b: number, t: number): number;
 declare function sum(array: number[]): number;
 declare function average(array: number[]): number;
 declare function median(array: number[]): number;
+declare function getDistanceFromMidpoint(position: number, length: number): number;
 declare function range(start: number, end: number): number[];
 declare function includesAny(string: string, substrings: string[]): boolean;
 declare function isChinese(string: string): boolean;
@@ -178,7 +177,9 @@ type StringSegment = {
     symbol: string | null;
     string: string;
 };
-declare function segmentizeString(string: string, symbol: string, orphan?: boolean): StringSegment[];
+declare function splitFormatting(string: string, symbol: string): StringSegment[];
+declare function splitHashtags(string: string): StringSegment[];
+declare function splitUrls(string: string): StringSegment[];
 declare function base64ToUint8Array(base64: string): Uint8Array;
 declare function uint8ArrayToBase64(array: Uint8Array): string;
 declare function hexToUint8Array(hex: string): Uint8Array;
@@ -354,12 +355,16 @@ declare function makeAsyncQueue(concurrency?: number): {
     enqueue(fn: () => Promise<void>): void;
     drain: () => Promise<void>;
 };
-export declare class Maybe<T> {
-    private value;
-    constructor(value: T | null);
-    bind<K>(fn: (value: T) => K): Maybe<Awaited<K>>;
-    valueOf(): Promise<T | null>;
+export declare class Optional<T> {
+    value: T | null | undefined;
+    constructor(value: T | null | undefined);
+    ifPresent(fn: (value: T) => void): this;
+    orElse(fn: () => void): void;
 }
+interface Newable<T> {
+    new (): T;
+}
+declare function findInstance<T, K extends T>(array: T[], type: Newable<K>): Optional<K>;
 type Playbook<T> = {
     ttl: number;
     ttlMax?: number;
@@ -447,6 +452,7 @@ export declare const Arrays: {
     requireNumberArgument: typeof requireNumberArgument;
     bringToFront: typeof bringToFront;
     bringToFrontInPlace: typeof bringToFrontInPlace;
+    findInstance: typeof findInstance;
 };
 export declare const System: {
     sleepMillis: typeof sleepMillis;
@@ -460,6 +466,7 @@ export declare const Numbers: {
     sum: typeof sum;
     average: typeof average;
     median: typeof median;
+    getDistanceFromMidpoint: typeof getDistanceFromMidpoint;
     clamp: typeof clamp;
     range: typeof range;
     interpolate: typeof interpolate;
@@ -575,7 +582,6 @@ export declare const Types: {
     isDate: typeof isDate;
     isBlank: typeof isBlank;
     isId: typeof isId;
-    isNumbool: typeof isNumbool;
     isNullable: typeof isNullable;
     asString: typeof asString;
     asNumber: typeof asNumber;
@@ -585,7 +591,6 @@ export declare const Types: {
     asNullableString: typeof asNullableString;
     asEmptiableString: typeof asEmptiableString;
     asId: typeof asId;
-    asNumbool: typeof asNumbool;
     asTime: typeof asTime;
     asArray: typeof asArray;
     asObject: typeof asObject;
@@ -665,7 +670,9 @@ export declare const Strings: {
     describeMarkdown: typeof describeMarkdown;
     isBalanced: typeof isBalanced;
     textToFormat: typeof textToFormat;
-    segmentize: typeof segmentizeString;
+    splitFormatting: typeof splitFormatting;
+    splitHashtags: typeof splitHashtags;
+    splitUrls: typeof splitUrls;
     hexToUint8Array: typeof hexToUint8Array;
     uint8ArrayToHex: typeof uint8ArrayToHex;
     base64ToUint8Array: typeof base64ToUint8Array;
