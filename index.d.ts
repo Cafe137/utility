@@ -361,8 +361,8 @@ export declare class Optional<T> {
     ifPresent(fn: (value: T) => void): this;
     orElse(fn: () => void): void;
 }
-interface Newable<T> {
-    new (): T;
+interface Newable<T> extends Function {
+    new (...args: any[]): T;
 }
 declare function findInstance<T, K extends T>(array: T[], type: Newable<K>): Optional<K>;
 type Playbook<T> = {
