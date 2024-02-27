@@ -237,7 +237,9 @@ function rgbToHex(n) {
 function isObject(n, e = !0) {
     return !n ||
         (e && !isUndefined(n._readableState)) ||
-        (e && n.constructor && (n.constructor.isBuffer || n.constructor.name == 'Uint8Array'))
+        (e &&
+            n.constructor &&
+            (n.constructor.isBuffer || n.constructor.name == 'Uint8Array' || n.constructor.name === 'ArrayBuffer'))
         ? !1
         : typeof n == 'object'
 }
