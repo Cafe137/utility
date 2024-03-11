@@ -62,6 +62,7 @@ declare function searchHex(string: string, length: number): string | null;
 declare function searchSubstring(string: string, predicate: (string: string) => boolean, separators?: string[]): string | null;
 declare function randomHexString(length: number, generator?: () => number): string;
 declare function asString(string: any): string;
+declare function asSafeString(string: any): string;
 declare function asNumber(number: any): number;
 declare function asInteger(number: any): number;
 declare function asBoolean(bool: any): boolean;
@@ -571,6 +572,7 @@ export declare const Types: {
     isId: typeof isId;
     isNullable: typeof isNullable;
     asString: typeof asString;
+    asSafeString: typeof asSafeString;
     asNumber: typeof asNumber;
     asInteger: typeof asInteger;
     asBoolean: typeof asBoolean;

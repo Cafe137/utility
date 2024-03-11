@@ -339,6 +339,15 @@ function asString(n) {
     if (isBlank(n)) throw new TypeError('Expected string, got: ' + n)
     return n
 }
+function asSafeString(n) {
+    if (
+        !asString(n)
+            .split('')
+            .every(e => e === '_' || isLetterOrDigit(e))
+    )
+        throw new TypeError('Expected safe string, got: ' + n)
+    return n
+}
 function asNumber(n) {
     if (isNumber(n)) return n
     if (!isString(n) || !n.match(/^-?\d+(\.\d+)?$/)) throw new TypeError('Expected number, got: ' + n)
@@ -2123,6 +2132,7 @@ function raycastCircle(n, e, t) {
         isId,
         isNullable,
         asString,
+        asSafeString,
         asNumber,
         asInteger,
         asBoolean,
