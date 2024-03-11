@@ -83,7 +83,6 @@ declare function deepMerge2<X extends object, Y extends object>(target: X, sourc
 declare function deepMerge3<X extends object, Y extends object, Z extends object>(target: X, sourceA: Y, sourceB: Z): X & Y & Z;
 declare function zip<T>(objects: CafeObject<T>[], reducer: (a: T, b: T) => T): CafeObject<T>;
 declare function zipSum(objects: CafeObject<number>[]): CafeObject<number>;
-declare function asPageNumber(value: any): number;
 declare function pushToBucket<T>(object: Record<string, T[]>, bucket: string, item: T): void;
 declare function unshiftAndLimit<T>(array: T[], item: T, limit: number): void;
 declare function atRolling<T>(array: T[], index: number): T;
@@ -91,14 +90,6 @@ declare function pushAll<T>(array: T[], elements: T[]): void;
 declare function unshiftAll<T>(array: T[], elements: T[]): void;
 declare function mapAllAsync<T, K>(array: T[], fn: (value: T) => Promise<K>): Promise<K[]>;
 declare function glue<T, K>(array: T[], glueElement: K | (() => K)): (T | K)[];
-interface Page<T> {
-    data: T[];
-    pageSize: number;
-    totalPages: number;
-    totalElements: number;
-    currentPage: number;
-}
-declare function pageify<T>(data: T[], totalElements: number, pageSize: number, currentPage: number): Page<T>;
 declare function asEqual<A>(a: A, b: A): [A, A];
 declare function asTrue(data: any): true;
 declare function asTruthy<T>(data: T): T;
@@ -564,10 +555,6 @@ export declare const Objects: {
     toQueryString: typeof toQueryString;
     parseQueryString: typeof parseQueryString;
     hasKey: typeof hasKey;
-};
-export declare const Pagination: {
-    asPageNumber: typeof asPageNumber;
-    pageify: typeof pageify;
 };
 export declare const Types: {
     isFunction: typeof isFunction;
