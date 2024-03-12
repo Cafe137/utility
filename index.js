@@ -1737,6 +1737,12 @@ function findInstance(n, e) {
     const t = n.find(r => r instanceof e)
     return new Optional(t)
 }
+function interleave(n, e) {
+    const t = [],
+        r = Math.max(n.length, e.length)
+    for (let o = 0; o < r; o++) n[o] && t.push(n[o]), e[o] && t.push(e[o])
+    return t
+}
 function tickPlaybook(n) {
     if (n.length === 0) return null
     const e = n[0]
@@ -2017,7 +2023,8 @@ function raycastCircle(n, e, t) {
         requireNumberArgument,
         bringToFront,
         bringToFrontInPlace,
-        findInstance
+        findInstance,
+        interleave
     }),
     (exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError }),
     (exports.Numbers = {
