@@ -127,6 +127,7 @@ declare function splitOnce(string: string, separator: string, last?: boolean): [
 declare function splitAll(string: string, separators: string[]): string[];
 declare function getExtension(path: string): string;
 declare function getBasename(path: string): string;
+declare function normalizeEmail(email: string): string;
 declare function normalizeFilename(path: string): string;
 interface ParsedFilename {
     basename: string;
@@ -628,6 +629,7 @@ export declare const Strings: {
     surroundInOut: typeof surroundInOut;
     getExtension: typeof getExtension;
     getBasename: typeof getBasename;
+    normalizeEmail: typeof normalizeEmail;
     normalizeFilename: typeof normalizeFilename;
     parseFilename: typeof parseFilename;
     camelToTitle: typeof camelToTitle;
