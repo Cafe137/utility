@@ -105,6 +105,15 @@ function floatBetween(n, e, t = Math.random) {
 function signedRandom() {
     return Math.random() * 2 - 1
 }
+function containsPoint(n, e, t) {
+    return e >= n.x && e < n.x + n.width && t >= n.y && t < n.y + n.height
+}
+function randomPoint(n, e, t, r = Math.random) {
+    let o, i
+    do (o = intBetween(0, n - 1, r)), (i = intBetween(0, e - 1, r))
+    while (t && containsPoint(t, o, i))
+    return [o, i]
+}
 function chance(n, e = Math.random) {
     return e() < n
 }
@@ -1985,7 +1994,7 @@ function raycastCircle(n, e, t) {
     }
     return i
 }
-;(exports.Random = { intBetween, floatBetween, chance, signed: signedRandom, makeSeededRng }),
+;(exports.Random = { intBetween, floatBetween, chance, signed: signedRandom, makeSeededRng, point: randomPoint }),
     (exports.Arrays = {
         countUnique,
         makeUnique,
