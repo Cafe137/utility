@@ -18,6 +18,13 @@ declare function makeSeededRng(seed: number): () => number;
 declare function intBetween(min: number, max: number, generator?: () => number): number;
 declare function floatBetween(min: number, max: number, generator?: () => number): number;
 declare function signedRandom(): number;
+interface Rectangle {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+declare function randomPoint(width: number, height: number, exclude?: Rectangle, generator?: () => number): [number, number];
 declare function chance(threshold: number, generator?: () => number): boolean;
 declare function pick<T>(array: T[], generator?: () => number): T;
 declare function pickMany<T>(array: T[], count: number, generator?: () => number): T[];
@@ -401,6 +408,7 @@ export declare const Random: {
     chance: typeof chance;
     signed: typeof signedRandom;
     makeSeededRng: typeof makeSeededRng;
+    point: typeof randomPoint;
 };
 export declare const Arrays: {
     countUnique: typeof countUnique;
