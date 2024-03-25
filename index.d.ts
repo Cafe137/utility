@@ -49,6 +49,9 @@ declare function asMegabytes(number: number): number;
 declare function convertBytes(bytes: number): string;
 declare function hexToRgb(hex: string): [number, number, number];
 declare function rgbToHex(rgb: [number, number, number]): string;
+declare function haversineDistanceToMeters(lat1: number, lon1: number, lat2: number, lon2: number): number;
+declare function roundToNearest(value: number, nearest: number): number;
+declare function formatDistance(meters: number): string;
 declare function isObject(value: any, checkForPlainObject?: boolean): value is object;
 declare function isStrictlyObject(value: any): value is object;
 declare function isEmptyArray(value: any): boolean;
@@ -490,6 +493,9 @@ export declare const Numbers: {
     convertBytes: typeof convertBytes;
     hexToRgb: typeof hexToRgb;
     rgbToHex: typeof rgbToHex;
+    haversineDistanceToMeters: typeof haversineDistanceToMeters;
+    roundToNearest: typeof roundToNearest;
+    formatDistance: typeof formatDistance;
 };
 export declare const Promises: {
     raceFulfilled: typeof raceFulfilled;

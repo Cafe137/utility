@@ -15,31 +15,31 @@ Object.defineProperty(exports, '__esModule', { value: !0 }),
         exports.Optional =
             void 0)
 async function invertPromise(n) {
-    return new Promise((e, t) => n.then(t, e))
+    return new Promise((t, e) => n.then(e, t))
 }
 async function raceFulfilled(n) {
     return invertPromise(Promise.all(n.map(invertPromise)))
 }
-async function runInParallelBatches(n, e = 1) {
-    const t = splitByCount(n, e),
+async function runInParallelBatches(n, t = 1) {
+    const e = splitByCount(n, t),
         r = [],
-        o = t.map(async i => {
+        o = e.map(async i => {
             for (const s of i) r.push(await s())
         })
     return await Promise.all(o), r
 }
 async function sleepMillis(n) {
-    return new Promise(e =>
+    return new Promise(t =>
         setTimeout(() => {
-            e(!0)
+            t(!0)
         }, n)
     )
 }
-function shuffle(n, e = Math.random) {
-    for (let t = n.length - 1; t > 0; t--) {
-        const r = Math.floor(e() * (t + 1)),
-            o = n[t]
-        ;(n[t] = n[r]), (n[r] = o)
+function shuffle(n, t = Math.random) {
+    for (let e = n.length - 1; e > 0; e--) {
+        const r = Math.floor(t() * (e + 1)),
+            o = n[e]
+        ;(n[e] = n[r]), (n[r] = o)
     }
     return n
 }
@@ -55,171 +55,171 @@ function onlyOrNull(n) {
 function firstOrNull(n) {
     return n && n.length > 0 ? n[0] : null
 }
-function initializeArray(n, e) {
-    const t = []
-    for (let r = 0; r < n; r++) t.push(e(r))
-    return t
-}
-function rotate2DArray(n) {
+function initializeArray(n, t) {
     const e = []
-    for (let t = 0; t < n[0].length; t++) {
-        e.push([])
-        for (let r = 0; r < n.length; r++) e[t].push(n[r][t])
-    }
+    for (let r = 0; r < n; r++) e.push(t(r))
     return e
 }
-function initialize2DArray(n, e, t) {
+function rotate2DArray(n) {
+    const t = []
+    for (let e = 0; e < n[0].length; e++) {
+        t.push([])
+        for (let r = 0; r < n.length; r++) t[e].push(n[r][e])
+    }
+    return t
+}
+function initialize2DArray(n, t, e) {
     const r = []
     for (let o = 0; o < n; o++) {
         r.push([])
-        for (let i = 0; i < e; i++) r[o].push(t)
+        for (let i = 0; i < t; i++) r[o].push(e)
     }
     return r
 }
-function containsShape(n, e, t, r) {
-    if (t < 0 || r < 0 || r + e[0].length > n[0].length || t + e.length > n.length) return !1
-    for (let o = 0; o < e.length; o++)
-        for (let i = 0; i < e[o].length; i++) if (e[o][i] !== void 0 && n[t + o][r + i] !== e[o][i]) return !1
+function containsShape(n, t, e, r) {
+    if (e < 0 || r < 0 || r + t[0].length > n[0].length || e + t.length > n.length) return !1
+    for (let o = 0; o < t.length; o++)
+        for (let i = 0; i < t[o].length; i++) if (t[o][i] !== void 0 && n[e + o][r + i] !== t[o][i]) return !1
     return !0
 }
-function pickRandomIndices(n, e, t = Math.random) {
-    return shuffle(range(0, n.length - 1), t).slice(0, e)
+function pickRandomIndices(n, t, e = Math.random) {
+    return shuffle(range(0, n.length - 1), e).slice(0, t)
 }
-function pluck(n, e) {
-    return n.map(t => t[e])
+function pluck(n, t) {
+    return n.map(e => e[t])
 }
 function makeSeededRng(n) {
-    let e = n,
-        t = 3405648695,
+    let t = n,
+        e = 3405648695,
         r = 3735928559
     return function () {
-        return (e += t), (t ^= e << 7), (e *= r), (r ^= e << 13), (e ^= t ^ r), (e >>> 0) / 4294967296
+        return (t += e), (e ^= t << 7), (t *= r), (r ^= t << 13), (t ^= e ^ r), (t >>> 0) / 4294967296
     }
 }
-function intBetween(n, e, t = Math.random) {
-    return Math.floor(t() * (e - n + 1)) + n
+function intBetween(n, t, e = Math.random) {
+    return Math.floor(e() * (t - n + 1)) + n
 }
-function floatBetween(n, e, t = Math.random) {
-    return t() * (e - n) + n
+function floatBetween(n, t, e = Math.random) {
+    return e() * (t - n) + n
 }
 function signedRandom() {
     return Math.random() * 2 - 1
 }
-function containsPoint(n, e, t) {
-    return e >= n.x && e < n.x + n.width && t >= n.y && t < n.y + n.height
+function containsPoint(n, t, e) {
+    return t >= n.x && t < n.x + n.width && e >= n.y && e < n.y + n.height
 }
-function randomPoint(n, e, t, r = Math.random) {
+function randomPoint(n, t, e, r = Math.random) {
     let o, i
-    do (o = intBetween(0, n - 1, r)), (i = intBetween(0, e - 1, r))
-    while (t && containsPoint(t, o, i))
+    do (o = intBetween(0, n - 1, r)), (i = intBetween(0, t - 1, r))
+    while (e && containsPoint(e, o, i))
     return [o, i]
 }
-function chance(n, e = Math.random) {
-    return e() < n
+function chance(n, t = Math.random) {
+    return t() < n
 }
-function pick(n, e = Math.random) {
-    return n[Math.floor(n.length * e())]
+function pick(n, t = Math.random) {
+    return n[Math.floor(n.length * t())]
 }
-function pickMany(n, e, t = Math.random) {
-    if (e > n.length) throw new Error(`Count (${e}) is greater than array length (${n.length})`)
-    return pickRandomIndices(n, e, t).map(o => n[o])
+function pickMany(n, t, e = Math.random) {
+    if (t > n.length) throw new Error(`Count (${t}) is greater than array length (${n.length})`)
+    return pickRandomIndices(n, t, e).map(o => n[o])
 }
-function pickManyUnique(n, e, t, r = Math.random) {
-    if (e > n.length) throw new Error(`Count (${e}) is greater than array length (${n.length})`)
+function pickManyUnique(n, t, e, r = Math.random) {
+    if (t > n.length) throw new Error(`Count (${t}) is greater than array length (${n.length})`)
     const o = []
-    for (; o.length < e; ) {
+    for (; o.length < t; ) {
         const i = pick(n, r)
-        o.some(s => t(s, i)) || o.push(i)
+        o.some(s => e(s, i)) || o.push(i)
     }
     return o
 }
-function pickGuaranteed(n, e, t, r, o, i = Math.random) {
-    const s = n.filter(u => u !== e && u !== t),
+function pickGuaranteed(n, t, e, r, o, i = Math.random) {
+    const s = n.filter(u => u !== t && u !== e),
         c = []
-    for (e !== null && c.push(e); s.length && c.length < r; ) {
+    for (t !== null && c.push(t); s.length && c.length < r; ) {
         const u = exports.Random.intBetween(0, s.length - 1, i)
         o(s[u], c) && c.push(s[u]), s.splice(u, 1)
     }
-    return shuffle(c, i), { values: c, indexOfGuaranteed: e !== null ? c.indexOf(e) : -1 }
+    return shuffle(c, i), { values: c, indexOfGuaranteed: t !== null ? c.indexOf(t) : -1 }
 }
 function last(n) {
     return n[n.length - 1]
 }
-function pickWeighted(n, e, t) {
-    if ((isUndefined(t) && (t = Math.random()), n.length !== e.length)) throw new Error('Array length mismatch')
-    let r = e.reduce((i, s) => i + s, 0)
-    const o = t * r
-    for (let i = 0; i < n.length - 1; i++) if (((r -= e[i]), o >= r)) return n[i]
+function pickWeighted(n, t, e) {
+    if ((isUndefined(e) && (e = Math.random()), n.length !== t.length)) throw new Error('Array length mismatch')
+    let r = t.reduce((i, s) => i + s, 0)
+    const o = e * r
+    for (let i = 0; i < n.length - 1; i++) if (((r -= t[i]), o >= r)) return n[i]
     return last(n)
 }
-function sortWeighted(n, e, t = Math.random) {
-    const r = e.map(i => t() * i),
+function sortWeighted(n, t, e = Math.random) {
+    const r = t.map(i => e() * i),
         o = []
     for (let i = 0; i < n.length; i++) o.push([n[i], r[i]])
     return o.sort((i, s) => s[1] - i[1]).map(i => i[0])
 }
-function getDeep(n, e) {
-    const t = e.split('.')
+function getDeep(n, t) {
+    const e = t.split('.')
     let r = n
-    for (const o of t) {
+    for (const o of e) {
         if (!r[o]) return r[o]
         r = r[o]
     }
     return r
 }
-function getDeepOrElse(n, e, t) {
-    return getDeep(n, e) || t
+function getDeepOrElse(n, t, e) {
+    return getDeep(n, t) || e
 }
-function setDeep(n, e, t) {
-    const r = e.split(/\.|\[/)
+function setDeep(n, t, e) {
+    const r = t.split(/\.|\[/)
     let o = n
     for (let i = 0; i < r.length; i++) {
         const s = r[i],
             c = i < r.length - 1 && r[i + 1].includes(']'),
             l = s.includes(']') ? s.replace(/\[|\]/g, '') : s
-        if (i === r.length - 1) return (o[l] = t), t
+        if (i === r.length - 1) return (o[l] = e), e
         isObject(o[l]) || (c ? (o[l] = []) : (o[l] = {})), (o = o[l])
     }
-    return t
+    return e
 }
-function incrementDeep(n, e, t = 1) {
-    const r = getDeep(n, e) || 0
-    return setDeep(n, e, r + t), r
+function incrementDeep(n, t, e = 1) {
+    const r = getDeep(n, t) || 0
+    return setDeep(n, t, r + e), r
 }
-function ensureDeep(n, e, t) {
-    return getDeep(n, e) || setDeep(n, e, t)
+function ensureDeep(n, t, e) {
+    return getDeep(n, t) || setDeep(n, t, e)
 }
-function deleteDeep(n, e) {
-    const t = beforeLast(e, '.'),
-        r = afterLast(e, '.')
-    if (!t || !r) return
-    const o = getDeep(n, t)
+function deleteDeep(n, t) {
+    const e = beforeLast(t, '.'),
+        r = afterLast(t, '.')
+    if (!e || !r) return
+    const o = getDeep(n, e)
     delete o[r]
 }
-function replaceDeep(n, e, t) {
-    const r = getDeep(n, e)
-    if (!r) throw new Error("Key '" + e + "' does not exist.")
-    return setDeep(n, e, t), r
+function replaceDeep(n, t, e) {
+    const r = getDeep(n, t)
+    if (!r) throw new Error("Key '" + t + "' does not exist.")
+    return setDeep(n, t, e), r
 }
-function getFirstDeep(n, e, t) {
-    for (const r of e) {
+function getFirstDeep(n, t, e) {
+    for (const r of t) {
         const o = getDeep(n, r)
         if (o) return o
     }
-    if (t) {
+    if (e) {
         const r = Object.values(n)
         if (r.length) return r[0]
     }
     return null
 }
-async function forever(n, e, t) {
+async function forever(n, t, e) {
     for (;;) {
         try {
             await n()
         } catch (r) {
-            t && t('Error in forever', r)
+            e && e('Error in forever', r)
         }
-        await sleepMillis(e)
+        await sleepMillis(t)
     }
 }
 function asMegabytes(n) {
@@ -235,17 +235,37 @@ function convertBytes(n) {
         : n + ' B'
 }
 function hexToRgb(n) {
-    const e = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(n.toLowerCase())
-    if (!e) throw new Error('Invalid hex color: ' + n)
-    return [parseInt(e[1], 16), parseInt(e[2], 16), parseInt(e[3], 16)]
+    const t = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(n.toLowerCase())
+    if (!t) throw new Error('Invalid hex color: ' + n)
+    return [parseInt(t[1], 16), parseInt(t[2], 16), parseInt(t[3], 16)]
 }
 function rgbToHex(n) {
-    return '#' + n.map(e => e.toString(16).padStart(2, '0')).join('')
+    return '#' + n.map(t => t.toString(16).padStart(2, '0')).join('')
 }
-function isObject(n, e = !0) {
+function haversineDistanceToMeters(n, t, e, r) {
+    const i = (n * Math.PI) / 180,
+        s = (e * Math.PI) / 180,
+        c = ((e - n) * Math.PI) / 180,
+        u = ((r - t) * Math.PI) / 180,
+        l = Math.sin(c / 2) * Math.sin(c / 2) + Math.cos(i) * Math.cos(s) * Math.sin(u / 2) * Math.sin(u / 2)
+    return 6371e3 * (2 * Math.atan2(Math.sqrt(l), Math.sqrt(1 - l)))
+}
+function roundToNearest(n, t) {
+    return Math.round(n / t) * t
+}
+function formatDistance(n) {
+    return n > 1e3
+        ? (n / 1e3).toFixed(0) + ' km'
+        : n >= 500
+        ? roundToNearest(n, 100) + ' m'
+        : n >= 100
+        ? roundToNearest(n, 50) + ' m'
+        : roundToNearest(n, 10) + ' m'
+}
+function isObject(n, t = !0) {
     return !n ||
-        (e && !isUndefined(n._readableState)) ||
-        (e &&
+        (t && !isUndefined(n._readableState)) ||
+        (t &&
             n.constructor &&
             (n.constructor.isBuffer || n.constructor.name == 'Uint8Array' || n.constructor.name === 'ArrayBuffer'))
         ? !1
@@ -309,40 +329,40 @@ const symbols = '!@#$%^&*()_+-=[]{}|;:<>?,./',
         '\u{1F645}'
     ],
     hexAlphabet = '0123456789abcdef'
-function randomLetterString(n, e = Math.random) {
-    let t = ''
-    for (let r = 0; r < n; r++) t += lowercaseAlphabet[Math.floor(e() * lowercaseAlphabet.length)]
-    return t
+function randomLetterString(n, t = Math.random) {
+    let e = ''
+    for (let r = 0; r < n; r++) e += lowercaseAlphabet[Math.floor(t() * lowercaseAlphabet.length)]
+    return e
 }
-function randomAlphanumericString(n, e = Math.random) {
-    let t = ''
-    for (let r = 0; r < n; r++) t += alphanumericAlphabet[Math.floor(e() * alphanumericAlphabet.length)]
-    return t
+function randomAlphanumericString(n, t = Math.random) {
+    let e = ''
+    for (let r = 0; r < n; r++) e += alphanumericAlphabet[Math.floor(t() * alphanumericAlphabet.length)]
+    return e
 }
-function randomRichAsciiString(n, e = Math.random) {
-    let t = ''
-    for (let r = 0; r < n; r++) t += richAsciiAlphabet[Math.floor(e() * richAsciiAlphabet.length)]
-    return t
+function randomRichAsciiString(n, t = Math.random) {
+    let e = ''
+    for (let r = 0; r < n; r++) e += richAsciiAlphabet[Math.floor(t() * richAsciiAlphabet.length)]
+    return e
 }
-function randomUnicodeString(n, e = Math.random) {
-    let t = ''
-    for (let r = 0; r < n; r++) t += unicodeTestingAlphabet[Math.floor(e() * unicodeTestingAlphabet.length)]
-    return t
+function randomUnicodeString(n, t = Math.random) {
+    let e = ''
+    for (let r = 0; r < n; r++) e += unicodeTestingAlphabet[Math.floor(t() * unicodeTestingAlphabet.length)]
+    return e
 }
-function searchHex(n, e) {
-    const t = new RegExp(`[0-9a-f]{${e}}`, 'i'),
-        r = n.match(t)
+function searchHex(n, t) {
+    const e = new RegExp(`[0-9a-f]{${t}}`, 'i'),
+        r = n.match(e)
     return r ? r[0] : null
 }
-function searchSubstring(n, e, t = symbolsArray) {
-    const r = splitAll(n, t)
-    for (const o of r) if (e(o)) return o
+function searchSubstring(n, t, e = symbolsArray) {
+    const r = splitAll(n, e)
+    for (const o of r) if (t(o)) return o
     return null
 }
-function randomHexString(n, e = Math.random) {
-    let t = ''
-    for (let r = 0; r < n; r++) t += hexAlphabet[Math.floor(e() * hexAlphabet.length)]
-    return t
+function randomHexString(n, t = Math.random) {
+    let e = ''
+    for (let r = 0; r < n; r++) e += hexAlphabet[Math.floor(t() * hexAlphabet.length)]
+    return e
 }
 function asString(n) {
     if (isBlank(n)) throw new TypeError('Expected string, got: ' + n)
@@ -352,7 +372,7 @@ function asSafeString(n) {
     if (
         !asString(n)
             .split('')
-            .every(e => e === '_' || isLetterOrDigit(e))
+            .every(t => t === '_' || isLetterOrDigit(t))
     )
         throw new TypeError('Expected safe string, got: ' + n)
     return n
@@ -384,19 +404,19 @@ function asEmptiableString(n) {
 }
 function asId(n) {
     if (isId(n)) return n
-    const e = parseInt(n, 10)
-    if (!isId(e)) throw new TypeError('Expected id, got: ' + n)
-    return e
+    const t = parseInt(n, 10)
+    if (!isId(t)) throw new TypeError('Expected id, got: ' + n)
+    return t
 }
 function asTime(n) {
     if (!isString(n)) throw new TypeError('Expected time, got: ' + n)
-    const e = n.split(':')
-    if (e.length !== 2) throw new TypeError('Expected time, got: ' + n)
-    const t = parseInt(e[0], 10),
-        r = parseInt(e[1], 10)
-    if (!isNumber(t) || !isNumber(r) || t < 0 || t > 23 || r < 0 || r > 59)
+    const t = n.split(':')
+    if (t.length !== 2) throw new TypeError('Expected time, got: ' + n)
+    const e = parseInt(t[0], 10),
+        r = parseInt(t[1], 10)
+    if (!isNumber(e) || !isNumber(r) || e < 0 || e > 23 || r < 0 || r > 59)
         throw new TypeError('Expected time, got: ' + n)
-    return `${String(t).padStart(2, '0')}:${String(r).padStart(2, '0')}`
+    return `${String(e).padStart(2, '0')}:${String(r).padStart(2, '0')}`
 }
 function asArray(n) {
     if (!Array.isArray(n)) throw new TypeError('Expected array, got: ' + n)
@@ -406,109 +426,109 @@ function asObject(n) {
     if (!isStrictlyObject(n)) throw new TypeError('Expected object, got: ' + n)
     return n
 }
-function isNullable(n, e) {
-    return isUndefined(e) || e === null ? !0 : n(e)
+function isNullable(n, t) {
+    return isUndefined(t) || t === null ? !0 : n(t)
 }
-function asNullable(n, e) {
-    return e === null || isUndefined(e) ? null : n(e)
+function asNullable(n, t) {
+    return t === null || isUndefined(t) ? null : n(t)
 }
-function enforceObjectShape(n, e) {
-    for (const [t, r] of Object.entries(e)) if (!r(n[t])) throw TypeError(`${t} in value does not exist or match shape`)
-    for (const t of Object.keys(n)) if (!e[t]) throw TypeError(`${t} exists in value but not in shape`)
+function enforceObjectShape(n, t) {
+    for (const [e, r] of Object.entries(t)) if (!r(n[e])) throw TypeError(`${e} in value does not exist or match shape`)
+    for (const e of Object.keys(n)) if (!t[e]) throw TypeError(`${e} exists in value but not in shape`)
     return !0
 }
-function enforceArrayShape(n, e) {
-    return n.every(t => enforceObjectShape(t, e))
+function enforceArrayShape(n, t) {
+    return n.every(e => enforceObjectShape(e, t))
 }
-function represent(n, e = 'json', t = 0) {
+function represent(n, t = 'json', e = 0) {
     if (isObject(n, !1)) {
-        if (t > 1) return '[object Object]'
-        if (e === 'json') {
+        if (e > 1) return '[object Object]'
+        if (t === 'json') {
             if (Array.isArray(n)) {
-                const o = n.map(i => represent(i, 'json', t + 1))
-                return t === 0 ? JSON.stringify(o) : o
+                const o = n.map(i => represent(i, 'json', e + 1))
+                return e === 0 ? JSON.stringify(o) : o
             }
             const r = {}
-            n.message && (r.message = represent(n.message, 'json', t + 1))
-            for (const [o, i] of Object.entries(n)) r[o] = represent(i, 'json', t + 1)
-            return t === 0 ? JSON.stringify(r) : r
-        } else if (e === 'key-value') {
+            n.message && (r.message = represent(n.message, 'json', e + 1))
+            for (const [o, i] of Object.entries(n)) r[o] = represent(i, 'json', e + 1)
+            return e === 0 ? JSON.stringify(r) : r
+        } else if (t === 'key-value') {
             const r = Object.keys(n)
             return (
                 n.message && !r.includes('message') && r.unshift('message'),
-                r.map(o => `${o}=${JSON.stringify(represent(n[o], 'json', t + 1))}`).join(' ')
+                r.map(o => `${o}=${JSON.stringify(represent(n[o], 'json', e + 1))}`).join(' ')
             )
         }
     }
-    return isUndefined(n) && (n = 'undefined'), t === 0 ? JSON.stringify(n) : n
+    return isUndefined(n) && (n = 'undefined'), e === 0 ? JSON.stringify(n) : n
 }
-function expandError(n, e) {
+function expandError(n, t) {
     if (isString(n)) return n
-    const t = Object.keys(n)
-    n.message && !t.includes('message') && t.push('message')
-    const r = t.map(o => `${o}: ${n[o]}`).join('; ')
-    return e && n.stack
+    const e = Object.keys(n)
+    n.message && !e.includes('message') && e.push('message')
+    const r = e.map(o => `${o}: ${n[o]}`).join('; ')
+    return t && n.stack
         ? r +
               `
 ` +
               n.stack
         : r
 }
-function deepMergeInPlace(n, e) {
-    if (isStrictlyObject(n) && isStrictlyObject(e))
-        for (const t in e)
-            isStrictlyObject(e[t])
-                ? (n[t] || (n[t] = {}), deepMergeInPlace(n[t], e[t]))
-                : Array.isArray(e[t])
-                ? (n[t] = [...e[t]])
-                : ((e[t] !== null && e[t] !== void 0) || n[t] === null || n[t] === void 0) && (n[t] = e[t])
+function deepMergeInPlace(n, t) {
+    if (isStrictlyObject(n) && isStrictlyObject(t))
+        for (const e in t)
+            isStrictlyObject(t[e])
+                ? (n[e] || (n[e] = {}), deepMergeInPlace(n[e], t[e]))
+                : Array.isArray(t[e])
+                ? (n[e] = [...t[e]])
+                : ((t[e] !== null && t[e] !== void 0) || n[e] === null || n[e] === void 0) && (n[e] = t[e])
     return n
 }
-function deepMerge2(n, e) {
-    const t = {}
-    return deepMergeInPlace(t, n), deepMergeInPlace(t, e), t
+function deepMerge2(n, t) {
+    const e = {}
+    return deepMergeInPlace(e, n), deepMergeInPlace(e, t), e
 }
-function deepMerge3(n, e, t) {
+function deepMerge3(n, t, e) {
     const r = {}
-    return deepMergeInPlace(r, n), deepMergeInPlace(r, e), deepMergeInPlace(r, t), r
+    return deepMergeInPlace(r, n), deepMergeInPlace(r, t), deepMergeInPlace(r, e), r
 }
-function zip(n, e) {
-    const t = {}
-    for (const r of n) for (const o of Object.keys(r)) t[o] ? (t[o] = e(t[o], r[o])) : (t[o] = r[o])
-    return t
+function zip(n, t) {
+    const e = {}
+    for (const r of n) for (const o of Object.keys(r)) e[o] ? (e[o] = t(e[o], r[o])) : (e[o] = r[o])
+    return e
 }
 function zipSum(n) {
-    return zip(n, (e, t) => e + t)
+    return zip(n, (t, e) => t + e)
 }
-function pushToBucket(n, e, t) {
-    n[e] || (n[e] = []), n[e].push(t)
+function pushToBucket(n, t, e) {
+    n[t] || (n[t] = []), n[t].push(e)
 }
-function unshiftAndLimit(n, e, t) {
-    for (n.unshift(e); n.length > t; ) n.pop()
+function unshiftAndLimit(n, t, e) {
+    for (n.unshift(t); n.length > e; ) n.pop()
 }
-function atRolling(n, e) {
-    let t = e % n.length
-    return t < 0 && (t += n.length), n[t]
+function atRolling(n, t) {
+    let e = t % n.length
+    return e < 0 && (e += n.length), n[e]
 }
-function pushAll(n, e) {
-    Array.prototype.push.apply(n, e)
+function pushAll(n, t) {
+    Array.prototype.push.apply(n, t)
 }
-function unshiftAll(n, e) {
-    Array.prototype.unshift.apply(n, e)
+function unshiftAll(n, t) {
+    Array.prototype.unshift.apply(n, t)
 }
-async function mapAllAsync(n, e) {
-    const t = []
-    for (const r of n) t.push(await e(r))
-    return t
+async function mapAllAsync(n, t) {
+    const e = []
+    for (const r of n) e.push(await t(r))
+    return e
 }
-function glue(n, e) {
-    const t = []
-    for (let r = 0; r < n.length; r++) t.push(n[r]), r < n.length - 1 && (isFunction(e) ? t.push(e()) : t.push(e))
-    return t
+function glue(n, t) {
+    const e = []
+    for (let r = 0; r < n.length; r++) e.push(n[r]), r < n.length - 1 && (isFunction(t) ? e.push(t()) : e.push(t))
+    return e
 }
-function asEqual(n, e) {
-    if (n !== e) throw Error(`Expected [${n}] to equal [${e}]`)
-    return [n, e]
+function asEqual(n, t) {
+    if (n !== t) throw Error(`Expected [${n}] to equal [${t}]`)
+    return [n, t]
 }
 function asTrue(n) {
     if (n !== !0) throw Error(`Expected [true], got: [${n}]`)
@@ -526,54 +546,54 @@ function asFalsy(n) {
     if (n) throw Error(`Expected falsy value, got: [${n}]`)
     return n
 }
-function asEither(n, e) {
-    if (!e.includes(n)) throw Error(`Expected any of [${e.join(', ')}], got: [${n}]`)
+function asEither(n, t) {
+    if (!t.includes(n)) throw Error(`Expected any of [${t.join(', ')}], got: [${n}]`)
     return n
 }
-function scheduleMany(n, e) {
-    for (let t = 0; t < n.length; t++) {
-        const r = n[t],
-            o = e[t],
+function scheduleMany(n, t) {
+    for (let e = 0; e < n.length; e++) {
+        const r = n[e],
+            o = t[e],
             i = Math.max(0, o.getTime() - Date.now())
         setTimeout(r, i)
     }
 }
-function interpolate(n, e, t) {
-    return n + (e - n) * t
+function interpolate(n, t, e) {
+    return n + (t - n) * e
 }
 function sum(n) {
-    return n.reduce((e, t) => e + t, 0)
+    return n.reduce((t, e) => t + e, 0)
 }
 function average(n) {
-    return n.reduce((e, t) => e + t, 0) / n.length
+    return n.reduce((t, e) => t + e, 0) / n.length
 }
 function median(n) {
-    const e = [...n].sort((r, o) => r - o),
-        t = Math.floor(e.length / 2)
-    return e.length % 2 === 0 ? (e[t] + e[t - 1]) / 2 : e[t]
+    const t = [...n].sort((r, o) => r - o),
+        e = Math.floor(t.length / 2)
+    return t.length % 2 === 0 ? (t[e] + t[e - 1]) / 2 : t[e]
 }
-function getDistanceFromMidpoint(n, e) {
-    return n - (e - 1) / 2
+function getDistanceFromMidpoint(n, t) {
+    return n - (t - 1) / 2
 }
-function range(n, e) {
-    const t = []
-    for (let r = n; r <= e; r++) t.push(r)
-    return t
+function range(n, t) {
+    const e = []
+    for (let r = n; r <= t; r++) e.push(r)
+    return e
 }
-function includesAny(n, e) {
-    for (const t of e) if (n.includes(t)) return !0
+function includesAny(n, t) {
+    for (const e of t) if (n.includes(e)) return !0
     return !1
 }
 function isChinese(n) {
     return /^[\u4E00-\u9FA5]+$/.test(n)
 }
-function slugify(n, e = () => !1) {
+function slugify(n, t = () => !1) {
     return n
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .split('')
-        .map(t => (/[a-z0-9]/.test(t) || e(t) ? t : '-'))
+        .map(e => (/[a-z0-9]/.test(e) || t(e) ? e : '-'))
         .join('')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '')
@@ -587,119 +607,119 @@ function slugToTitle(n) {
 function slugToCamel(n) {
     return decapitalize(n.split('-').map(capitalize).join(''))
 }
-function joinHumanly(n, e = ', ', t = ' and ') {
+function joinHumanly(n, t = ', ', e = ' and ') {
     return !n || !n.length
         ? ''
         : n.length === 1
         ? n[0]
         : n.length === 2
-        ? `${n[0]}${t}${n[1]}`
-        : `${n.slice(0, n.length - 1).join(e)}${t}${n[n.length - 1]}`
+        ? `${n[0]}${e}${n[1]}`
+        : `${n.slice(0, n.length - 1).join(t)}${e}${n[n.length - 1]}`
 }
-function surroundInOut(n, e) {
-    return e + n.split('').join(e) + e
+function surroundInOut(n, t) {
+    return t + n.split('').join(t) + t
 }
 function enumify(n) {
     return slugify(n).replace(/-/g, '_').toUpperCase()
 }
-function getFuzzyMatchScore(n, e) {
-    if (e.length === 0) return 0
-    const t = n.toLowerCase(),
-        r = e.toLowerCase()
-    return n === e
+function getFuzzyMatchScore(n, t) {
+    if (t.length === 0) return 0
+    const e = n.toLowerCase(),
+        r = t.toLowerCase()
+    return n === t
         ? 1e4
-        : t.startsWith(r)
+        : e.startsWith(r)
         ? 1e4 - n.length
-        : t.includes(r)
+        : e.includes(r)
         ? 5e3 - n.length
-        : new RegExp('.*' + r.split('').join('.*') + '.*').test(t)
+        : new RegExp('.*' + r.split('').join('.*') + '.*').test(e)
         ? 1e3 - n.length
         : 0
 }
-function sortByFuzzyScore(n, e) {
-    return n.filter(t => getFuzzyMatchScore(t, e)).sort((t, r) => getFuzzyMatchScore(r, e) - getFuzzyMatchScore(t, e))
+function sortByFuzzyScore(n, t) {
+    return n.filter(e => getFuzzyMatchScore(e, t)).sort((e, r) => getFuzzyMatchScore(r, t) - getFuzzyMatchScore(e, t))
 }
 function escapeHtml(n) {
     return n.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 const htmlEntityMap = { '&amp;': '&', '&quot;': '"', '&apos;': "'", '&gt;': '>', '&lt;': '<' }
 function decodeHtmlEntities(n) {
-    let e = n
-        .replace(/&#(\d+);/g, (t, r) => String.fromCharCode(r))
-        .replace(/&#x(\d+);/g, (t, r) => String.fromCharCode(parseInt(r, 16)))
-    for (const [t, r] of Object.entries(htmlEntityMap)) e = e.replaceAll(t, r)
-    return e
+    let t = n
+        .replace(/&#(\d+);/g, (e, r) => String.fromCharCode(r))
+        .replace(/&#x(\d+);/g, (e, r) => String.fromCharCode(parseInt(r, 16)))
+    for (const [e, r] of Object.entries(htmlEntityMap)) t = t.replaceAll(e, r)
+    return t
 }
-function before(n, e) {
-    const t = n.indexOf(e)
-    return t === -1 ? null : n.slice(0, t)
+function before(n, t) {
+    const e = n.indexOf(t)
+    return e === -1 ? null : n.slice(0, e)
 }
-function after(n, e) {
-    const t = n.indexOf(e)
-    return t === -1 ? null : n.slice(t + e.length)
+function after(n, t) {
+    const e = n.indexOf(t)
+    return e === -1 ? null : n.slice(e + t.length)
 }
-function beforeLast(n, e) {
-    const t = n.lastIndexOf(e)
-    return t === -1 ? null : n.slice(0, t)
+function beforeLast(n, t) {
+    const e = n.lastIndexOf(t)
+    return e === -1 ? null : n.slice(0, e)
 }
-function afterLast(n, e) {
-    const t = n.lastIndexOf(e)
-    return t === -1 ? null : n.slice(t + e.length)
+function afterLast(n, t) {
+    const e = n.lastIndexOf(t)
+    return e === -1 ? null : n.slice(e + t.length)
 }
-function betweenWide(n, e, t) {
-    const r = beforeLast(n, t)
-    return r ? after(r, e) : null
+function betweenWide(n, t, e) {
+    const r = beforeLast(n, e)
+    return r ? after(r, t) : null
 }
-function betweenNarrow(n, e, t) {
-    const r = after(n, e)
-    return r ? before(r, t) : null
+function betweenNarrow(n, t, e) {
+    const r = after(n, t)
+    return r ? before(r, e) : null
 }
-function splitOnce(n, e, t = !1) {
-    const r = t ? n.lastIndexOf(e) : n.indexOf(e)
-    return r === -1 ? (t ? [null, n] : [n, null]) : [n.slice(0, r), n.slice(r + e.length)]
+function splitOnce(n, t, e = !1) {
+    const r = e ? n.lastIndexOf(t) : n.indexOf(t)
+    return r === -1 ? (e ? [null, n] : [n, null]) : [n.slice(0, r), n.slice(r + t.length)]
 }
-function splitAll(n, e) {
-    let t = [n]
-    for (const r of e) t = t.flatMap(o => o.split(r))
-    return t.filter(r => r)
+function splitAll(n, t) {
+    let e = [n]
+    for (const r of t) e = e.flatMap(o => o.split(r))
+    return e.filter(r => r)
 }
 function getExtension(n) {
-    const e = last(n.split(/\\|\//g)),
-        t = e.lastIndexOf('.', e.length - 1)
-    return t <= 0 ? '' : e.slice(t + 1)
+    const t = last(n.split(/\\|\//g)),
+        e = t.lastIndexOf('.', t.length - 1)
+    return e <= 0 ? '' : t.slice(e + 1)
 }
 function getBasename(n) {
-    const e = last(n.split(/\\|\//g)),
-        t = e.lastIndexOf('.', e.length - 1)
-    return t <= 0 ? e : e.slice(0, t)
+    const t = last(n.split(/\\|\//g)),
+        e = t.lastIndexOf('.', t.length - 1)
+    return e <= 0 ? t : t.slice(0, e)
 }
 function normalizeEmail(n) {
-    let [e, t] = n.split('@')
-    e = e.replaceAll('.', '').toLowerCase()
-    const [r] = e.split('+')
-    if (!r || !t || t.indexOf('.') === -1 || t.indexOf('.') === t.length - 1) throw new Error('Invalid email')
-    return `${r}@${t.toLowerCase()}`
+    let [t, e] = n.split('@')
+    t = t.replaceAll('.', '').toLowerCase()
+    const [r] = t.split('+')
+    if (!r || !e || e.indexOf('.') === -1 || e.indexOf('.') === e.length - 1) throw new Error('Invalid email')
+    return `${r}@${e.toLowerCase()}`
 }
 function normalizeFilename(n) {
-    const e = getBasename(n),
-        t = getExtension(n)
-    return t ? `${e}.${t}` : e
+    const t = getBasename(n),
+        e = getExtension(n)
+    return e ? `${t}.${e}` : t
 }
 function parseFilename(n) {
-    const e = getBasename(n),
-        t = getExtension(n)
-    return { basename: e, extension: t, filename: t ? `${e}.${t}` : e }
+    const t = getBasename(n),
+        e = getExtension(n)
+    return { basename: t, extension: e, filename: e ? `${t}.${e}` : t }
 }
-function randomize(n, e = Math.random) {
-    return n.replace(/\{(.+?)\}/g, (t, r) => pick(r.split('|'), e))
+function randomize(n, t = Math.random) {
+    return n.replace(/\{(.+?)\}/g, (e, r) => pick(r.split('|'), t))
 }
 function expand(n) {
-    const e = /\{(.+?)\}/,
-        t = n.match(e)
-    if (!t || !t.index) return [n]
-    const r = t[1].split(','),
-        o = n.slice(0, t.index),
-        i = n.slice(t.index + t[0].length)
+    const t = /\{(.+?)\}/,
+        e = n.match(t)
+    if (!e || !e.index) return [n]
+    const r = e[1].split(','),
+        o = n.slice(0, e.index),
+        i = n.slice(e.index + e[0].length)
     let s = []
     for (const c of r) {
         const u = expand(o + c + i)
@@ -718,13 +738,13 @@ function decapitalize(n) {
 }
 function isLetter(n) {
     if (!n) return !1
-    const e = n.charCodeAt(0)
-    return (e >= 65 && e <= 90) || (e >= 97 && e <= 122)
+    const t = n.charCodeAt(0)
+    return (t >= 65 && t <= 90) || (t >= 97 && t <= 122)
 }
 function isDigit(n) {
     if (!n) return !1
-    const e = n.charCodeAt(0)
-    return e >= 48 && e <= 57
+    const t = n.charCodeAt(0)
+    return t >= 48 && t <= 57
 }
 function isLetterOrDigit(n) {
     return isLetter(n) || isDigit(n)
@@ -737,17 +757,17 @@ function isWordBreakCharacter(n) {
 function isValidObjectPathCharacter(n) {
     return isLetterOrDigit(n) || n === '.' || n === '[' || n === ']' || n === '_'
 }
-function insertString(n, e, t, r, o) {
-    return n.slice(0, e) + r + n.slice(e, e + t) + o + n.slice(e + t)
+function insertString(n, t, e, r, o) {
+    return n.slice(0, t) + r + n.slice(t, t + e) + o + n.slice(t + e)
 }
-function indexOfRegex(n, e, t = 0) {
-    const r = e.exec(n.slice(t))
+function indexOfRegex(n, t, e = 0) {
+    const r = t.exec(n.slice(e))
     return r ? { index: r.index, match: r[0] } : null
 }
-function lineMatches(n, e, t = !0) {
-    if (!t) return e.every(o => (o instanceof RegExp ? o.test(n) : n.indexOf(o, 0) !== -1))
+function lineMatches(n, t, e = !0) {
+    if (!e) return t.every(o => (o instanceof RegExp ? o.test(n) : n.indexOf(o, 0) !== -1))
     let r = 0
-    for (const o of e)
+    for (const o of t)
         if (o instanceof RegExp) {
             const i = indexOfRegex(n, o, r)
             if (!i) return !1
@@ -759,11 +779,11 @@ function lineMatches(n, e, t = !0) {
         }
     return !0
 }
-function linesMatchInOrder(n, e, t = !0) {
+function linesMatchInOrder(n, t, e = !0) {
     let r = 0
-    for (const o of e) {
+    for (const o of t) {
         let i = !1
-        for (; !i && r < n.length; ) lineMatches(n[r], o, t) && (i = !0), r++
+        for (; !i && r < n.length; ) lineMatches(n[r], o, e) && (i = !0), r++
         if (!i) return !1
     }
     return !0
@@ -771,134 +791,134 @@ function linesMatchInOrder(n, e, t = !0) {
 function csvEscape(n) {
     return n.match(/"|,/) ? `"${n.replace(/"/g, '""')}"` : n
 }
-function indexOfEarliest(n, e, t = 0) {
+function indexOfEarliest(n, t, e = 0) {
     let r = -1
-    for (const o of e) {
-        const i = n.indexOf(o, t)
+    for (const o of t) {
+        const i = n.indexOf(o, e)
         i !== -1 && (r === -1 || i < r) && (r = i)
     }
     return r
 }
-function indexOfWordBreak(n, e = 0) {
-    for (let t = e; t < n.length; t++) if (isWordBreakCharacter(n[t])) return t
+function indexOfWordBreak(n, t = 0) {
+    for (let e = t; e < n.length; e++) if (isWordBreakCharacter(n[e])) return e
     return -1
 }
-function indexOfHashtag(n, e = 0) {
-    for (let t = e; t < n.length; t++) if (n[t] === '#' && isLetterOrDigit(n[t + 1])) return t
+function indexOfHashtag(n, t = 0) {
+    for (let e = t; e < n.length; e++) if (n[e] === '#' && isLetterOrDigit(n[e + 1])) return e
     return -1
 }
-function lastIndexOfBefore(n, e, t = 0) {
-    return n.slice(0, t).lastIndexOf(e)
+function lastIndexOfBefore(n, t, e = 0) {
+    return n.slice(0, e).lastIndexOf(t)
 }
-function findWeightedPair(n, e = 0, t = '{', r = '}') {
+function findWeightedPair(n, t = 0, e = '{', r = '}') {
     let o = 1
-    for (let i = e; i < n.length; i++)
+    for (let i = t; i < n.length; i++)
         if (n.slice(i, i + r.length) === r) {
             if (--o === 0) return i
-        } else n.slice(i, i + t.length) === t && o++
+        } else n.slice(i, i + e.length) === e && o++
     return -1
 }
-function extractBlock(n, e) {
-    const t = e.wordBoundary
+function extractBlock(n, t) {
+    const e = t.wordBoundary
         ? indexOfEarliest(
               n,
               [
-                  `${e.opening} `,
-                  `${e.opening}
+                  `${t.opening} `,
+                  `${t.opening}
 `
               ],
-              e.start || 0
+              t.start || 0
           )
-        : n.indexOf(e.opening, e.start || 0)
-    if (t === -1) return null
-    const r = findWeightedPair(n, t + e.opening.length, e.opening, e.closing)
-    return r === -1 ? null : e.exclusive ? n.slice(t + e.opening.length, r) : n.slice(t, r + e.closing.length)
+        : n.indexOf(t.opening, t.start || 0)
+    if (e === -1) return null
+    const r = findWeightedPair(n, e + t.opening.length, t.opening, t.closing)
+    return r === -1 ? null : t.exclusive ? n.slice(e + t.opening.length, r) : n.slice(e, r + t.closing.length)
 }
-function extractAllBlocks(n, e) {
-    const t = []
-    let r = e.wordBoundary
+function extractAllBlocks(n, t) {
+    const e = []
+    let r = t.wordBoundary
         ? indexOfEarliest(
               n,
               [
-                  `${e.opening} `,
-                  `${e.opening}
+                  `${t.opening} `,
+                  `${t.opening}
 `
               ],
-              e.start || 0
+              t.start || 0
           )
-        : n.indexOf(e.opening, e.start || 0)
+        : n.indexOf(t.opening, t.start || 0)
     for (;;) {
-        if (r === -1) return t
-        const o = extractBlock(n, Object.assign(Object.assign({}, e), { start: r }))
-        if (!o) return t
-        t.push(o),
-            (r = e.wordBoundary
+        if (r === -1) return e
+        const o = extractBlock(n, Object.assign(Object.assign({}, t), { start: r }))
+        if (!o) return e
+        e.push(o),
+            (r = t.wordBoundary
                 ? indexOfEarliest(
                       n,
                       [
-                          `${e.opening} `,
-                          `${e.opening}
+                          `${t.opening} `,
+                          `${t.opening}
 `
                       ],
                       r + o.length
                   )
-                : n.indexOf(e.opening, r + o.length))
+                : n.indexOf(t.opening, r + o.length))
     }
 }
-function replaceBlocks(n, e, t) {
+function replaceBlocks(n, t, e) {
     let r = 0
     for (;;) {
-        const o = exports.Strings.extractBlock(n, Object.assign(Object.assign({}, t), { start: r }))
+        const o = exports.Strings.extractBlock(n, Object.assign(Object.assign({}, e), { start: r }))
         if (!o) return n
-        const i = e(o)
+        const i = t(o)
         ;(r = n.indexOf(o, r) + i.length), (n = n.replace(o, i))
     }
 }
-function splitFormatting(n, e) {
-    const t = []
+function splitFormatting(n, t) {
+    const e = []
     let r = 0
     for (; r < n.length; ) {
-        const o = n.indexOf(e, r)
+        const o = n.indexOf(t, r)
         if (o === -1) {
-            t.push({ string: n.slice(r), symbol: null })
+            e.push({ string: n.slice(r), symbol: null })
             break
         }
-        const i = n.indexOf(e, o + e.length)
-        if ((o > r && i !== -1 && t.push({ string: n.slice(r, o), symbol: null }), i === -1)) {
-            t.push({ string: n.slice(r), symbol: null })
+        const i = n.indexOf(t, o + t.length)
+        if ((o > r && i !== -1 && e.push({ string: n.slice(r, o), symbol: null }), i === -1)) {
+            e.push({ string: n.slice(r), symbol: null })
             break
         }
-        t.push({ string: n.slice(o + e.length, i), symbol: e }), (r = i + e.length)
+        e.push({ string: n.slice(o + t.length, i), symbol: t }), (r = i + t.length)
     }
-    return t
+    return e
 }
 function splitHashtags(n) {
-    const e = []
-    let t = 0
-    for (; t < n.length; ) {
-        const r = indexOfHashtag(n, t)
+    const t = []
+    let e = 0
+    for (; e < n.length; ) {
+        const r = indexOfHashtag(n, e)
         if (r === -1) {
-            e.push({ string: n.slice(t), symbol: null })
+            t.push({ string: n.slice(e), symbol: null })
             break
         }
         const o = indexOfWordBreak(n, r + 1)
         if (o === -1) {
-            e.push({ string: n.slice(t, r), symbol: null }), e.push({ string: n.slice(r + 1), symbol: '#' })
+            t.push({ string: n.slice(e, r), symbol: null }), t.push({ string: n.slice(r + 1), symbol: '#' })
             break
         }
-        r > t && e.push({ string: n.slice(t, r), symbol: null }),
-            e.push({ string: n.slice(r + 1, o), symbol: '#' }),
-            (t = o)
+        r > e && t.push({ string: n.slice(e, r), symbol: null }),
+            t.push({ string: n.slice(r + 1, o), symbol: '#' }),
+            (e = o)
     }
-    return e
+    return t
 }
 function splitUrls(n) {
-    const e = []
-    let t = 0
-    for (; t < n.length; ) {
-        const r = indexOfEarliest(n, ['http://', 'https://'], t)
+    const t = []
+    let e = 0
+    for (; e < n.length; ) {
+        const r = indexOfEarliest(n, ['http://', 'https://'], e)
         if (r === -1) {
-            e.push({ string: n.slice(t), symbol: null })
+            t.push({ string: n.slice(e), symbol: null })
             break
         }
         const o = indexOfEarliest(
@@ -911,21 +931,21 @@ function splitUrls(n) {
             r
         )
         if (o === -1) {
-            r > t && e.push({ string: n.slice(t, r), symbol: null }), e.push({ string: n.slice(r), symbol: 'http' })
+            r > e && t.push({ string: n.slice(e, r), symbol: null }), t.push({ string: n.slice(r), symbol: 'http' })
             break
         }
-        r > t && e.push({ string: n.slice(t, r), symbol: null }),
-            e.push({ string: n.slice(r, o), symbol: 'http' }),
-            (t = o)
+        r > e && t.push({ string: n.slice(e, r), symbol: null }),
+            t.push({ string: n.slice(r, o), symbol: 'http' }),
+            (e = o)
     }
-    return e
+    return t
 }
 const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
 function base64ToUint8Array(n) {
-    let e = 0
-    n.charAt(n.length - 1) === '=' && (e++, n.charAt(n.length - 2) === '=' && e++)
-    const t = (n.length * 6) / 8 - e,
-        r = new Uint8Array(t)
+    let t = 0
+    n.charAt(n.length - 1) === '=' && (t++, n.charAt(n.length - 2) === '=' && t++)
+    const e = (n.length * 6) / 8 - t,
+        r = new Uint8Array(e)
     let o = 0,
         i = 0
     for (; o < n.length; ) {
@@ -936,13 +956,13 @@ function base64ToUint8Array(n) {
             f = (s << 2) | (c >> 4),
             a = ((c & 15) << 4) | (u >> 2),
             h = ((u & 3) << 6) | l
-        ;(r[i++] = f), i < t && (r[i++] = a), i < t && (r[i++] = h)
+        ;(r[i++] = f), i < e && (r[i++] = a), i < e && (r[i++] = h)
     }
     return r
 }
 function uint8ArrayToBase64(n) {
-    let e = '',
-        t = 0
+    let t = '',
+        e = 0
     for (let r = 0; r < n.length; r += 3) {
         const o = n[r],
             i = n[r + 1],
@@ -951,47 +971,47 @@ function uint8ArrayToBase64(n) {
             u = ((o & 3) << 4) | (i >> 4),
             l = ((i & 15) << 2) | (s >> 6),
             f = s & 63
-        ;(e += BASE64_CHARS[c] + BASE64_CHARS[u]),
-            r + 1 < n.length ? (e += BASE64_CHARS[l]) : t++,
-            r + 2 < n.length ? (e += BASE64_CHARS[f]) : t++
+        ;(t += BASE64_CHARS[c] + BASE64_CHARS[u]),
+            r + 1 < n.length ? (t += BASE64_CHARS[l]) : e++,
+            r + 2 < n.length ? (t += BASE64_CHARS[f]) : e++
     }
-    return t && (e += t === 1 ? '=' : '=='), e
+    return e && (t += e === 1 ? '=' : '=='), t
 }
 function hexToUint8Array(n) {
     n.startsWith('0x') && (n = n.slice(2))
-    const e = n.length / 2,
-        t = new Uint8Array(e)
-    for (let r = 0; r < e; r++) {
+    const t = n.length / 2,
+        e = new Uint8Array(t)
+    for (let r = 0; r < t; r++) {
         const o = parseInt(n.slice(r * 2, r * 2 + 2), 16)
-        t[r] = o
+        e[r] = o
     }
-    return t
+    return e
 }
 function uint8ArrayToHex(n) {
     return Array.from(n)
-        .map(e => e.toString(16).padStart(2, '0'))
+        .map(t => t.toString(16).padStart(2, '0'))
         .join('')
 }
-function route(n, e) {
-    const t = n.split('/').filter(i => i),
-        r = e.split('/').filter(i => i)
-    if (t.length !== r.length) return null
+function route(n, t) {
+    const e = n.split('/').filter(i => i),
+        r = t.split('/').filter(i => i)
+    if (e.length !== r.length) return null
     const o = {}
-    for (let i = 0; i < t.length; i++) {
-        const s = t[i]
+    for (let i = 0; i < e.length; i++) {
+        const s = e[i]
         if (s.startsWith(':')) o[s.slice(1)] = r[i]
         else if (s !== r[i]) return null
     }
     return o
 }
-function explodeReplace(n, e, t) {
+function explodeReplace(n, t, e) {
     const r = []
-    for (const o of t) o !== e && r.push(n.replace(e, o))
+    for (const o of e) o !== t && r.push(n.replace(t, o))
     return r
 }
-function generateVariants(n, e, t, r = Math.random) {
+function generateVariants(n, t, e, r = Math.random) {
     const o = exports.Arrays.shuffle(
-            e.map(s => ({
+            t.map(s => ({
                 variants: exports.Arrays.shuffle(
                     s.variants.map(c => c),
                     r
@@ -1004,136 +1024,136 @@ function generateVariants(n, e, t, r = Math.random) {
     for (const s of o) {
         const c = s.variants.filter(l => l !== s.avoid),
             u = c.find(l => n.includes(l))
-        if (u && (pushAll(i, explodeReplace(n, u, c)), i.length >= t)) break
+        if (u && (pushAll(i, explodeReplace(n, u, c)), i.length >= e)) break
     }
-    if (i.length < t)
+    if (i.length < e)
         for (const s of o) {
             const c = s.variants.find(u => n.includes(u))
-            if (c && (pushAll(i, explodeReplace(n, c, s.variants)), i.length >= t)) break
+            if (c && (pushAll(i, explodeReplace(n, c, s.variants)), i.length >= e)) break
         }
-    return i.slice(0, t)
+    return i.slice(0, e)
 }
 function hashCode(n) {
-    let e = 0
-    for (let t = 0; t < n.length; t++) (e = (e << 5) - e + n.charCodeAt(t)), (e |= 0)
-    return e
+    let t = 0
+    for (let e = 0; e < n.length; e++) (t = (t << 5) - t + n.charCodeAt(e)), (t |= 0)
+    return t
 }
-function replaceWord(n, e, t, r = !1) {
-    const o = new RegExp(r ? `(?<=\\s|^)${e}(?=\\s|$)` : `\\b${e}\\b`, 'g')
-    return n.replace(o, t)
+function replaceWord(n, t, e, r = !1) {
+    const o = new RegExp(r ? `(?<=\\s|^)${t}(?=\\s|$)` : `\\b${t}\\b`, 'g')
+    return n.replace(o, e)
 }
-function replacePascalCaseWords(n, e) {
-    const t = /\b[A-Z][a-zA-Z0-9]*\b/g
-    return n.replace(t, r => (r.toUpperCase() === r ? r : e(r)))
+function replacePascalCaseWords(n, t) {
+    const e = /\b[A-Z][a-zA-Z0-9]*\b/g
+    return n.replace(e, r => (r.toUpperCase() === r ? r : t(r)))
 }
 function stripHtml(n) {
     return n.replace(/<[^>]*>/g, '')
 }
-function containsWord(n, e) {
-    return new RegExp(`\\b${e}\\b`).test(n)
+function containsWord(n, t) {
+    return new RegExp(`\\b${t}\\b`).test(n)
 }
-function containsWords(n, e, t) {
-    return t === 'any' ? e.some(r => containsWord(n, r)) : e.every(r => containsWord(n, r))
+function containsWords(n, t, e) {
+    return e === 'any' ? t.some(r => containsWord(n, r)) : t.every(r => containsWord(n, r))
 }
 function parseHtmlAttributes(n) {
-    const e = {},
-        t = n.match(/([a-z\-]+)="([^"]+)"/g)
-    if (t)
-        for (const r of t) {
+    const t = {},
+        e = n.match(/([a-z\-]+)="([^"]+)"/g)
+    if (e)
+        for (const r of e) {
             const [o, i] = splitOnce(r, '=')
-            e[o] = i.slice(1, i.length - 1)
+            t[o] = i.slice(1, i.length - 1)
         }
-    return e
+    return t
 }
-function readNextWord(n, e, t = []) {
+function readNextWord(n, t, e = []) {
     let r = ''
-    for (; e < n.length && (isLetterOrDigit(n[e]) || t.includes(n[e])); ) r += n[e++]
+    for (; t < n.length && (isLetterOrDigit(n[t]) || e.includes(n[t])); ) r += n[t++]
     return r
 }
-function resolveVariables(n, e, t = '$', r = ':') {
-    for (const o in e) n = resolveVariableWithDefaultSyntax(n, o, e[o], t, r)
+function resolveVariables(n, t, e = '$', r = ':') {
+    for (const o in t) n = resolveVariableWithDefaultSyntax(n, o, t[o], e, r)
     return (n = resolveRemainingVariablesWithDefaults(n)), n
 }
-function resolveVariableWithDefaultSyntax(n, e, t, r = '$', o = ':') {
-    if (t === '') return n
-    let i = n.indexOf(`${r}${e}`)
+function resolveVariableWithDefaultSyntax(n, t, e, r = '$', o = ':') {
+    if (e === '') return n
+    let i = n.indexOf(`${r}${t}`)
     for (; i !== -1; ) {
-        if (n[i + e.length + 1] === o)
-            if (n[i + e.length + 2] === o) n = n.replace(`${r}${e}${o}${o}`, t)
+        if (n[i + t.length + 1] === o)
+            if (n[i + t.length + 2] === o) n = n.replace(`${r}${t}${o}${o}`, e)
             else {
-                const c = readNextWord(n, i + e.length + 2, ['_'])
-                n = n.replace(`${r}${e}${o}${c}`, t)
+                const c = readNextWord(n, i + t.length + 2, ['_'])
+                n = n.replace(`${r}${t}${o}${c}`, e)
             }
-        else n = n.replace(`${r}${e}`, t)
-        i = n.indexOf(`${r}${e}`, i + t.length)
+        else n = n.replace(`${r}${t}`, e)
+        i = n.indexOf(`${r}${t}`, i + e.length)
     }
     return n
 }
-function resolveRemainingVariablesWithDefaults(n, e = '$', t = ':') {
-    let r = n.indexOf(e)
+function resolveRemainingVariablesWithDefaults(n, t = '$', e = ':') {
+    let r = n.indexOf(t)
     for (; r !== -1; ) {
         const o = readNextWord(n, r + 1)
-        if (n[r + o.length + 1] === t)
-            if (n[r + o.length + 2] === t) n = n.replace(`${e}${o}${t}${t}`, '')
+        if (n[r + o.length + 1] === e)
+            if (n[r + o.length + 2] === e) n = n.replace(`${t}${o}${e}${e}`, '')
             else {
                 const s = readNextWord(n, r + o.length + 2)
-                n = n.replace(`${e}${o}${t}${s}`, s)
+                n = n.replace(`${t}${o}${e}${s}`, s)
             }
-        r = n.indexOf(e, r + 1)
+        r = n.indexOf(t, r + 1)
     }
     return n
 }
-function resolveMarkdownLinks(n, e) {
-    let t = n.indexOf('](')
-    for (; t !== -1; ) {
-        const r = lastIndexOfBefore(n, '[', t),
-            o = n.indexOf(')', t)
+function resolveMarkdownLinks(n, t) {
+    let e = n.indexOf('](')
+    for (; e !== -1; ) {
+        const r = lastIndexOfBefore(n, '[', e),
+            o = n.indexOf(')', e)
         if (r !== -1 && o !== -1) {
             const [i, s] = n.slice(r + 1, o).split(']('),
-                c = e(i, s)
+                c = t(i, s)
             n = n.slice(0, r) + c + n.slice(o + 1)
         }
-        t = n.indexOf('](', t + 1)
+        e = n.indexOf('](', e + 1)
     }
     return n
 }
-function toQueryString(n, e = !0) {
-    const t = Object.entries(n)
+function toQueryString(n, t = !0) {
+    const e = Object.entries(n)
         .filter(([r, o]) => o != null)
         .map(([r, o]) => `${r}=${encodeURIComponent(o)}`)
         .join('&')
-    return t ? (e ? '?' : '') + t : ''
+    return e ? (t ? '?' : '') + e : ''
 }
 function parseQueryString(n) {
-    const e = {},
-        t = n.split('&')
-    for (const r of t) {
+    const t = {},
+        e = n.split('&')
+    for (const r of e) {
         const [o, i] = r.split('=')
-        o && i && (e[o] = decodeURIComponent(i))
+        o && i && (t[o] = decodeURIComponent(i))
     }
-    return e
+    return t
 }
-function hasKey(n, e) {
-    return Object.prototype.hasOwnProperty.call(n, e)
+function hasKey(n, t) {
+    return Object.prototype.hasOwnProperty.call(n, t)
 }
-function selectMax(n, e) {
-    let t = null,
+function selectMax(n, t) {
+    let e = null,
         r = -1 / 0
     for (const [o, i] of Object.entries(n)) {
-        const s = e(i)
-        s > r && ((r = s), (t = o))
+        const s = t(i)
+        s > r && ((r = s), (e = o))
     }
-    return t ? [t, n[t]] : null
+    return e ? [e, n[e]] : null
 }
-function buildUrl(n, e, t) {
-    return joinUrl(n, e) + toQueryString(t || {})
+function buildUrl(n, t, e) {
+    return joinUrl(n, t) + toQueryString(e || {})
 }
-function parseCsv(n, e = ',', t = '"') {
+function parseCsv(n, t = ',', e = '"') {
     const r = []
     let o = '',
         i = !1
     const s = n.split('')
-    for (const c of s) c === e && !i ? (r.push(o), (o = '')) : c === t && ((!o && !i) || i) ? (i = !i) : (o += c)
+    for (const c of s) c === t && !i ? (r.push(o), (o = '')) : c === e && ((!o && !i) || i) ? (i = !i) : (o += c)
     return r.push(o), r
 }
 function humanizeProgress(n) {
@@ -1141,19 +1161,19 @@ function humanizeProgress(n) {
         n.totalTimeMs
     )} (${humanizeTime(n.remainingTimeMs)} left) [${Math.round(n.baseTimeMs)} ms each]`
 }
-async function waitFor(n, e, t) {
-    for (let r = 0; r < t; r++) {
+async function waitFor(n, t, e) {
+    for (let r = 0; r < e; r++) {
         try {
             if (await n()) return !0
         } catch {}
-        r < t - 1 && (await sleepMillis(e))
+        r < e - 1 && (await sleepMillis(t))
     }
     return !1
 }
-function filterAndRemove(n, e) {
-    const t = []
-    for (let r = n.length - 1; r >= 0; r--) e(n[r]) && t.push(n.splice(r, 1)[0])
-    return t
+function filterAndRemove(n, t) {
+    const e = []
+    for (let r = n.length - 1; r >= 0; r--) t(n[r]) && e.push(n.splice(r, 1)[0])
+    return e
 }
 function cloneWithJson(n) {
     return JSON.parse(JSON.stringify(n))
@@ -1168,8 +1188,8 @@ function dateTimeSlug(n) {
     return (n || new Date()).toISOString().slice(0, 19).replace(/T|:/g, '-')
 }
 function fromUtcString(n) {
-    const e = new Date(n)
-    return new Date(e.getTime() - e.getTimezoneOffset() * 6e4)
+    const t = new Date(n)
+    return new Date(t.getTime() - t.getTimezoneOffset() * 6e4)
 }
 function fromMillis(n) {
     return new Date(n)
@@ -1178,14 +1198,14 @@ function createTimeDigits(n) {
     return String(Math.floor(n)).padStart(2, '0')
 }
 function humanizeTime(n) {
-    const e = Math.floor(n / 36e5)
+    const t = Math.floor(n / 36e5)
     n = n % 36e5
-    const t = Math.floor(n / 6e4)
+    const e = Math.floor(n / 6e4)
     n = n % 6e4
     const r = Math.floor(n / 1e3)
-    return e
-        ? `${createTimeDigits(e)}:${createTimeDigits(t)}:${createTimeDigits(r)}`
-        : `${createTimeDigits(t)}:${createTimeDigits(r)}`
+    return t
+        ? `${createTimeDigits(t)}:${createTimeDigits(e)}:${createTimeDigits(r)}`
+        : `${createTimeDigits(e)}:${createTimeDigits(r)}`
 }
 const DefaultAgoTranslations = {
     now: () => 'A few seconds ago',
@@ -1195,11 +1215,11 @@ const DefaultAgoTranslations = {
     days: n => `${n} days ago`,
     weeks: n => `${n} weeks ago`
 }
-function getAgo(n, e) {
-    const t = e?.now || Date.now(),
-        r = e?.translations || DefaultAgoTranslations,
+function getAgo(n, t) {
+    const e = t?.now || Date.now(),
+        r = t?.translations || DefaultAgoTranslations,
         o = exports.Types.isDate(n) ? n.getTime() : n
-    let i = (t - o) / 1e3
+    let i = (e - o) / 1e3
     return i < 10
         ? r.now()
         : i < 120
@@ -1212,31 +1232,31 @@ function getAgo(n, e) {
                     ? r.hours(Math.floor(i))
                     : ((i /= 24), i < 14 ? r.days(Math.floor(i)) : ((i /= 7), r.weeks(Math.floor(i))))))
 }
-function countCycles(n, e, t) {
+function countCycles(n, t, e) {
     var r, o, i
-    const c = ((r = t?.now) !== null && r !== void 0 ? r : Date.now()) - n,
-        u = Math.floor(c / e),
+    const c = ((r = e?.now) !== null && r !== void 0 ? r : Date.now()) - n,
+        u = Math.floor(c / t),
         l =
-            e / ((o = t?.precision) !== null && o !== void 0 ? o : 1) -
-            Math.ceil((c % e) / ((i = t?.precision) !== null && i !== void 0 ? i : 1))
+            t / ((o = e?.precision) !== null && o !== void 0 ? o : 1) -
+            Math.ceil((c % t) / ((i = e?.precision) !== null && i !== void 0 ? i : 1))
     return { cycles: u, remaining: l }
 }
 const throttleTimers = {}
-function throttle(n, e) {
-    return !throttleTimers[n] || Date.now() > throttleTimers[n] ? ((throttleTimers[n] = Date.now() + e), !0) : !1
+function throttle(n, t) {
+    return !throttleTimers[n] || Date.now() > throttleTimers[n] ? ((throttleTimers[n] = Date.now() + t), !0) : !1
 }
 const timeUnits = { s: 1e3, m: 6e4, h: 36e5, d: 864e5 }
-function timeSince(n, e, t) {
+function timeSince(n, t, e) {
     return (
-        (e = isDate(e) ? e.getTime() : e), (t = t ? (isDate(t) ? t.getTime() : t) : Date.now()), (t - e) / timeUnits[n]
+        (t = isDate(t) ? t.getTime() : t), (e = e ? (isDate(e) ? e.getTime() : e) : Date.now()), (e - t) / timeUnits[n]
     )
 }
-function getProgress(n, e, t, r) {
+function getProgress(n, t, e, r) {
     r || (r = Date.now())
-    const o = e / t,
+    const o = t / e,
         i = r - n,
-        s = i / e,
-        c = s * t,
+        s = i / t,
+        c = s * e,
         u = c - i
     return { deltaMs: i, progress: o, baseTimeMs: s, totalTimeMs: c, remainingTimeMs: u }
 }
@@ -1292,58 +1312,58 @@ const dateUnits = [
     ['weeks', 6048e5]
 ]
 function makeDate(n) {
-    const e = parseFloat(n)
-    if (isNaN(e)) throw Error('makeDate got NaN for input')
-    const t = n.replace(/^-?[0-9.]+/, '').trim(),
-        r = dateUnits.findIndex(o => o[0] === t.toLowerCase())
-    return r === -1 ? e : e * dateUnits[r][1]
+    const t = parseFloat(n)
+    if (isNaN(t)) throw Error('makeDate got NaN for input')
+    const e = n.replace(/^-?[0-9.]+/, '').trim(),
+        r = dateUnits.findIndex(o => o[0] === e.toLowerCase())
+    return r === -1 ? t : t * dateUnits[r][1]
 }
 function getPreLine(n) {
     return n.replace(/ +/g, ' ').replace(/^ /gm, '')
 }
 const tinyCache = {}
-async function getCached(n, e, t) {
+async function getCached(n, t, e) {
     const r = Date.now(),
         o = tinyCache[n]
     if (o && o.validUntil > r) return o.value
-    const i = await t(),
-        s = r + e
+    const i = await e(),
+        s = r + t
     return (tinyCache[n] = { value: i, validUntil: s }), i
 }
 function joinUrl(...n) {
     return n
-        .filter(e => e)
+        .filter(t => t)
         .join('/')
         .replace(/(?<!:)\/+/g, '/')
 }
-function replaceBetweenStrings(n, e, t, r, o = !0) {
-    const i = n.indexOf(e),
-        s = n.indexOf(t, i + e.length)
+function replaceBetweenStrings(n, t, e, r, o = !0) {
+    const i = n.indexOf(t),
+        s = n.indexOf(e, i + t.length)
     if (i === -1 || s === -1) throw Error('Start or end not found')
-    return o ? n.substring(0, i + e.length) + r + n.substring(s) : n.substring(0, i) + r + n.substring(s + t.length)
+    return o ? n.substring(0, i + t.length) + r + n.substring(s) : n.substring(0, i) + r + n.substring(s + e.length)
 }
 function describeMarkdown(n) {
-    let e = 'p'
+    let t = 'p'
     n.startsWith('#')
-        ? ((e = 'h1'), (n = n.slice(1).trim()))
-        : n.startsWith('-') && ((e = 'li'), (n = n.slice(1).trim()))
-    const t = n[0] === n[0].toUpperCase(),
+        ? ((t = 'h1'), (n = n.slice(1).trim()))
+        : n.startsWith('-') && ((t = 'li'), (n = n.slice(1).trim()))
+    const e = n[0] === n[0].toUpperCase(),
         r = /[.?!]$/.test(n),
         o = /:$/.test(n)
-    return { type: e, isCapitalized: t, hasPunctuation: r, endsWithColon: o }
+    return { type: t, isCapitalized: e, hasPunctuation: r, endsWithColon: o }
 }
-function isBalanced(n, e = '(', t = ')') {
+function isBalanced(n, t = '(', e = ')') {
     let r = 0,
         o = 0
     for (; o < n.length; )
-        if ((n.startsWith(e, o) ? (r++, (o += e.length)) : n.startsWith(t, o) ? (r--, (o += t.length)) : o++, r < 0))
+        if ((n.startsWith(t, o) ? (r++, (o += t.length)) : n.startsWith(e, o) ? (r--, (o += e.length)) : o++, r < 0))
             return !1
-    return e === t ? r % 2 === 0 : r === 0
+    return t === e ? r % 2 === 0 : r === 0
 }
 function textToFormat(n) {
     n = n.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    let e = n.length
-    for (; (n = n.replace(/(\w+)[\s,']+\w+/g, '$1')), n.length !== e; ) e = n.length
+    let t = n.length
+    for (; (n = n.replace(/(\w+)[\s,']+\w+/g, '$1')), n.length !== t; ) t = n.length
     return (
         (n = n.replaceAll(/[A-Z][a-zA-Z0-9]*/g, 'A')),
         (n = n.replaceAll(/[a-z][a-zA-Z0-9]*/g, 'a')),
@@ -1352,28 +1372,28 @@ function textToFormat(n) {
     )
 }
 function sortObject(n) {
-    const t = Object.keys(n).sort((o, i) => o.localeCompare(i)),
+    const e = Object.keys(n).sort((o, i) => o.localeCompare(i)),
         r = {}
-    for (const o of t) r[o] = sortAny(n[o])
+    for (const o of e) r[o] = sortAny(n[o])
     return r
 }
 function sortArray(n) {
-    const e = []
+    const t = []
     return (
         n
-            .sort((t, r) => JSON.stringify(sortAny(t)).localeCompare(JSON.stringify(sortAny(r))))
-            .forEach(t => e.push(sortAny(t))),
-        e
+            .sort((e, r) => JSON.stringify(sortAny(e)).localeCompare(JSON.stringify(sortAny(r))))
+            .forEach(e => t.push(sortAny(e))),
+        t
     )
 }
 function sortAny(n) {
     return Array.isArray(n) ? sortArray(n) : isObject(n) ? sortObject(n) : n
 }
-function deepEquals(n, e) {
-    return JSON.stringify(sortAny(n)) === JSON.stringify(sortAny(e))
+function deepEquals(n, t) {
+    return JSON.stringify(sortAny(n)) === JSON.stringify(sortAny(t))
 }
 function deepEqualsEvery(...n) {
-    for (let e = 1; e < n.length; e++) if (!deepEquals(n[e - 1], n[e])) return !1
+    for (let t = 1; t < n.length; t++) if (!deepEquals(n[t - 1], n[t])) return !1
     return !0
 }
 function safeParse(n) {
@@ -1388,41 +1408,41 @@ function createSequence() {
     return { next: () => n++ }
 }
 function createOscillator(n) {
-    let e = 0
-    return { next: () => n[e++ % n.length] }
+    let t = 0
+    return { next: () => n[t++ % n.length] }
 }
 function createStatefulToggle(n) {
-    let e
-    return t => {
-        const r = t === n && e !== n
-        return (e = t), r
+    let t
+    return e => {
+        const r = e === n && t !== n
+        return (t = e), r
     }
 }
-function organiseWithLimits(n, e, t, r, o) {
+function organiseWithLimits(n, t, e, r, o) {
     const i = {}
-    for (const s of Object.keys(e)) i[s] = []
+    for (const s of Object.keys(t)) i[s] = []
     ;(i[r] = []), o && (n = n.sort(o))
     for (const s of n) {
-        const c = s[t],
-            u = e[c] ? c : r
-        i[u].length >= e[u] ? i[r].push(s) : i[u].push(s)
+        const c = s[e],
+            u = t[c] ? c : r
+        i[u].length >= t[u] ? i[r].push(s) : i[u].push(s)
     }
     return i
 }
-function diffKeys(n, e) {
-    const t = Object.keys(n),
-        r = Object.keys(e),
-        o = t.filter(s => !r.includes(s)),
-        i = r.filter(s => !t.includes(s))
+function diffKeys(n, t) {
+    const e = Object.keys(n),
+        r = Object.keys(t),
+        o = e.filter(s => !r.includes(s)),
+        i = r.filter(s => !e.includes(s))
     return { uniqueToA: o, uniqueToB: i }
 }
 function pickRandomKey(n) {
-    const e = Object.keys(n)
-    return e[Math.floor(Math.random() * e.length)]
+    const t = Object.keys(n)
+    return t[Math.floor(Math.random() * t.length)]
 }
-function mapRandomKey(n, e) {
-    const t = pickRandomKey(n)
-    return (n[t] = e(n[t])), t
+function mapRandomKey(n, t) {
+    const e = pickRandomKey(n)
+    return (n[e] = t(n[e])), e
 }
 function fromObjectString(n) {
     return (
@@ -1431,14 +1451,14 @@ function fromObjectString(n) {
             `
 `
         )),
-        (n = n.replace(/(\w+)\((.+)\)/g, (e, t, r) => `${t}(${r.replaceAll(',', '&comma;')})`)),
+        (n = n.replace(/(\w+)\((.+)\)/g, (t, e, r) => `${e}(${r.replaceAll(',', '&comma;')})`)),
         (n = n.replace(/(,)(\s+})/g, '$2')),
         (n = n.replace(/\.\.\..+?,/g, '')),
         (n = n.replace(/({\s+)([a-zA-Z]\w+),/g, "$1$2: '$2',")),
         (n = n.replace(/(,\s+)([a-zA-Z]\w+),/g, "$1$2: '$2',")),
-        (n = n.replace(/:(.+)\?(.+):/g, (e, t, r) => `: (${t.trim()} && ${r.trim()}) ||`)),
+        (n = n.replace(/:(.+)\?(.+):/g, (t, e, r) => `: (${e.trim()} && ${r.trim()}) ||`)),
         (n = n.replace(/([a-zA-Z0-9]+)( ?: ?{)/g, '"$1"$2')),
-        (n = n.replace(/([a-zA-Z0-9]+) ?: ?(.+?)(,|\n|})/g, (e, t, r, o) => `"${t}":"${r.trim()}"${o}`)),
+        (n = n.replace(/([a-zA-Z0-9]+) ?: ?(.+?)(,|\n|})/g, (t, e, r, o) => `"${e}":"${r.trim()}"${o}`)),
         (n = n.replace(/("'|'")/g, '"')),
         (n = n.replaceAll('&comma;', ',')),
         JSON.parse(n)
@@ -1464,121 +1484,121 @@ const thresholds = [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e9
         'decillion'
     ],
     shortNumberUnits = ['K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'O', 'N', 'gwei', 'bzz', 'eth', 'btc', 'dai', 'D']
-function formatNumber(n, e) {
-    var t, r
-    const o = (t = e?.longForm) !== null && t !== void 0 ? t : !1,
-        i = e?.unit ? ` ${e.unit}` : '',
+function formatNumber(n, t) {
+    var e, r
+    const o = (e = t?.longForm) !== null && e !== void 0 ? e : !1,
+        i = t?.unit ? ` ${t.unit}` : '',
         s = o ? longNumberUnits : shortNumberUnits,
-        c = (r = e?.precision) !== null && r !== void 0 ? r : 1
+        c = (r = t?.precision) !== null && r !== void 0 ? r : 1
     if (n < thresholds[0]) return `${n}${i}`
     for (let u = 0; u < thresholds.length - 1; u++)
         if (n < thresholds[u + 1]) return `${(n / thresholds[u]).toFixed(c)}${o ? ' ' : ''}${s[u]}${i}`
     return `${(n / thresholds[thresholds.length - 1]).toFixed(c)}${o ? ' ' : ''}${s[thresholds.length - 1]}${i}`
 }
 function makeNumber(n) {
-    const e = parseFloat(n)
-    if (isNaN(e)) throw Error('makeNumber got NaN for input')
-    const t = n.replace(/^-?[0-9.]+/, '').trim(),
-        r = shortNumberUnits.findIndex(o => o.toLowerCase() === t.toLowerCase())
-    return r === -1 ? e : e * thresholds[r]
+    const t = parseFloat(n)
+    if (isNaN(t)) throw Error('makeNumber got NaN for input')
+    const e = n.replace(/^-?[0-9.]+/, '').trim(),
+        r = shortNumberUnits.findIndex(o => o.toLowerCase() === e.toLowerCase())
+    return r === -1 ? t : t * thresholds[r]
 }
-function clamp(n, e, t) {
-    return n < e ? e : n > t ? t : n
+function clamp(n, t, e) {
+    return n < t ? t : n > e ? e : n
 }
-function increment(n, e, t) {
-    const r = n + e
-    return r > t ? t : r
+function increment(n, t, e) {
+    const r = n + t
+    return r > e ? e : r
 }
-function decrement(n, e, t) {
-    const r = n - e
-    return r < t ? t : r
+function decrement(n, t, e) {
+    const r = n - t
+    return r < e ? e : r
 }
-function runOn(n, e) {
-    return e(n), n
+function runOn(n, t) {
+    return t(n), n
 }
-function ifPresent(n, e) {
-    n && e(n)
+function ifPresent(n, t) {
+    n && t(n)
 }
-function mergeArrays(n, e) {
-    const t = Object.keys(e)
-    for (const r of t) Array.isArray(e[r]) && Array.isArray(n[r]) && pushAll(n[r], e[r])
+function mergeArrays(n, t) {
+    const e = Object.keys(t)
+    for (const r of e) Array.isArray(t[r]) && Array.isArray(n[r]) && pushAll(n[r], t[r])
 }
 function empty(n) {
     return n.splice(0, n.length), n
 }
 function removeEmptyArrays(n) {
-    for (const e of Object.keys(n))
-        (isEmptyArray(n[e]) || (Array.isArray(n[e]) && n[e].every(t => t == null))) && delete n[e]
+    for (const t of Object.keys(n))
+        (isEmptyArray(n[t]) || (Array.isArray(n[t]) && n[t].every(e => e == null))) && delete n[t]
     return n
 }
 function removeEmptyValues(n) {
-    for (const e of Object.entries(n))
-        (isUndefined(e[1]) || e[1] === null || (isString(e[1]) && isBlank(e[1]))) && delete n[e[0]]
+    for (const t of Object.entries(n))
+        (isUndefined(t[1]) || t[1] === null || (isString(t[1]) && isBlank(t[1]))) && delete n[t[0]]
     return n
 }
-function filterObjectKeys(n, e) {
-    const t = {}
-    for (const [r, o] of Object.entries(n)) e(r) && (t[r] = o)
-    return t
+function filterObjectKeys(n, t) {
+    const e = {}
+    for (const [r, o] of Object.entries(n)) t(r) && (e[r] = o)
+    return e
 }
-function filterObjectValues(n, e) {
-    const t = {}
-    for (const [r, o] of Object.entries(n)) e(o) && (t[r] = o)
-    return t
+function filterObjectValues(n, t) {
+    const e = {}
+    for (const [r, o] of Object.entries(n)) t(o) && (e[r] = o)
+    return e
 }
-function mapObject(n, e) {
-    const t = {}
-    for (const r of Object.entries(n)) t[r[0]] = e(r[1])
-    return t
+function mapObject(n, t) {
+    const e = {}
+    for (const r of Object.entries(n)) e[r[0]] = t(r[1])
+    return e
 }
-async function rethrow(n, e) {
+async function rethrow(n, t) {
     try {
         return await n()
     } catch {
-        throw e
+        throw t
     }
 }
-function setSomeOnObject(n, e, t) {
-    typeof t < 'u' && t !== null && (n[e] = t)
+function setSomeOnObject(n, t, e) {
+    typeof e < 'u' && e !== null && (n[t] = e)
 }
-function setSomeDeep(n, e, t, r) {
-    const o = getDeep(t, r)
-    typeof o > 'u' || o === null || setDeep(n, e, o)
+function setSomeDeep(n, t, e, r) {
+    const o = getDeep(e, r)
+    typeof o > 'u' || o === null || setDeep(n, t, o)
 }
 function flip(n) {
-    const e = {}
-    for (const [t, r] of Object.entries(n)) e[r] = t
-    return e
+    const t = {}
+    for (const [e, r] of Object.entries(n)) t[r] = e
+    return t
 }
 function getAllPermutations(n) {
-    const e = Object.keys(n),
-        t = e.map(c => n[c].length),
-        r = t.reduce((c, u) => (c *= u))
+    const t = Object.keys(n),
+        e = t.map(c => n[c].length),
+        r = e.reduce((c, u) => (c *= u))
     let o = 1
     const i = [1]
-    for (let c = 0; c < t.length - 1; c++) (o *= t[c]), i.push(o)
+    for (let c = 0; c < e.length - 1; c++) (o *= e[c]), i.push(o)
     const s = []
     for (let c = 0; c < r; c++) {
         const u = {}
-        for (let l = 0; l < e.length; l++) {
-            const f = n[e[l]],
+        for (let l = 0; l < t.length; l++) {
+            const f = n[t[l]],
                 a = Math.floor(c / i[l]) % f.length
-            u[e[l]] = f[a]
+            u[t[l]] = f[a]
         }
         s.push(u)
     }
     return s
 }
 function countTruthyValues(n) {
-    return Object.values(n).filter(e => e).length
+    return Object.values(n).filter(t => t).length
 }
-function getFlatNotation(n, e, t) {
-    return n + (t ? '[' + e + ']' : (n.length ? '.' : '') + e)
+function getFlatNotation(n, t, e) {
+    return n + (e ? '[' + t + ']' : (n.length ? '.' : '') + t)
 }
-function flattenInner(n, e, t, r, o) {
-    if (!isObject(e)) return e
-    for (const [i, s] of Object.entries(e)) {
-        const c = getFlatNotation(t, i, r)
+function flattenInner(n, t, e, r, o) {
+    if (!isObject(t)) return t
+    for (const [i, s] of Object.entries(t)) {
+        const c = getFlatNotation(e, i, r)
         Array.isArray(s)
             ? o
                 ? flattenInner(n, s, c, !0, o)
@@ -1589,98 +1609,98 @@ function flattenInner(n, e, t, r, o) {
     }
     return n
 }
-function flatten(n, e = !1, t) {
-    return flattenInner({}, n, t || '', !1, e)
+function flatten(n, t = !1, e) {
+    return flattenInner({}, n, e || '', !1, t)
 }
 function unflatten(n) {
     if (!isObject(n)) return n
-    const e = Array.isArray(n) ? [] : {}
-    for (const [t, r] of Object.entries(n))
+    const t = Array.isArray(n) ? [] : {}
+    for (const [e, r] of Object.entries(n))
         Array.isArray(r)
             ? setDeep(
-                  e,
                   t,
+                  e,
                   r.map(o => unflatten(o))
               )
-            : setDeep(e, t, r)
+            : setDeep(t, e, r)
+    return t
+}
+function match(n, t, e) {
+    return t[n] ? t[n] : e
+}
+function indexArray(n, t) {
+    const e = {}
+    for (const r of n) {
+        const o = t(r)
+        e[o] = r
+    }
     return e
 }
-function match(n, e, t) {
-    return e[n] ? e[n] : t
-}
-function indexArray(n, e) {
-    const t = {}
+function indexArrayToCollection(n, t) {
+    const e = {}
     for (const r of n) {
-        const o = e(r)
-        t[o] = r
+        const o = t(r)
+        e[o] || (e[o] = []), e[o].push(r)
     }
-    return t
+    return e
 }
-function indexArrayToCollection(n, e) {
-    const t = {}
-    for (const r of n) {
-        const o = e(r)
-        t[o] || (t[o] = []), t[o].push(r)
-    }
-    return t
+function splitBySize(n, t) {
+    const e = []
+    for (let r = 0; r < n.length; r += t) e.push(n.slice(r, r + t))
+    return e
 }
-function splitBySize(n, e) {
-    const t = []
-    for (let r = 0; r < n.length; r += e) t.push(n.slice(r, r + e))
-    return t
-}
-function splitByCount(n, e) {
-    const t = Math.ceil(n.length / e),
+function splitByCount(n, t) {
+    const e = Math.ceil(n.length / t),
         r = []
-    for (let o = 0; o < n.length; o += t) r.push(n.slice(o, o + t))
+    for (let o = 0; o < n.length; o += e) r.push(n.slice(o, o + e))
     return r
 }
-function tokenizeByLength(n, e) {
-    const t = [],
-        r = Math.ceil(n.length / e)
-    for (let o = 0; o < r; o++) t.push(n.slice(o * e, o * e + e))
-    return t
+function tokenizeByLength(n, t) {
+    const e = [],
+        r = Math.ceil(n.length / t)
+    for (let o = 0; o < r; o++) e.push(n.slice(o * t, o * t + t))
+    return e
 }
-function tokenizeByCount(n, e) {
-    const t = Math.ceil(n.length / e)
-    return tokenizeByLength(n, t)
+function tokenizeByCount(n, t) {
+    const e = Math.ceil(n.length / t)
+    return tokenizeByLength(n, e)
 }
-function makeUnique(n, e) {
-    return Object.values(indexArray(n, e))
+function makeUnique(n, t) {
+    return Object.values(indexArray(n, t))
 }
-function countUnique(n, e, t, r, o) {
-    const i = e ? n.map(e) : n,
+function countUnique(n, t, e, r, o) {
+    const i = t ? n.map(t) : n,
         s = {}
     for (const u of i) s[u] = (s[u] || 0) + 1
     const c = r ? sortObjectValues(s, o ? (u, l) => u[1] - l[1] : (u, l) => l[1] - u[1]) : s
-    return t ? Object.keys(c) : c
+    return e ? Object.keys(c) : c
 }
-function sortObjectValues(n, e) {
-    return Object.fromEntries(Object.entries(n).sort(e))
+function sortObjectValues(n, t) {
+    return Object.fromEntries(Object.entries(n).sort(t))
 }
 function transformToArray(n) {
-    const e = [],
-        t = Object.keys(n),
-        r = n[t[0]].length
+    const t = [],
+        e = Object.keys(n),
+        r = n[e[0]].length
     for (let o = 0; o < r; o++) {
         const i = {}
-        for (const s of t) i[s] = n[s][o]
-        e.push(i)
+        for (const s of e) i[s] = n[s][o]
+        t.push(i)
     }
-    return e
-}
-function incrementMulti(n, e, t = 1) {
-    for (const r of n) r[e] += t
-}
-function setMulti(n, e, t) {
-    for (const r of n) r[e] = t
-}
-function group(n, e) {
-    const t = []
-    let r = []
-    n.length && (t.push(r), r.push(n[0]))
-    for (let o = 1; o < n.length; o++) e(n[o], n[o - 1]) || ((r = []), t.push(r)), r.push(n[o])
     return t
+}
+function incrementMulti(n, t, e = 1) {
+    for (const r of n) r[t] += e
+}
+function setMulti(n, t, e) {
+    for (const r of n) r[t] = e
+}
+function group(n, t) {
+    const e = []
+    let r = []
+    n.length && (e.push(r), r.push(n[0]))
+    for (let o = 1; o < n.length; o++) t(n[o], n[o - 1]) || ((r = []), e.push(r)), r.push(n[o])
+    return e
 }
 function createBidirectionalMap() {
     return { map: new Map(), keys: [] }
@@ -1688,45 +1708,45 @@ function createBidirectionalMap() {
 function createTemporalBidirectionalMap() {
     return { map: new Map(), keys: [] }
 }
-function pushToBidirectionalMap(n, e, t, r = 100) {
-    if (n.map.has(e)) {
-        const o = n.keys.indexOf(e)
+function pushToBidirectionalMap(n, t, e, r = 100) {
+    if (n.map.has(t)) {
+        const o = n.keys.indexOf(t)
         n.keys.splice(o, 1)
     }
-    if ((n.map.set(e, t), n.keys.push(e), n.keys.length > r)) {
+    if ((n.map.set(t, e), n.keys.push(t), n.keys.length > r)) {
         const o = n.keys.shift()
         o && n.map.delete(o)
     }
 }
-function unshiftToBidirectionalMap(n, e, t, r = 100) {
-    if (n.map.has(e)) {
-        const o = n.keys.indexOf(e)
+function unshiftToBidirectionalMap(n, t, e, r = 100) {
+    if (n.map.has(t)) {
+        const o = n.keys.indexOf(t)
         n.keys.splice(o, 1)
     }
-    if ((n.map.set(e, t), n.keys.unshift(e), n.keys.length > r)) {
+    if ((n.map.set(t, e), n.keys.unshift(t), n.keys.length > r)) {
         const o = n.keys.shift()
         o && n.map.delete(o)
     }
 }
-function addToTemporalBidirectionalMap(n, e, t, r, o = 100) {
-    pushToBidirectionalMap(n, e, { validUntil: Date.now() + r, data: t }, o)
+function addToTemporalBidirectionalMap(n, t, e, r, o = 100) {
+    pushToBidirectionalMap(n, t, { validUntil: Date.now() + r, data: e }, o)
 }
-function getFromTemporalBidirectionalMap(n, e) {
-    const t = n.map.get(e)
-    return t && t.validUntil > Date.now() ? t.data : null
+function getFromTemporalBidirectionalMap(n, t) {
+    const e = n.map.get(t)
+    return e && e.validUntil > Date.now() ? e.data : null
 }
 function makeAsyncQueue(n = 1) {
-    const e = [],
-        t = []
+    const t = [],
+        e = []
     let r = 0
     async function o() {
-        if (e.length > 0 && r < n) {
+        if (t.length > 0 && r < n) {
             r++
-            const s = e.shift()
+            const s = t.shift()
             try {
                 s && (await s())
             } finally {
-                if (--r === 0) for (; t.length > 0; ) t.shift()()
+                if (--r === 0) for (; e.length > 0; ) e.shift()()
                 o()
             }
         }
@@ -1734,200 +1754,200 @@ function makeAsyncQueue(n = 1) {
     async function i() {
         return r
             ? new Promise(s => {
-                  t.push(s)
+                  e.push(s)
               })
             : Promise.resolve()
     }
     return {
         enqueue(s) {
-            e.push(s), o()
+            t.push(s), o()
         },
         drain: i
     }
 }
 class Optional {
-    constructor(e) {
-        this.value = e
+    constructor(t) {
+        this.value = t
     }
-    ifPresent(e) {
-        return this.value && e(this.value), this
+    ifPresent(t) {
+        return this.value && t(this.value), this
     }
-    orElse(e) {
-        var t
-        ;((t = this.value) !== null && t !== void 0) || e()
+    orElse(t) {
+        var e
+        ;((e = this.value) !== null && e !== void 0) || t()
     }
 }
 exports.Optional = Optional
-function findInstance(n, e) {
-    const t = n.find(r => r instanceof e)
-    return new Optional(t)
+function findInstance(n, t) {
+    const e = n.find(r => r instanceof t)
+    return new Optional(e)
 }
-function interleave(n, e) {
-    const t = [],
-        r = Math.max(n.length, e.length)
-    for (let o = 0; o < r; o++) n[o] && t.push(n[o]), e[o] && t.push(e[o])
-    return t
+function interleave(n, t) {
+    const e = [],
+        r = Math.max(n.length, t.length)
+    for (let o = 0; o < r; o++) n[o] && e.push(n[o]), t[o] && e.push(t[o])
+    return e
 }
 function tickPlaybook(n) {
     if (n.length === 0) return null
-    const e = n[0]
+    const t = n[0]
     return (
-        e.ttlMax ? --e.ttl <= 0 && n.shift() : (e.ttlMax = e.ttl),
-        { progress: (e.ttlMax - e.ttl) / e.ttlMax, data: e.data }
+        t.ttlMax ? --t.ttl <= 0 && n.shift() : (t.ttlMax = t.ttl),
+        { progress: (t.ttlMax - t.ttl) / t.ttlMax, data: t.data }
     )
 }
-function getArgument(n, e, t, r) {
-    const o = n.findIndex(c => c.endsWith('-' + e) || c.includes('-' + e + '=')),
+function getArgument(n, t, e, r) {
+    const o = n.findIndex(c => c.endsWith('-' + t) || c.includes('-' + t + '=')),
         i = n[o]
-    if (!i) return (t || {})[r || e || ''] || null
+    if (!i) return (e || {})[r || t || ''] || null
     if (i.includes('=')) return i.split('=')[1]
     const s = n[o + 1]
-    return s && !s.startsWith('-') ? s : (t || {})[r || e || ''] || null
+    return s && !s.startsWith('-') ? s : (e || {})[r || t || ''] || null
 }
-function getNumberArgument(n, e, t, r) {
-    const o = getArgument(n, e, t, r)
+function getNumberArgument(n, t, e, r) {
+    const o = getArgument(n, t, e, r)
     if (!o) return null
     try {
         return makeNumber(o)
     } catch {
-        throw new Error(`Invalid number argument ${e}: ${o}`)
+        throw new Error(`Invalid number argument ${t}: ${o}`)
     }
 }
-function getBooleanArgument(n, e, t, r) {
-    const o = n.some(u => u.endsWith('-' + e)),
-        i = getArgument(n, e, t, r)
+function getBooleanArgument(n, t, e, r) {
+    const o = n.some(u => u.endsWith('-' + t)),
+        i = getArgument(n, t, e, r)
     if (!i && o) return !0
     if (!i && !o) return null
     const s = ['true', '1', 'yes', 'y', 'on'],
         c = ['false', '0', 'no', 'n', 'off']
     if (s.includes(i.toLowerCase())) return !0
     if (c.includes(i.toLowerCase())) return !1
-    throw Error(`Invalid boolean argument ${e}: ${i}`)
+    throw Error(`Invalid boolean argument ${t}: ${i}`)
 }
-function requireStringArgument(n, e, t, r) {
-    const o = getArgument(n, e, t, r)
-    if (!o) throw new Error(`Missing argument ${e}`)
+function requireStringArgument(n, t, e, r) {
+    const o = getArgument(n, t, e, r)
+    if (!o) throw new Error(`Missing argument ${t}`)
     return o
 }
-function requireNumberArgument(n, e, t, r) {
-    const o = requireStringArgument(n, e, t, r)
+function requireNumberArgument(n, t, e, r) {
+    const o = requireStringArgument(n, t, e, r)
     try {
         return makeNumber(o)
     } catch {
-        throw new Error(`Invalid argument ${e}: ${o}`)
+        throw new Error(`Invalid argument ${t}: ${o}`)
     }
 }
-function bringToFrontInPlace(n, e) {
-    const t = n[e]
-    n.splice(e, 1), n.unshift(t)
+function bringToFrontInPlace(n, t) {
+    const e = n[t]
+    n.splice(t, 1), n.unshift(e)
 }
-function bringToFront(n, e) {
-    const t = [...n]
-    return bringToFrontInPlace(t, e), t
+function bringToFront(n, t) {
+    const e = [...n]
+    return bringToFrontInPlace(e, t), e
 }
-function addPoint(n, e) {
-    return { x: n.x + e.x, y: n.y + e.y }
+function addPoint(n, t) {
+    return { x: n.x + t.x, y: n.y + t.y }
 }
-function subtractPoint(n, e) {
-    return { x: n.x - e.x, y: n.y - e.y }
+function subtractPoint(n, t) {
+    return { x: n.x - t.x, y: n.y - t.y }
 }
-function multiplyPoint(n, e) {
-    return { x: n.x * e, y: n.y * e }
+function multiplyPoint(n, t) {
+    return { x: n.x * t, y: n.y * t }
 }
 function normalizePoint(n) {
-    const e = Math.sqrt(n.x * n.x + n.y * n.y)
-    return { x: n.x / e, y: n.y / e }
+    const t = Math.sqrt(n.x * n.x + n.y * n.y)
+    return { x: n.x / t, y: n.y / t }
 }
-function pushPoint(n, e, t) {
-    return { x: n.x + Math.cos(e) * t, y: n.y + Math.sin(e) * t }
+function pushPoint(n, t, e) {
+    return { x: n.x + Math.cos(t) * e, y: n.y + Math.sin(t) * e }
 }
-function getDistanceBetweenPoints(n, e) {
-    return Math.sqrt((n.x - e.x) ** 2 + (n.y - e.y) ** 2)
+function getDistanceBetweenPoints(n, t) {
+    return Math.sqrt((n.x - t.x) ** 2 + (n.y - t.y) ** 2)
 }
-function filterCoordinates(n, e, t = 'row-first') {
+function filterCoordinates(n, t, e = 'row-first') {
     const r = []
-    if (t === 'column-first')
-        for (let o = 0; o < n.length; o++) for (let i = 0; i < n[0].length; i++) e(o, i) && r.push({ x: o, y: i })
-    else for (let o = 0; o < n[0].length; o++) for (let i = 0; i < n.length; i++) e(i, o) && r.push({ x: i, y: o })
+    if (e === 'column-first')
+        for (let o = 0; o < n.length; o++) for (let i = 0; i < n[0].length; i++) t(o, i) && r.push({ x: o, y: i })
+    else for (let o = 0; o < n[0].length; o++) for (let i = 0; i < n.length; i++) t(i, o) && r.push({ x: i, y: o })
     return r
 }
-function isHorizontalLine(n, e, t) {
+function isHorizontalLine(n, t, e) {
     var r, o
     return (
-        ((r = n[e + 1]) === null || r === void 0 ? void 0 : r[t]) &&
-        ((o = n[e - 1]) === null || o === void 0 ? void 0 : o[t]) &&
-        !n[e][t - 1] &&
-        !n[e][t + 1]
+        ((r = n[t + 1]) === null || r === void 0 ? void 0 : r[e]) &&
+        ((o = n[t - 1]) === null || o === void 0 ? void 0 : o[e]) &&
+        !n[t][e - 1] &&
+        !n[t][e + 1]
     )
 }
-function isVerticalLine(n, e, t) {
+function isVerticalLine(n, t, e) {
     var r, o
     return (
-        n[e][t + 1] &&
-        n[e][t - 1] &&
-        !(!((r = n[e - 1]) === null || r === void 0) && r[t]) &&
-        !(!((o = n[e + 1]) === null || o === void 0) && o[t])
+        n[t][e + 1] &&
+        n[t][e - 1] &&
+        !(!((r = n[t - 1]) === null || r === void 0) && r[e]) &&
+        !(!((o = n[t + 1]) === null || o === void 0) && o[e])
     )
 }
-function isLeftmost(n, e, t) {
+function isLeftmost(n, t, e) {
     var r
-    return !(!((r = n[e - 1]) === null || r === void 0) && r[t])
+    return !(!((r = n[t - 1]) === null || r === void 0) && r[e])
 }
-function isRightmost(n, e, t) {
+function isRightmost(n, t, e) {
     var r
-    return !(!((r = n[e + 1]) === null || r === void 0) && r[t])
+    return !(!((r = n[t + 1]) === null || r === void 0) && r[e])
 }
-function isTopmost(n, e, t) {
-    return !n[e][t - 1]
+function isTopmost(n, t, e) {
+    return !n[t][e - 1]
 }
-function isBottommost(n, e, t) {
-    return !n[e][t + 1]
+function isBottommost(n, t, e) {
+    return !n[t][e + 1]
 }
-function getCorners(n, e, t) {
+function getCorners(n, t, e) {
     var r, o, i, s, c, u, l, f
     const a = []
-    return n[e][t]
-        ? isHorizontalLine(n, e, t) || isVerticalLine(n, e, t)
+    return n[t][e]
+        ? isHorizontalLine(n, t, e) || isVerticalLine(n, t, e)
             ? []
-            : (!(!((c = n[e - 1]) === null || c === void 0) && c[t - 1]) &&
-                  isLeftmost(n, e, t) &&
-                  isTopmost(n, e, t) &&
-                  a.push({ x: e, y: t }),
-              !(!((u = n[e + 1]) === null || u === void 0) && u[t - 1]) &&
-                  isRightmost(n, e, t) &&
-                  isTopmost(n, e, t) &&
-                  a.push({ x: e + 1, y: t }),
-              !(!((l = n[e - 1]) === null || l === void 0) && l[t + 1]) &&
-                  isLeftmost(n, e, t) &&
-                  isBottommost(n, e, t) &&
-                  a.push({ x: e, y: t + 1 }),
-              !(!((f = n[e + 1]) === null || f === void 0) && f[t + 1]) &&
-                  isRightmost(n, e, t) &&
-                  isBottommost(n, e, t) &&
-                  a.push({ x: e + 1, y: t + 1 }),
+            : (!(!((c = n[t - 1]) === null || c === void 0) && c[e - 1]) &&
+                  isLeftmost(n, t, e) &&
+                  isTopmost(n, t, e) &&
+                  a.push({ x: t, y: e }),
+              !(!((u = n[t + 1]) === null || u === void 0) && u[e - 1]) &&
+                  isRightmost(n, t, e) &&
+                  isTopmost(n, t, e) &&
+                  a.push({ x: t + 1, y: e }),
+              !(!((l = n[t - 1]) === null || l === void 0) && l[e + 1]) &&
+                  isLeftmost(n, t, e) &&
+                  isBottommost(n, t, e) &&
+                  a.push({ x: t, y: e + 1 }),
+              !(!((f = n[t + 1]) === null || f === void 0) && f[e + 1]) &&
+                  isRightmost(n, t, e) &&
+                  isBottommost(n, t, e) &&
+                  a.push({ x: t + 1, y: e + 1 }),
               a)
-        : (!((r = n[e - 1]) === null || r === void 0) && r[t] && n[e][t - 1] && a.push({ x: e, y: t }),
-          !((o = n[e + 1]) === null || o === void 0) && o[t] && n[e][t - 1] && a.push({ x: e + 1, y: t }),
-          !((i = n[e - 1]) === null || i === void 0) && i[t] && n[e][t + 1] && a.push({ x: e, y: t + 1 }),
-          !((s = n[e + 1]) === null || s === void 0) && s[t] && n[e][t + 1] && a.push({ x: e + 1, y: t + 1 }),
+        : (!((r = n[t - 1]) === null || r === void 0) && r[e] && n[t][e - 1] && a.push({ x: t, y: e }),
+          !((o = n[t + 1]) === null || o === void 0) && o[e] && n[t][e - 1] && a.push({ x: t + 1, y: e }),
+          !((i = n[t - 1]) === null || i === void 0) && i[e] && n[t][e + 1] && a.push({ x: t, y: e + 1 }),
+          !((s = n[t + 1]) === null || s === void 0) && s[e] && n[t][e + 1] && a.push({ x: t + 1, y: e + 1 }),
           a)
 }
-function findCorners(n, e, t, r) {
+function findCorners(n, t, e, r) {
     const o = [
         { x: 0, y: 0 },
-        { x: t, y: 0 },
+        { x: e, y: 0 },
         { x: 0, y: r },
-        { x: t, y: r }
+        { x: e, y: r }
     ]
     for (let i = 0; i < n.length; i++)
         for (let s = 0; s < n[0].length; s++) {
             const c = getCorners(n, i, s)
             for (const u of c) o.some(l => l.x === u.x && l.y === u.y) || o.push(u)
         }
-    return o.map(i => ({ x: i.x * e, y: i.y * e }))
+    return o.map(i => ({ x: i.x * t, y: i.y * t }))
 }
-function findLines(n, e) {
-    const t = filterCoordinates(n, (u, l) => n[u][l] === 0 && n[u][l + 1] !== 0, 'row-first').map(u =>
+function findLines(n, t) {
+    const e = filterCoordinates(n, (u, l) => n[u][l] === 0 && n[u][l + 1] !== 0, 'row-first').map(u =>
             Object.assign(Object.assign({}, u), { dx: 1, dy: 0 })
         ),
         r = filterCoordinates(n, (u, l) => n[u][l] === 0 && n[u][l - 1] !== 0, 'row-first').map(u =>
@@ -1949,39 +1969,39 @@ function findLines(n, e) {
             },
             'column-first'
         ).map(u => Object.assign(Object.assign({}, u), { dx: 0, dy: 1 }))
-    t.forEach(u => u.y++), i.forEach(u => u.x++)
+    e.forEach(u => u.y++), i.forEach(u => u.x++)
     const s = group([...o, ...i], (u, l) => u.x === l.x && u.y - 1 === l.y),
-        c = group([...r, ...t], (u, l) => u.y === l.y && u.x - 1 === l.x)
+        c = group([...r, ...e], (u, l) => u.y === l.y && u.x - 1 === l.x)
     return [...s, ...c]
         .map(u => ({ start: u[0], end: last(u) }))
         .map(u => ({
-            start: multiplyPoint(u.start, e),
-            end: multiplyPoint(addPoint(u.end, { x: u.start.dx, y: u.start.dy }), e)
+            start: multiplyPoint(u.start, t),
+            end: multiplyPoint(addPoint(u.end, { x: u.start.dx, y: u.start.dy }), t)
         }))
 }
-function getAngleInRadians(n, e) {
-    return Math.atan2(e.y - n.y, e.x - n.x)
+function getAngleInRadians(n, t) {
+    return Math.atan2(t.y - n.y, t.x - n.x)
 }
-function getSortedRayAngles(n, e) {
-    return e.map(t => getAngleInRadians(n, t)).sort((t, r) => t - r)
+function getSortedRayAngles(n, t) {
+    return t.map(e => getAngleInRadians(n, e)).sort((e, r) => e - r)
 }
-function getLineIntersectionPoint(n, e, t, r) {
-    const o = (r.y - t.y) * (e.x - n.x) - (r.x - t.x) * (e.y - n.y)
+function getLineIntersectionPoint(n, t, e, r) {
+    const o = (r.y - e.y) * (t.x - n.x) - (r.x - e.x) * (t.y - n.y)
     if (o === 0) return null
-    let i = n.y - t.y,
-        s = n.x - t.x
-    const c = (r.x - t.x) * i - (r.y - t.y) * s,
-        u = (e.x - n.x) * i - (e.y - n.y) * s
+    let i = n.y - e.y,
+        s = n.x - e.x
+    const c = (r.x - e.x) * i - (r.y - e.y) * s,
+        u = (t.x - n.x) * i - (t.y - n.y) * s
     return (
         (i = c / o),
         (s = u / o),
-        i > 0 && i < 1 && s > 0 && s < 1 ? { x: n.x + i * (e.x - n.x), y: n.y + i * (e.y - n.y) } : null
+        i > 0 && i < 1 && s > 0 && s < 1 ? { x: n.x + i * (t.x - n.x), y: n.y + i * (t.y - n.y) } : null
     )
 }
-function raycast(n, e, t) {
+function raycast(n, t, e) {
     const r = [],
-        o = pushPoint(n, t, 1e4)
-    for (const i of e) {
+        o = pushPoint(n, e, 1e4)
+    for (const i of t) {
         const s = getLineIntersectionPoint(n, o, i.start, i.end)
         s && r.push(s)
     }
@@ -1993,12 +2013,12 @@ function raycast(n, e, t) {
           })
         : null
 }
-function raycastCircle(n, e, t) {
-    const o = getSortedRayAngles(n, t),
+function raycastCircle(n, t, e) {
+    const o = getSortedRayAngles(n, e),
         i = []
     for (const s of o) {
-        const c = raycast(n, e, s - 0.001),
-            u = raycast(n, e, s + 0.001)
+        const c = raycast(n, t, s - 0.001),
+            u = raycast(n, t, s + 0.001)
         c && i.push(c), u && i.push(u)
     }
     return i
@@ -2068,7 +2088,10 @@ function raycastCircle(n, e, t) {
         asMegabytes,
         convertBytes,
         hexToRgb,
-        rgbToHex
+        rgbToHex,
+        haversineDistanceToMeters,
+        roundToNearest,
+        formatDistance
     }),
     (exports.Promises = { raceFulfilled, invert: invertPromise, runInParallelBatches, makeAsyncQueue }),
     (exports.Dates = {
