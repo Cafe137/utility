@@ -219,11 +219,19 @@ declare function fromUtcString(string: string): Date;
 declare function fromMillis(millis: number): Date;
 declare function createTimeDigits(value: number): string;
 declare function humanizeTime(millis: number): string;
-declare function getAgo(date: Date, now?: number): string;
-declare function getAgoStructured(dateOrTimestamp: Date | number, now?: number): {
-    value: number;
-    unit: string;
-};
+interface AgoTranslations {
+    now: () => string;
+    seconds: (value: number) => string;
+    minutes: (value: number) => string;
+    hours: (value: number) => string;
+    days: (value: number) => string;
+    weeks: (value: number) => string;
+}
+interface GetAgoOptions {
+    now?: number;
+    translations?: AgoTranslations;
+}
+declare function getAgo(date: Date | number, options?: GetAgoOptions): string;
 type CountCyclesOptions = {
     precision?: number;
     now?: number;
@@ -490,7 +498,6 @@ export declare const Promises: {
 };
 export declare const Dates: {
     getAgo: typeof getAgo;
-    getAgoStructured: typeof getAgoStructured;
     countCycles: typeof countCycles;
     isoDate: typeof isoDate;
     throttle: typeof throttle;

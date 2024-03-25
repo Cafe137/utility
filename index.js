@@ -1178,30 +1178,30 @@ function humanizeTime(n) {
         ? `${createTimeDigits(e)}:${createTimeDigits(t)}:${createTimeDigits(r)}`
         : `${createTimeDigits(t)}:${createTimeDigits(r)}`
 }
-function getAgo(n, e) {
-    e || (e = Date.now())
-    const t = n.getTime()
-    let r = (e - t) / 1e3
-    return r < 10
-        ? 'A few seconds ago'
-        : r < 120
-        ? r.toFixed(0) + ' seconds ago'
-        : ((r /= 60),
-          r < 120
-              ? r.toFixed(0) + ' minutes ago'
-              : ((r /= 60), r < 48 ? r.toFixed(0) + ' hours ago' : ((r /= 24), r.toFixed(0) + ' days ago')))
+const DefaultAgoTranslations = {
+    now: () => 'A few seconds ago',
+    seconds: n => `${n} seconds ago`,
+    minutes: n => `${n} minutes ago`,
+    hours: n => `${n} hours ago`,
+    days: n => `${n} days ago`,
+    weeks: n => `${n} weeks ago`
 }
-function getAgoStructured(n, e) {
-    e || (e = Date.now())
-    const t = typeof n == 'number' ? n : n.getTime()
-    let r = (e - t) / 1e3
-    return r < 120
-        ? { value: Math.floor(r), unit: 'second' }
-        : ((r /= 60),
-          r < 120
-              ? { value: Math.floor(r), unit: 'minute' }
-              : ((r /= 60),
-                r < 48 ? { value: Math.floor(r), unit: 'hour' } : ((r /= 24), { value: Math.floor(r), unit: 'day' })))
+function getAgo(n, e) {
+    const t = e?.now || Date.now(),
+        r = e?.translations || DefaultAgoTranslations,
+        o = exports.Types.isDate(n) ? n.getTime() : n
+    let i = (t - o) / 1e3
+    return i < 10
+        ? r.now()
+        : i < 120
+        ? r.seconds(Math.floor(i))
+        : ((i /= 60),
+          i < 120
+              ? r.minutes(Math.floor(i))
+              : ((i /= 60),
+                i < 48
+                    ? r.hours(Math.floor(i))
+                    : ((i /= 24), i < 14 ? r.days(Math.floor(i)) : ((i /= 7), r.weeks(Math.floor(i))))))
 }
 function countCycles(n, e, t) {
     var r, o, i
@@ -2064,7 +2064,6 @@ function raycastCircle(n, e, t) {
     (exports.Promises = { raceFulfilled, invert: invertPromise, runInParallelBatches, makeAsyncQueue }),
     (exports.Dates = {
         getAgo,
-        getAgoStructured,
         countCycles,
         isoDate,
         throttle,
