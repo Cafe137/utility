@@ -206,6 +206,7 @@ declare function resolveMarkdownLinks(string: string, transformer: (label: strin
 declare function toQueryString(object: Record<string, any>, questionMark?: boolean): string;
 declare function parseQueryString(queryString: string): Record<string, string>;
 declare function hasKey(object: Record<string, any>, key: string): boolean;
+declare function selectMax<T>(object: Record<string, T>, mapper: (item: T) => number): [string, T] | null;
 declare function buildUrl(baseUrl?: string | null, path?: string | null, query?: Record<string, any> | null): string;
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
@@ -574,6 +575,7 @@ export declare const Objects: {
     toQueryString: typeof toQueryString;
     parseQueryString: typeof parseQueryString;
     hasKey: typeof hasKey;
+    selectMax: typeof selectMax;
 };
 export declare const Types: {
     isFunction: typeof isFunction;

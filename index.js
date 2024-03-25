@@ -1116,6 +1116,15 @@ function parseQueryString(n) {
 function hasKey(n, e) {
     return Object.prototype.hasOwnProperty.call(n, e)
 }
+function selectMax(n, e) {
+    let t = null,
+        r = -1 / 0
+    for (const [o, i] of Object.entries(n)) {
+        const s = e(i)
+        s > r && ((r = s), (t = o))
+    }
+    return t ? [t, n[t]] : null
+}
 function buildUrl(n, e, t) {
     return joinUrl(n, e) + toQueryString(t || {})
 }
@@ -2139,7 +2148,8 @@ function raycastCircle(n, e, t) {
         fromObjectString,
         toQueryString,
         parseQueryString,
-        hasKey
+        hasKey,
+        selectMax
     }),
     (exports.Types = {
         isFunction,
