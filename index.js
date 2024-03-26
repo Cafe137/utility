@@ -1145,6 +1145,11 @@ function selectMax(n, t) {
     }
     return e ? [e, n[e]] : null
 }
+function reposition(n, t, e, r) {
+    const o = n.find(i => i[t] === e)
+    o && (o[t] = e + r), n.sort((i, s) => asNumber(i[t]) - asNumber(s[t]))
+    for (let i = 0; i < n.length; i++) n[i][t] = i + 1
+}
 function buildUrl(n, t, e) {
     return joinUrl(n, t) + toQueryString(e || {})
 }
@@ -2172,7 +2177,8 @@ function raycastCircle(n, t, e) {
         toQueryString,
         parseQueryString,
         hasKey,
-        selectMax
+        selectMax,
+        reposition
     }),
     (exports.Types = {
         isFunction,

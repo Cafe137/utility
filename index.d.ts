@@ -210,6 +210,7 @@ declare function toQueryString(object: Record<string, any>, questionMark?: boole
 declare function parseQueryString(queryString: string): Record<string, string>;
 declare function hasKey(object: Record<string, any>, key: string): boolean;
 declare function selectMax<T>(object: Record<string, T>, mapper: (item: T) => number): [string, T] | null;
+declare function reposition(array: Record<string, unknown>[], key: string, current: number, delta: number): void;
 declare function buildUrl(baseUrl?: string | null, path?: string | null, query?: Record<string, any> | null): string;
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
@@ -582,6 +583,7 @@ export declare const Objects: {
     parseQueryString: typeof parseQueryString;
     hasKey: typeof hasKey;
     selectMax: typeof selectMax;
+    reposition: typeof reposition;
 };
 export declare const Types: {
     isFunction: typeof isFunction;
