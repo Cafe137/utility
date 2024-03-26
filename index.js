@@ -1776,6 +1776,15 @@ class Optional {
     constructor(t) {
         this.value = t
     }
+    static of(t) {
+        return new Optional(t)
+    }
+    static empty() {
+        return new Optional(null)
+    }
+    map(t) {
+        return new Optional(this.value ? t(this.value) : null)
+    }
     ifPresent(t) {
         return this.value && t(this.value), this
     }
@@ -1787,7 +1796,7 @@ class Optional {
 exports.Optional = Optional
 function findInstance(n, t) {
     const e = n.find(r => r instanceof t)
-    return new Optional(e)
+    return Optional.of(e)
 }
 function interleave(n, t) {
     const e = [],

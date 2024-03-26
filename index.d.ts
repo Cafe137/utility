@@ -370,7 +370,10 @@ declare function makeAsyncQueue(concurrency?: number): {
 };
 export declare class Optional<T> {
     value: T | null | undefined;
-    constructor(value: T | null | undefined);
+    private constructor();
+    static of<U>(value: U | null | undefined): Optional<U>;
+    static empty<U>(): Optional<U>;
+    map<K>(fn: (value: T) => K): Optional<K>;
     ifPresent(fn: (value: T) => void): this;
     orElse(fn: () => void): void;
 }
