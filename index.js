@@ -1146,9 +1146,11 @@ function selectMax(n, t) {
     return e ? [e, n[e]] : null
 }
 function reposition(n, t, e, r) {
-    const o = n.find(i => i[t] === e)
-    o && (o[t] = e + r), n.sort((i, s) => asNumber(i[t]) - asNumber(s[t]))
-    for (let i = 0; i < n.length; i++) n[i][t] = i + 1
+    const o = n.find(s => s[t] === e),
+        i = n.find(s => s[t] === e + r)
+    o && i ? ((o[t] = e + r), (i[t] = e)) : o && (o[t] = e + r),
+        n.sort((s, c) => asNumber(s[t]) - asNumber(c[t])),
+        n.forEach((s, c) => (s[t] = c + 1))
 }
 function buildUrl(n, t, e) {
     return joinUrl(n, t) + toQueryString(e || {})
