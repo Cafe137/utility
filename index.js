@@ -289,9 +289,6 @@ function isFunction(n) {
 function isString(n) {
     return Object.prototype.toString.call(n) === '[object String]'
 }
-function isPromise(n) {
-    return n && typeof n.then == 'function'
-}
 function isNumber(n) {
     return typeof n == 'number' && isFinite(n)
 }
@@ -425,6 +422,13 @@ function asArray(n) {
 function asObject(n) {
     if (!isStrictlyObject(n)) throw new TypeError('Expected object, got: ' + n)
     return n
+}
+function asNumericDictionary(n) {
+    const t = asObject(n),
+        e = Object.keys(t),
+        r = Object.values(t)
+    if (!e.every(isString) || !r.every(isNumber)) throw new TypeError('Expected numeric dictionary, got: ' + n)
+    return t
 }
 function isNullable(n, t) {
     return isUndefined(t) || t === null ? !0 : n(t)
@@ -2217,6 +2221,7 @@ function raycastCircle(n, t, e) {
         asTime,
         asArray,
         asObject,
+        asNumericDictionary,
         asNullable,
         enforceObjectShape,
         enforceArrayShape
