@@ -1802,6 +1802,9 @@ function findInstance(n, t) {
     const e = n.find(r => r instanceof t)
     return Optional.of(e)
 }
+function filterInstances(n, t) {
+    return n.filter(e => e instanceof t)
+}
 function interleave(n, t) {
     const e = [],
         r = Math.max(n.length, t.length)
@@ -2089,6 +2092,7 @@ function raycastCircle(n, t, e) {
         bringToFront,
         bringToFrontInPlace,
         findInstance,
+        filterInstances,
         interleave
     }),
     (exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError }),

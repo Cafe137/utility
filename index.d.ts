@@ -382,6 +382,7 @@ interface Newable<T> extends Function {
     new (...args: any[]): T;
 }
 declare function findInstance<T, K extends T>(array: T[], type: Newable<K>): Optional<K>;
+declare function filterInstances<T, K extends T>(array: T[], type: Newable<K>): K[];
 declare function interleave<T, K>(arrayA: T[], arrayB: K[]): (T | K)[];
 type Playbook<T> = {
     ttl: number;
@@ -472,6 +473,7 @@ export declare const Arrays: {
     bringToFront: typeof bringToFront;
     bringToFrontInPlace: typeof bringToFrontInPlace;
     findInstance: typeof findInstance;
+    filterInstances: typeof filterInstances;
     interleave: typeof interleave;
 };
 export declare const System: {
