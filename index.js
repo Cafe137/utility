@@ -430,6 +430,13 @@ function asNumericDictionary(n) {
     if (!e.every(isString) || !r.every(isNumber)) throw new TypeError('Expected numeric dictionary, got: ' + n)
     return t
 }
+function isUrl(n) {
+    return isString(n) && n.match(/^https?:\/\/.+/) !== null
+}
+function asUrl(n) {
+    if (!isUrl(n)) throw new TypeError('Expected url, got: ' + n)
+    return n
+}
 function isNullable(n, t) {
     return isUndefined(t) || t === null ? !0 : n(t)
 }
@@ -2252,6 +2259,7 @@ function raycastCircle(n, t, e) {
         asArray,
         asObject,
         asNumericDictionary,
+        asUrl,
         asNullable,
         enforceObjectShape,
         enforceArrayShape

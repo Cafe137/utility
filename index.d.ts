@@ -84,6 +84,7 @@ declare function asTime(value: any): string;
 declare function asArray(value: any): unknown[];
 declare function asObject(value: any): Record<string, unknown>;
 declare function asNumericDictionary(value: any): Record<string, number>;
+declare function asUrl(value: any): string;
 declare function isNullable(typeFn: (value: any) => boolean, value: any): boolean;
 declare function asNullable<T>(typeFn: (value: any) => T, value: any): T | null;
 declare function enforceObjectShape(value: Record<string, any>, shape: Record<string, (value: any) => boolean>): boolean;
@@ -623,6 +624,7 @@ export declare const Types: {
     asArray: typeof asArray;
     asObject: typeof asObject;
     asNumericDictionary: typeof asNumericDictionary;
+    asUrl: typeof asUrl;
     asNullable: typeof asNullable;
     enforceObjectShape: typeof enforceObjectShape;
     enforceArrayShape: typeof enforceArrayShape;
