@@ -199,6 +199,11 @@ declare function hashCode(string: string): number;
 declare function replaceWord(string: string, search: string, replace: string, whitespaceOnly?: boolean): string;
 declare function replacePascalCaseWords(string: string, replacer: (word: string) => string): string;
 declare function stripHtml(string: string): string;
+declare function breakLine(string: string): {
+    line: string;
+    rest: string;
+};
+declare function toLines(string: string, maxWidth: number, characterWidths?: Record<string, number>): string[];
 declare function containsWord(string: string, word: string): boolean;
 declare function containsWords(string: string, words: string[], mode: 'any' | 'all'): boolean;
 declare function parseHtmlAttributes(string: string): Record<string, string>;
@@ -709,6 +714,8 @@ export declare const Strings: {
     replaceWord: typeof replaceWord;
     replacePascalCaseWords: typeof replacePascalCaseWords;
     stripHtml: typeof stripHtml;
+    breakLine: typeof breakLine;
+    toLines: typeof toLines;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;

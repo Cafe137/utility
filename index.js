@@ -1053,6 +1053,32 @@ function replacePascalCaseWords(n, t) {
 function stripHtml(n) {
     return n.replace(/<[^>]*>/g, '')
 }
+function breakLine(n) {
+    const t = n.lastIndexOf(' ')
+    if (t === -1) return { line: n, rest: '' }
+    const e = n.slice(0, t),
+        r = n.slice(t + 1)
+    return { line: e, rest: r }
+}
+function toLines(n, t, e = {}) {
+    const r = []
+    let o = '',
+        i = 0
+    for (let s = 0; s < n.length; s++) {
+        const c = n[s],
+            u = e[c] || 1
+        if (((o += c), (i += u), i > t)) {
+            const { line: l, rest: f } = breakLine(o)
+            r.push(l),
+                (o = f),
+                (i = f
+                    .split('')
+                    .map(a => e[a] || 1)
+                    .reduce((a, h) => a + h, 0))
+        }
+    }
+    return o && r.push(o), r
+}
 function containsWord(n, t) {
     return new RegExp(`\\b${t}\\b`).test(n)
 }
@@ -2316,7 +2342,9 @@ function raycastCircle(n, t, e) {
         hashCode,
         replaceWord,
         replacePascalCaseWords,
-        stripHtml
+        stripHtml,
+        breakLine,
+        toLines
     }),
     (exports.Assertions = { asEqual, asTrue, asTruthy, asFalse, asFalsy, asEither }),
     (exports.Cache = { get: getCached }),
