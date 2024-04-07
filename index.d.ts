@@ -84,6 +84,7 @@ declare function asTime(value: any): string;
 declare function asArray(value: any): unknown[];
 declare function asObject(value: any): Record<string, unknown>;
 declare function asNumericDictionary(value: any): Record<string, number>;
+declare function isUrl(value: any): boolean;
 declare function asUrl(value: any): string;
 declare function isNullable(typeFn: (value: any) => boolean, value: any): boolean;
 declare function asNullable<T>(typeFn: (value: any) => T, value: any): T | null;
@@ -610,6 +611,7 @@ export declare const Types: {
     isDate: typeof isDate;
     isBlank: typeof isBlank;
     isId: typeof isId;
+    isUrl: typeof isUrl;
     isNullable: typeof isNullable;
     asString: typeof asString;
     asSafeString: typeof asSafeString;

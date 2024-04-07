@@ -2245,6 +2245,7 @@ function raycastCircle(n, t, e) {
         isDate,
         isBlank,
         isId,
+        isUrl,
         isNullable,
         asString,
         asSafeString,
