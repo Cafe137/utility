@@ -162,13 +162,13 @@ function getDeep(n, t) {
     const e = t.split('.')
     let r = n
     for (const o of e) {
-        if (!r[o]) return r[o]
+        if (r[o] === null || r[o] === void 0) return null
         r = r[o]
     }
     return r
 }
-function getDeepOrElse(n, t, e) {
-    return getDeep(n, t) || e
+function getAny(n, t) {
+    return isObject(n) ? getDeep(n, t) : null
 }
 function setDeep(n, t, e) {
     const r = t.split(/\.|\[/)
@@ -1853,7 +1853,7 @@ function tickPlaybook(n) {
     )
 }
 function getArgument(n, t, e, r) {
-    const o = n.findIndex(c => c.endsWith('-' + t) || c.includes('-' + t + '=')),
+    const o = n.findIndex(c => c === `--${t}` || c.startsWith(`--${t}=`)),
         i = n[o]
     if (!i) return (e || {})[r || t || ''] || null
     if (i.includes('=')) return i.split('=')[1]
@@ -2177,7 +2177,7 @@ function raycastCircle(n, t, e) {
         safeParse,
         deleteDeep,
         getDeep,
-        getDeepOrElse,
+        getAny,
         setDeep,
         incrementDeep,
         ensureDeep,
