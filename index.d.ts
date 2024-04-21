@@ -64,6 +64,8 @@ declare function isBoolean(value: any): value is boolean;
 declare function isDate(value: any): value is Date;
 declare function isBlank(value: any): boolean;
 declare function isId(value: any): value is number;
+declare function isIntegerString(value: any): boolean;
+declare function isHexString(value: any): boolean;
 declare function randomLetterString(length: number, generator?: () => number): string;
 declare function randomAlphanumericString(length: number, generator?: () => number): string;
 declare function randomRichAsciiString(length: number, generator?: () => number): string;
@@ -611,6 +613,8 @@ export declare const Types: {
     isDate: typeof isDate;
     isBlank: typeof isBlank;
     isId: typeof isId;
+    isIntegerString: typeof isIntegerString;
+    isHexString: typeof isHexString;
     isUrl: typeof isUrl;
     isNullable: typeof isNullable;
     asString: typeof asString;

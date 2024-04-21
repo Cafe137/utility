@@ -304,6 +304,12 @@ function isBlank(n) {
 function isId(n) {
     return isNumber(n) && Number.isInteger(n) && n >= 1
 }
+function isIntegerString(n) {
+    return isString(n) && n.match(/^-?\d+$/) !== null
+}
+function isHexString(n) {
+    return isString(n) && n.match(/^(0x)?[0-9a-f]+$/i) !== null
+}
 const symbols = '!@#$%^&*()_+-=[]{}|;:<>?,./',
     symbolsArray = '!@#$%^&*()_+-=[]{}|;:<>?,./'.split(''),
     lowercaseAlphabet = 'abcdefghijklmnopqrstuvwxyz',
@@ -2245,6 +2251,8 @@ function raycastCircle(n, t, e) {
         isDate,
         isBlank,
         isId,
+        isIntegerString,
+        isHexString,
         isUrl,
         isNullable,
         asString,
