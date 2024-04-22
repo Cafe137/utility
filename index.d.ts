@@ -234,6 +234,23 @@ declare function fromUtcString(string: string): Date;
 declare function fromMillis(millis: number): Date;
 declare function createTimeDigits(value: number): string;
 declare function humanizeTime(millis: number): string;
+interface TimestampTranslations {
+    today: (hour: number, minute: number, pm: boolean) => string;
+    yesterday: () => string;
+    monday: () => string;
+    tuesday: () => string;
+    wednesday: () => string;
+    thursday: () => string;
+    friday: () => string;
+    saturday: () => string;
+    sunday: () => string;
+    weeks: (value: number) => string;
+}
+interface GetTimestampOptions {
+    now?: number;
+    translations?: TimestampTranslations;
+}
+declare function getTimestamp(date: Date | number, options?: GetTimestampOptions): string;
 interface AgoTranslations {
     now: () => string;
     seconds: (value: number) => string;
@@ -266,17 +283,17 @@ interface Progress {
 }
 declare function getProgress(startedAt: number, current: number, total: number, now?: number): Progress;
 declare const dayNumberIndex: {
-    0: string;
-    1: string;
-    2: string;
-    3: string;
-    4: string;
-    5: string;
-    6: string;
+    readonly 0: "sunday";
+    readonly 1: "monday";
+    readonly 2: "tuesday";
+    readonly 3: "wednesday";
+    readonly 4: "thursday";
+    readonly 5: "friday";
+    readonly 6: "saturday";
 };
 interface DayInfo {
     zeroBasedIndex: number;
-    day: string;
+    day: 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
 }
 declare function mapDayNumber(zeroBasedIndex: keyof typeof dayNumberIndex): DayInfo;
 declare function getDayInfoFromDate(date: Date): DayInfo;
@@ -520,6 +537,7 @@ export declare const Promises: {
     makeAsyncQueue: typeof makeAsyncQueue;
 };
 export declare const Dates: {
+    getTimestamp: typeof getTimestamp;
     getAgo: typeof getAgo;
     countCycles: typeof countCycles;
     isoDate: typeof isoDate;

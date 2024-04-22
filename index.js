@@ -598,8 +598,7 @@ function range(n, t) {
     return e
 }
 function includesAny(n, t) {
-    for (const e of t) if (n.includes(e)) return !0
-    return !1
+    return t.some(e => n.includes(e))
 }
 function isChinese(n) {
     return /^[\u4E00-\u9FA5]+$/.test(n)
@@ -1257,6 +1256,32 @@ function humanizeTime(n) {
         ? `${createTimeDigits(t)}:${createTimeDigits(e)}:${createTimeDigits(r)}`
         : `${createTimeDigits(e)}:${createTimeDigits(r)}`
 }
+function absoluteDays(n) {
+    return Math.floor((isDate(n) ? n.getTime() : n) / 864e5)
+}
+const DefaultTimestampTranslations = {
+    today: (n, t) => createTimeDigits(n) + ':' + createTimeDigits(t),
+    yesterday: () => 'Yesterday',
+    monday: () => 'Mon',
+    tuesday: () => 'Tue',
+    wednesday: () => 'Wed',
+    thursday: () => 'Thu',
+    friday: () => 'Fri',
+    saturday: () => 'Sat',
+    sunday: () => 'Sun',
+    weeks: n => `${n}w`
+}
+function getTimestamp(n, t) {
+    const e = new Date(t?.now || Date.now()),
+        r = t?.translations || DefaultTimestampTranslations,
+        o = isDate(n) ? n : new Date(n)
+    if (absoluteDays(e) === absoluteDays(o)) return r.today(o.getUTCHours(), o.getUTCMinutes(), o.getUTCHours() > 12)
+    if (absoluteDays(e) - absoluteDays(o) === 1) return r.yesterday()
+    const i = getDayInfoFromDate(o)
+    return absoluteDays(e) - absoluteDays(o) < 7
+        ? r[i.day]()
+        : r.weeks(Math.round((e.getTime() - o.getTime()) / 6048e5))
+}
 const DefaultAgoTranslations = {
     now: () => 'A few seconds ago',
     seconds: n => `${n} seconds ago`,
@@ -1481,10 +1506,8 @@ function organiseWithLimits(n, t, e, r, o) {
 }
 function diffKeys(n, t) {
     const e = Object.keys(n),
-        r = Object.keys(t),
-        o = e.filter(s => !r.includes(s)),
-        i = r.filter(s => !e.includes(s))
-    return { uniqueToA: o, uniqueToB: i }
+        r = Object.keys(t)
+    return { uniqueToA: e.filter(o => !r.includes(o)), uniqueToB: r.filter(o => !e.includes(o)) }
 }
 function pickRandomKey(n) {
     const t = Object.keys(n)
@@ -1748,9 +1771,12 @@ function setMulti(n, t, e) {
 function group(n, t) {
     const e = []
     let r = []
-    n.length && (e.push(r), r.push(n[0]))
-    for (let o = 1; o < n.length; o++) t(n[o], n[o - 1]) || ((r = []), e.push(r)), r.push(n[o])
-    return e
+    return (
+        n.forEach((o, i) => {
+            ;(i === 0 || !t(o, n[i - 1])) && ((r = []), e.push(r)), r.push(o)
+        }),
+        e
+    )
 }
 function createBidirectionalMap() {
     return { map: new Map(), keys: [] }
@@ -2158,6 +2184,7 @@ function raycastCircle(n, t, e) {
     }),
     (exports.Promises = { raceFulfilled, invert: invertPromise, runInParallelBatches, makeAsyncQueue }),
     (exports.Dates = {
+        getTimestamp,
         getAgo,
         countCycles,
         isoDate,
