@@ -1876,6 +1876,9 @@ function interleave(n, t) {
     for (let o = 0; o < r; o++) n[o] && e.push(n[o]), t[o] && e.push(t[o])
     return e
 }
+function toggle(n, t) {
+    return n.includes(t) ? n.filter(e => e !== t) : [...n, t]
+}
 function tickPlaybook(n) {
     if (n.length === 0) return null
     const t = n[0]
@@ -2158,7 +2161,8 @@ function raycastCircle(n, t, e) {
         bringToFrontInPlace,
         findInstance,
         filterInstances,
-        interleave
+        interleave,
+        toggle
     }),
     (exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError }),
     (exports.Numbers = {
