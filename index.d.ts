@@ -36,8 +36,7 @@ declare function pickGuaranteed<T>(array: T[], include: T | null, exclude: T | n
 declare function last<T>(array: T[]): T;
 declare function pickWeighted<T>(array: T[], weights: number[], randomNumber?: number): T;
 declare function sortWeighted<T>(array: T[], weights: number[], generator?: () => number): T[];
-declare function getDeep(object: CafeObject, path: string): unknown;
-declare function getAny(base: unknown, path: string): unknown;
+declare function getDeep(some: any, path: string): unknown;
 declare function setDeep<T>(object: CafeObject, path: string, value: T): T;
 declare function incrementDeep(object: CafeObject, path: string, amount?: number): number;
 declare function ensureDeep(object: CafeObject, path: string, value: unknown): unknown;
@@ -565,7 +564,6 @@ export declare const Objects: {
     safeParse: typeof safeParse;
     deleteDeep: typeof deleteDeep;
     getDeep: typeof getDeep;
-    getAny: typeof getAny;
     setDeep: typeof setDeep;
     incrementDeep: typeof incrementDeep;
     ensureDeep: typeof ensureDeep;

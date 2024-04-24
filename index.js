@@ -159,6 +159,7 @@ function sortWeighted(n, t, e = Math.random) {
     return o.sort((i, s) => s[1] - i[1]).map(i => i[0])
 }
 function getDeep(n, t) {
+    if (n == null) return null
     const e = t.split('.')
     let r = n
     for (const o of e) {
@@ -166,9 +167,6 @@ function getDeep(n, t) {
         r = r[o]
     }
     return r
-}
-function getAny(n, t) {
-    return isObject(n) ? getDeep(n, t) : null
 }
 function setDeep(n, t, e) {
     const r = t.split(/\.|\[/)
@@ -2214,7 +2212,6 @@ function raycastCircle(n, t, e) {
         safeParse,
         deleteDeep,
         getDeep,
-        getAny,
         setDeep,
         incrementDeep,
         ensureDeep,
