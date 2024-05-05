@@ -207,6 +207,7 @@ declare function breakLine(string: string): {
     rest: string;
 };
 declare function toLines(string: string, maxWidth: number, characterWidths?: Record<string, number>): string[];
+declare function levenshteinDistance(a: string, b: string): number;
 declare function containsWord(string: string, word: string): boolean;
 declare function containsWords(string: string, words: string[], mode: 'any' | 'all'): boolean;
 declare function parseHtmlAttributes(string: string): Record<string, string>;
@@ -742,6 +743,7 @@ export declare const Strings: {
     stripHtml: typeof stripHtml;
     breakLine: typeof breakLine;
     toLines: typeof toLines;
+    levenshteinDistance: typeof levenshteinDistance;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;

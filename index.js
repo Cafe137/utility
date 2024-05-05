@@ -1089,6 +1089,17 @@ function toLines(n, t, e = {}) {
     }
     return o && r.push(o), r
 }
+function levenshteinDistance(n, t) {
+    const e = []
+    for (let r = 0; r <= n.length; r++) e[r] = [r]
+    for (let r = 0; r <= t.length; r++) e[0][r] = r
+    for (let r = 1; r <= n.length; r++)
+        for (let o = 1; o <= t.length; o++) {
+            const i = n[r - 1] === t[o - 1] ? 0 : 1
+            e[r][o] = Math.min(e[r - 1][o] + 1, e[r][o - 1] + 1, e[r - 1][o - 1] + i)
+        }
+    return e[n.length][t.length]
+}
 function containsWord(n, t) {
     return new RegExp(`\\b${t}\\b`).test(n)
 }
@@ -2389,7 +2400,8 @@ function raycastCircle(n, t, e) {
         replacePascalCaseWords,
         stripHtml,
         breakLine,
-        toLines
+        toLines,
+        levenshteinDistance
     }),
     (exports.Assertions = { asEqual, asTrue, asTruthy, asFalse, asFalsy, asEither }),
     (exports.Cache = { get: getCached }),
