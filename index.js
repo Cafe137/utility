@@ -1888,6 +1888,33 @@ function interleave(n, t) {
 function toggle(n, t) {
     return n.includes(t) ? n.filter(e => e !== t) : [...n, t]
 }
+class Node {
+    constructor(t) {
+        ;(this.value = t), (this.children = [])
+    }
+}
+function createHierarchy(n, t, e, r, o = !1) {
+    const i = new Map(),
+        s = []
+    return (
+        n.forEach(c => {
+            const u = new Node(c)
+            if ((i.set(c[t], u), !c[e])) s.push(u)
+            else {
+                const l = i.get(c[e])
+                l?.children.push(u)
+            }
+        }),
+        s.forEach(c => {
+            c.children.sort((u, l) => {
+                const f = u.value[r],
+                    a = l.value[r]
+                return o ? a - f : f - a
+            })
+        }),
+        s
+    )
+}
 function tickPlaybook(n) {
     if (n.length === 0) return null
     const t = n[0]
@@ -2171,7 +2198,8 @@ function raycastCircle(n, t, e) {
         findInstance,
         filterInstances,
         interleave,
-        toggle
+        toggle,
+        createHierarchy
     }),
     (exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError }),
     (exports.Numbers = {

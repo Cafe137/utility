@@ -411,6 +411,12 @@ declare function findInstance<T, K extends T>(array: T[], type: Newable<K>): Opt
 declare function filterInstances<T, K extends T>(array: T[], type: Newable<K>): K[];
 declare function interleave<T, K>(arrayA: T[], arrayB: K[]): (T | K)[];
 declare function toggle<T>(array: T[], value: T): T[];
+declare class Node<T> {
+    value: T;
+    children: Node<T>[];
+    constructor(value: T);
+}
+declare function createHierarchy<T>(items: T[], idKey: keyof T, parentKey: keyof T, sortKey: keyof T, reverse?: boolean): Node<T>[];
 type Playbook<T> = {
     ttl: number;
     ttlMax?: number;
@@ -503,6 +509,7 @@ export declare const Arrays: {
     filterInstances: typeof filterInstances;
     interleave: typeof interleave;
     toggle: typeof toggle;
+    createHierarchy: typeof createHierarchy;
 };
 export declare const System: {
     sleepMillis: typeof sleepMillis;
