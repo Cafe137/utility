@@ -1896,24 +1896,28 @@ class Node {
 function createHierarchy(n, t, e, r, o = !1) {
     const i = new Map(),
         s = []
-    return (
-        n.forEach(c => {
-            const u = new Node(c)
-            if ((i.set(c[t], u), !c[e])) s.push(u)
-            else {
-                const l = i.get(c[e])
-                l?.children.push(u)
-            }
+    n.forEach(u => {
+        const l = new Node(u)
+        i.set(u[t], l)
+    }),
+        n.forEach(u => {
+            const l = i.get(u[t])
+            if (!l) return
+            const f = u[e]
+            if (f) {
+                const a = i.get(f)
+                a && a.children.push(l)
+            } else s.push(l)
+        })
+    const c = u => {
+        u.children.sort((l, f) => {
+            const a = l.value[r],
+                h = f.value[r]
+            return o ? h - a : a - h
         }),
-        s.forEach(c => {
-            c.children.sort((u, l) => {
-                const f = u.value[r],
-                    a = l.value[r]
-                return o ? a - f : f - a
-            })
-        }),
-        s
-    )
+            u.children.forEach(c)
+    }
+    return s.forEach(c), s
 }
 function tickPlaybook(n) {
     if (n.length === 0) return null
