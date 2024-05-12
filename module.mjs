@@ -2,6 +2,7 @@ import utility from './index.js'
 
 export const Arrays = utility.Arrays
 export const Assertions = utility.Assertions
+export const Binary = utility.Binary
 export const Cache = utility.Cache
 export const Dates = utility.Dates
 export const Numbers = utility.Numbers

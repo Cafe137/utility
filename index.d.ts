@@ -417,6 +417,38 @@ declare class Node<T> {
     constructor(value: T);
 }
 declare function createHierarchy<T>(items: T[], idKey: keyof T, parentKey: keyof T, sortKey: keyof T, reverse?: boolean): Node<T>[];
+declare function log2Reduce<T>(array: T[], reducer: (a: T, b: T) => T): T;
+declare function partition(bytes: Uint8Array, size: number): Uint8Array[];
+declare function concatBytes(...arrays: Uint8Array[]): Uint8Array;
+interface Uint8ArrayIO {
+    max: () => number;
+}
+declare class Uint8ArrayReader implements Uint8ArrayIO {
+    cursor: number;
+    buffer: Uint8Array;
+    constructor(buffer: Uint8Array);
+    read(size: number): Uint8Array;
+    max(): number;
+}
+declare class Uint8ArrayWriter implements Uint8ArrayIO {
+    cursor: number;
+    buffer: Uint8Array;
+    constructor(buffer: Uint8Array);
+    write(reader: Uint8ArrayReader): number;
+    max(): number;
+}
+declare class Chunk {
+    span: number;
+    writer: Uint8ArrayWriter;
+    hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array;
+    constructor(capacity: number, hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array, span?: number);
+    buildSpan(): Uint8Array;
+    build(): Uint8Array;
+    hash(): Uint8Array;
+}
+declare function merkleStart(capacity: number, hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array): Chunk[];
+declare function merkleAppend(levels: Chunk[], data: Uint8Array, onChunk: (chunk: Chunk) => Promise<void>, level?: number): Promise<Chunk[]>;
+declare function merkleFinalize(levels: Chunk[], onChunk: (chunk: Chunk) => Promise<void>, level?: number): Promise<Chunk>;
 type Playbook<T> = {
     ttl: number;
     ttlMax?: number;
@@ -453,6 +485,18 @@ declare function findLines(grid: Truthy[][], tileSize: number): Line[];
 declare function getLineIntersectionPoint(line1Start: Point, line1End: Point, line2Start: Point, line2End: Point): Point | null;
 declare function raycast(origin: Point, lines: Line[], angle: number): Point | null;
 declare function raycastCircle(origin: Point, lines: Line[], corners: Point[]): Point[];
+export declare const Binary: {
+    hexToUint8Array: typeof hexToUint8Array;
+    uint8ArrayToHex: typeof uint8ArrayToHex;
+    base64ToUint8Array: typeof base64ToUint8Array;
+    uint8ArrayToBase64: typeof uint8ArrayToBase64;
+    log2Reduce: typeof log2Reduce;
+    partition: typeof partition;
+    concatBytes: typeof concatBytes;
+    merkleStart: typeof merkleStart;
+    merkleAppend: typeof merkleAppend;
+    merkleFinalize: typeof merkleFinalize;
+};
 export declare const Random: {
     intBetween: typeof intBetween;
     floatBetween: typeof floatBetween;
@@ -737,10 +781,6 @@ export declare const Strings: {
     splitFormatting: typeof splitFormatting;
     splitHashtags: typeof splitHashtags;
     splitUrls: typeof splitUrls;
-    hexToUint8Array: typeof hexToUint8Array;
-    uint8ArrayToHex: typeof uint8ArrayToHex;
-    base64ToUint8Array: typeof base64ToUint8Array;
-    uint8ArrayToBase64: typeof uint8ArrayToBase64;
     route: typeof route;
     explodeReplace: typeof explodeReplace;
     generateVariants: typeof generateVariants;
