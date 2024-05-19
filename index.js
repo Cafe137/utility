@@ -45,16 +45,18 @@ function shuffle(t, n = Math.random) {
     return t
 }
 function onlyOrThrow(t) {
-    if (t && t.length === 1) return t[0]
-    throw t && 'length' in t
-        ? Error('Expected array to have length 1, got: ' + t.length)
-        : Error('Expected array, got: ' + t)
+    if (t.length === 1) return t[0]
+    throw Error(`Expected exactly one element, actual: ${t.length}`)
 }
 function onlyOrNull(t) {
-    return t && t.length === 1 ? t[0] : null
+    return t.length === 1 ? t[0] : null
 }
 function firstOrNull(t) {
-    return t && t.length > 0 ? t[0] : null
+    return t.length > 0 ? t[0] : null
+}
+function firstOrThrow(t) {
+    if (!t.length) throw Error('Received empty array')
+    return t[0]
 }
 function initializeArray(t, n) {
     const e = []
@@ -144,7 +146,14 @@ function pickGuaranteed(t, n, e, r, o, i = Math.random) {
     return shuffle(c, i), { values: c, indexOfGuaranteed: n !== null ? c.indexOf(n) : -1 }
 }
 function last(t) {
+    if (!t.length) throw Error('Received empty array')
     return t[t.length - 1]
+}
+function pipe(t, n, e) {
+    return e(n.reduce((r, o) => o(r), t))
+}
+function makePipe(t, n) {
+    return e => pipe(e, t, n)
 }
 function pickWeighted(t, n, e) {
     if ((isUndefined(e) && (e = Math.random()), t.length !== n.length)) throw new Error('Array length mismatch')
@@ -427,6 +436,9 @@ function asArray(t) {
 function asObject(t) {
     if (!isStrictlyObject(t)) throw new TypeError('Expected object, got: ' + t)
     return t
+}
+function asNullableObject(t) {
+    return t === null ? null : asObject(t)
 }
 function asNumericDictionary(t) {
     const n = asObject(t),
@@ -2269,6 +2281,7 @@ function raycastCircle(t, n, e) {
         indexCollection: indexArrayToCollection,
         onlyOrThrow,
         onlyOrNull,
+        firstOrThrow,
         firstOrNull,
         shuffle,
         initialize: initializeArray,
@@ -2284,6 +2297,8 @@ function raycastCircle(t, n, e) {
         pickRandomIndices,
         pickGuaranteed,
         last,
+        pipe,
+        makePipe,
         sortWeighted,
         pushAll,
         unshiftAll,
@@ -2443,6 +2458,7 @@ function raycastCircle(t, n, e) {
         asTime,
         asArray,
         asObject,
+        asNullableObject,
         asNumericDictionary,
         asUrl,
         asNullable,
