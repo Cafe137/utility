@@ -424,6 +424,14 @@ declare function createHierarchy<T>(items: T[], idKey: keyof T, parentKey: keyof
 declare function log2Reduce<T>(array: T[], reducer: (a: T, b: T) => T): T;
 declare function partition(bytes: Uint8Array, size: number): Uint8Array[];
 declare function concatBytes(...arrays: Uint8Array[]): Uint8Array;
+declare function isPng(bytes: Uint8Array): boolean;
+declare function isJpg(bytes: Uint8Array): boolean;
+declare function isWebp(bytes: Uint8Array): boolean;
+declare function isImage(bytes: Uint8Array): boolean;
+declare function numberToUint64LE(number: number): Uint8Array;
+declare function uint64LEToNumber(bytes: Uint8Array): number;
+declare function numberToUint64BE(number: number): Uint8Array;
+declare function uint64BEToNumber(bytes: Uint8Array): number;
 interface Uint8ArrayIO {
     max: () => number;
 }
@@ -446,7 +454,6 @@ declare class Chunk {
     writer: Uint8ArrayWriter;
     hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array;
     constructor(capacity: number, hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array, span?: number);
-    buildSpan(): Uint8Array;
     build(): Uint8Array;
     hash(): Uint8Array;
 }
@@ -500,6 +507,10 @@ export declare const Binary: {
     merkleStart: typeof merkleStart;
     merkleAppend: typeof merkleAppend;
     merkleFinalize: typeof merkleFinalize;
+    numberToUint64LE: typeof numberToUint64LE;
+    uint64LEToNumber: typeof uint64LEToNumber;
+    numberToUint64BE: typeof numberToUint64BE;
+    uint64BEToNumber: typeof uint64BEToNumber;
 };
 export declare const Random: {
     intBetween: typeof intBetween;
@@ -712,6 +723,10 @@ export declare const Types: {
     asNullable: typeof asNullable;
     enforceObjectShape: typeof enforceObjectShape;
     enforceArrayShape: typeof enforceArrayShape;
+    isPng: typeof isPng;
+    isJpg: typeof isJpg;
+    isWebp: typeof isWebp;
+    isImage: typeof isImage;
 };
 export declare const Strings: {
     tokenizeByCount: typeof tokenizeByCount;
