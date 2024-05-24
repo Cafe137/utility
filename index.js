@@ -1220,6 +1220,11 @@ function reposition(n, t, e, r) {
         n.sort((s, c) => asNumber(s[t]) - asNumber(c[t])),
         n.forEach((s, c) => (s[t] = c + 1))
 }
+function unwrapSingleKey(n) {
+    const t = Object.keys(n)
+    if (t.length === 1) return n[t[0]]
+    throw new Error('Expected object to have a single key')
+}
 function buildUrl(n, t, e) {
     return joinUrl(n, t) + toQueryString(e || {})
 }
@@ -2459,7 +2464,8 @@ function raycastCircle(n, t, e) {
         parseQueryString,
         hasKey,
         selectMax,
-        reposition
+        reposition,
+        unwrapSingleKey
     }),
     (exports.Types = {
         isFunction,
