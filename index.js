@@ -275,7 +275,10 @@ function isObject(n, t = !0) {
         (t && !isUndefined(n._readableState)) ||
         (t &&
             n.constructor &&
-            (n.constructor.isBuffer || n.constructor.name == 'Uint8Array' || n.constructor.name === 'ArrayBuffer'))
+            (n.constructor.isBuffer ||
+                n.constructor.name == 'Uint8Array' ||
+                n.constructor.name === 'ArrayBuffer' ||
+                n.constructor.name === 'ReadableStream'))
         ? !1
         : typeof n == 'object'
 }
