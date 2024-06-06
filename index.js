@@ -1090,6 +1090,9 @@ function breakLine(n) {
         r = n.slice(t + 1)
     return { line: e, rest: r }
 }
+function measureTextWidth(n, t = {}) {
+    return [...n].reduce((e, r) => e + (t[r] || 1), 0)
+}
 function toLines(n, t, e = {}) {
     const r = []
     let o = '',
@@ -2594,6 +2597,7 @@ function raycastCircle(n, t, e) {
         replacePascalCaseWords,
         stripHtml,
         breakLine,
+        measureTextWidth,
         toLines,
         levenshteinDistance
     }),

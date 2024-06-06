@@ -210,6 +210,7 @@ declare function breakLine(string: string): {
     line: string;
     rest: string;
 };
+declare function measureTextWidth(string: string, characterWidths?: Record<string, number>): number;
 declare function toLines(string: string, maxWidth: number, characterWidths?: Record<string, number>): string[];
 declare function levenshteinDistance(a: string, b: string): number;
 declare function containsWord(string: string, word: string): boolean;
@@ -814,6 +815,7 @@ export declare const Strings: {
     replacePascalCaseWords: typeof replacePascalCaseWords;
     stripHtml: typeof stripHtml;
     breakLine: typeof breakLine;
+    measureTextWidth: typeof measureTextWidth;
     toLines: typeof toLines;
     levenshteinDistance: typeof levenshteinDistance;
 };
