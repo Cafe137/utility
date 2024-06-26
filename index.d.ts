@@ -342,6 +342,7 @@ declare function diffKeys(objectA: CafeObject, objectB: CafeObject): {
 declare function pickRandomKey(object: CafeObject): string;
 declare function mapRandomKey<T>(object: CafeObject<T>, mapFunction: (value: T) => T): string;
 declare function fromObjectString<T>(string: string): T;
+declare function fromDecimals(number: string, decimals: number, unit?: string): string;
 interface NumberFormatOptions {
     precision?: number;
     longForm?: boolean;
@@ -595,6 +596,7 @@ export declare const Numbers: {
     increment: typeof increment;
     decrement: typeof decrement;
     format: typeof formatNumber;
+    fromDecimals: typeof fromDecimals;
     asMegabytes: typeof asMegabytes;
     convertBytes: typeof convertBytes;
     hexToRgb: typeof hexToRgb;

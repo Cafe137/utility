@@ -1594,6 +1594,13 @@ const thresholds = [1e3, 1e6, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24, 1e27, 1e30, 1e9
         'decillion'
     ],
     shortNumberUnits = ['K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'O', 'N', 'gwei', 'bzz', 'eth', 'btc', 'dai', 'D']
+function fromDecimals(n, t, e) {
+    let r = n.length - t
+    if (r <= 0) return '0.' + '0'.repeat(-r) + n + (e ? ' ' + e : '')
+    let o = n.substring(0, r),
+        i = n.substring(r)
+    return o === '' && (o = '0'), o + '.' + i + (e ? ' ' + e : '')
+}
 function formatNumber(n, t) {
     var e, r
     const o = (e = t?.longForm) !== null && e !== void 0 ? e : !1,
@@ -2382,6 +2389,7 @@ function raycastCircle(n, t, e) {
         increment,
         decrement,
         format: formatNumber,
+        fromDecimals,
         asMegabytes,
         convertBytes,
         hexToRgb,
