@@ -1296,7 +1296,7 @@ function humanizeTime(n) {
 function absoluteDays(n) {
     return Math.floor((isDate(n) ? n.getTime() : n) / 864e5)
 }
-const DefaultTimestampTranslations = {
+const DefaultTimestampLabels = {
     today: (n, t) => createTimeDigits(n) + ':' + createTimeDigits(t),
     yesterday: () => 'Yesterday',
     monday: () => 'Mon',
@@ -1310,7 +1310,7 @@ const DefaultTimestampTranslations = {
 }
 function getTimestamp(n, t) {
     const e = new Date(t?.now || Date.now()),
-        r = t?.translations || DefaultTimestampTranslations,
+        r = t?.labels || DefaultTimestampLabels,
         o = isDate(n) ? n : new Date(n)
     if (absoluteDays(e) === absoluteDays(o)) return r.today(o.getUTCHours(), o.getUTCMinutes(), o.getUTCHours() > 12)
     if (absoluteDays(e) - absoluteDays(o) === 1) return r.yesterday()
@@ -1319,30 +1319,34 @@ function getTimestamp(n, t) {
         ? r[i.day]()
         : r.weeks(Math.round((e.getTime() - o.getTime()) / 6048e5))
 }
-const DefaultAgoTranslations = {
-    now: () => 'A few seconds ago',
-    seconds: n => `${n} seconds ago`,
-    minutes: n => `${n} minutes ago`,
-    hours: n => `${n} hours ago`,
-    days: n => `${n} days ago`,
-    weeks: n => `${n} weeks ago`
+const DefaultTimeDeltaLabels = {
+    now: () => 'A few seconds',
+    seconds: n => `${n} seconds`,
+    minutes: n => `${n} minutes`,
+    hours: n => `${n} hours`,
+    days: n => `${n} days`,
+    weeks: n => `${n} weeks`
 }
-function getAgo(n, t) {
-    const e = t?.now || Date.now(),
-        r = t?.translations || DefaultAgoTranslations,
-        o = exports.Types.isDate(n) ? n.getTime() : n
-    let i = (e - o) / 1e3
-    return i < 10
-        ? r.now()
-        : i < 120
-        ? r.seconds(Math.floor(i))
-        : ((i /= 60),
-          i < 120
-              ? r.minutes(Math.floor(i))
-              : ((i /= 60),
-                i < 48
-                    ? r.hours(Math.floor(i))
-                    : ((i /= 24), i < 14 ? r.days(Math.floor(i)) : ((i /= 7), r.weeks(Math.floor(i))))))
+function getTimeDelta(n, t) {
+    var e
+    const r = (e = t?.now) !== null && e !== void 0 ? e : Date.now(),
+        o = t?.labels || DefaultTimeDeltaLabels,
+        i = exports.Types.isDate(n) ? n.getTime() : n
+    let s = (r - i) / 1e3
+    return s < 10
+        ? o.now()
+        : s < 120
+        ? o.seconds(Math.floor(s))
+        : ((s /= 60),
+          s < 120
+              ? o.minutes(Math.floor(s))
+              : ((s /= 60),
+                s < 48
+                    ? o.hours(Math.floor(s))
+                    : ((s /= 24), s < 14 ? o.days(Math.floor(s)) : ((s /= 7), o.weeks(Math.floor(s))))))
+}
+function secondsToHumanTime(n, t = DefaultTimeDeltaLabels) {
+    return getTimeDelta(0, { now: n * 1e3, labels: t })
 }
 function countCycles(n, t, e) {
     var r, o, i
@@ -2401,7 +2405,8 @@ function raycastCircle(n, t, e) {
     (exports.Promises = { raceFulfilled, invert: invertPromise, runInParallelBatches, makeAsyncQueue }),
     (exports.Dates = {
         getTimestamp,
-        getAgo,
+        getTimeDelta,
+        secondsToHumanTime,
         countCycles,
         isoDate,
         throttle,

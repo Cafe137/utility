@@ -240,7 +240,7 @@ declare function fromUtcString(string: string): Date;
 declare function fromMillis(millis: number): Date;
 declare function createTimeDigits(value: number): string;
 declare function humanizeTime(millis: number): string;
-interface TimestampTranslations {
+interface TimestampLabels {
     today: (hour: number, minute: number, pm: boolean) => string;
     yesterday: () => string;
     monday: () => string;
@@ -254,10 +254,10 @@ interface TimestampTranslations {
 }
 interface GetTimestampOptions {
     now?: number;
-    translations?: TimestampTranslations;
+    labels?: TimestampLabels;
 }
 declare function getTimestamp(date: Date | number, options?: GetTimestampOptions): string;
-interface AgoTranslations {
+interface TimeDeltaLabels {
     now: () => string;
     seconds: (value: number) => string;
     minutes: (value: number) => string;
@@ -265,11 +265,12 @@ interface AgoTranslations {
     days: (value: number) => string;
     weeks: (value: number) => string;
 }
-interface GetAgoOptions {
+interface TimeDeltaOptions {
     now?: number;
-    translations?: AgoTranslations;
+    labels?: TimeDeltaLabels;
 }
-declare function getAgo(date: Date | number, options?: GetAgoOptions): string;
+declare function getTimeDelta(date: Date | number, options?: TimeDeltaOptions): string;
+declare function secondsToHumanTime(seconds: number, labels?: TimeDeltaLabels): string;
 type CountCyclesOptions = {
     precision?: number;
     now?: number;
@@ -613,7 +614,8 @@ export declare const Promises: {
 };
 export declare const Dates: {
     getTimestamp: typeof getTimestamp;
-    getAgo: typeof getAgo;
+    getTimeDelta: typeof getTimeDelta;
+    secondsToHumanTime: typeof secondsToHumanTime;
     countCycles: typeof countCycles;
     isoDate: typeof isoDate;
     throttle: typeof throttle;
