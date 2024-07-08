@@ -25,7 +25,7 @@ async function runInParallelBatches(n, t = 1) {
     const e = splitByCount(n, t),
         r = [],
         o = e.map(async i => {
-            for (const s of i) r.push(await s())
+            for (const u of i) r.push(await u())
         })
     return await Promise.all(o), r
 }
@@ -132,16 +132,16 @@ function pickManyUnique(n, t, e, r = Math.random) {
     const o = []
     for (; o.length < t; ) {
         const i = pick(n, r)
-        o.some(s => e(s, i)) || o.push(i)
+        o.some(u => e(u, i)) || o.push(i)
     }
     return o
 }
 function pickGuaranteed(n, t, e, r, o, i = Math.random) {
-    const s = n.filter(u => u !== t && u !== e),
+    const u = n.filter(s => s !== t && s !== e),
         c = []
-    for (t !== null && c.push(t); s.length && c.length < r; ) {
-        const u = exports.Random.intBetween(0, s.length - 1, i)
-        o(s[u], c) && c.push(s[u]), s.splice(u, 1)
+    for (t !== null && c.push(t); u.length && c.length < r; ) {
+        const s = exports.Random.intBetween(0, u.length - 1, i)
+        o(u[s], c) && c.push(u[s]), u.splice(s, 1)
     }
     return shuffle(c, i), { values: c, indexOfGuaranteed: t !== null ? c.indexOf(t) : -1 }
 }
@@ -157,7 +157,7 @@ function makePipe(n, t) {
 }
 function pickWeighted(n, t, e) {
     if ((isUndefined(e) && (e = Math.random()), n.length !== t.length)) throw new Error('Array length mismatch')
-    let r = t.reduce((i, s) => i + s, 0)
+    let r = t.reduce((i, u) => i + u, 0)
     const o = e * r
     for (let i = 0; i < n.length - 1; i++) if (((r -= t[i]), o >= r)) return n[i]
     return last(n)
@@ -166,7 +166,7 @@ function sortWeighted(n, t, e = Math.random) {
     const r = t.map(i => e() * i),
         o = []
     for (let i = 0; i < n.length; i++) o.push([n[i], r[i]])
-    return o.sort((i, s) => s[1] - i[1]).map(i => i[0])
+    return o.sort((i, u) => u[1] - i[1]).map(i => i[0])
 }
 function getDeep(n, t) {
     if (n == null) return null
@@ -182,9 +182,9 @@ function setDeep(n, t, e) {
     const r = t.split(/\.|\[/)
     let o = n
     for (let i = 0; i < r.length; i++) {
-        const s = r[i],
+        const u = r[i],
             c = i < r.length - 1 && r[i + 1].includes(']'),
-            f = s.includes(']') ? s.replace(/\[|\]/g, '') : s
+            f = u.includes(']') ? u.replace(/\[|\]/g, '') : u
         if (i === r.length - 1) return (o[f] = e), e
         isObject(o[f]) || (c ? (o[f] = []) : (o[f] = {})), (o = o[f])
     }
@@ -252,10 +252,10 @@ function rgbToHex(n) {
 }
 function haversineDistanceToMeters(n, t, e, r) {
     const i = (n * Math.PI) / 180,
-        s = (e * Math.PI) / 180,
+        u = (e * Math.PI) / 180,
         c = ((e - n) * Math.PI) / 180,
-        u = ((r - t) * Math.PI) / 180,
-        f = Math.sin(c / 2) * Math.sin(c / 2) + Math.cos(i) * Math.cos(s) * Math.sin(u / 2) * Math.sin(u / 2)
+        s = ((r - t) * Math.PI) / 180,
+        f = Math.sin(c / 2) * Math.sin(c / 2) + Math.cos(i) * Math.cos(u) * Math.sin(s / 2) * Math.sin(s / 2)
     return 6371e3 * (2 * Math.atan2(Math.sqrt(f), Math.sqrt(1 - f)))
 }
 function roundToNearest(n, t) {
@@ -382,8 +382,15 @@ function randomHexString(n, t = Math.random) {
     for (let r = 0; r < n; r++) e += hexAlphabet[Math.floor(t() * hexAlphabet.length)]
     return e
 }
-function asString(n) {
+function asString(n, t) {
+    var e, r
     if (isBlank(n)) throw new TypeError('Expected string, got: ' + n)
+    if (t && ((t.min !== void 0 && n.length < t.min) || (t.max !== void 0 && n.length > t.max)))
+        throw RangeError(
+            `Expected string length in range: ${(e = t.min) !== null && e !== void 0 ? e : '-inf'}..${
+                (r = t.max) !== null && r !== void 0 ? r : 'inf'
+            }; got: ${n.length}`
+        )
     return n
 }
 function asSafeString(n) {
@@ -395,13 +402,23 @@ function asSafeString(n) {
         throw new TypeError('Expected safe string, got: ' + n)
     return n
 }
-function asNumber(n) {
-    if (isNumber(n)) return n
-    if (!isString(n) || !n.match(/^-?\d+(\.\d+)?$/)) throw new TypeError('Expected number, got: ' + n)
-    return parseFloat(n)
+function checkLimits(n, t) {
+    var e, r
+    if ((t.min !== void 0 && n < t.min) || (t.max !== void 0 && n > t.max))
+        throw RangeError(
+            `Expected value in range: ${(e = t.min) !== null && e !== void 0 ? e : '-inf'}..${
+                (r = t.max) !== null && r !== void 0 ? r : 'inf'
+            }; got: ${n}`
+        )
 }
-function asInteger(n) {
-    return asNumber(n) | 0
+function asNumber(n, t) {
+    if (isNumber(n)) return t && checkLimits(n, t), n
+    if (!isString(n) || !n.match(/^-?\d+(\.\d+)?$/)) throw new TypeError('Expected number, got: ' + n)
+    const e = parseFloat(n)
+    return t && checkLimits(e, t), e
+}
+function asInteger(n, t) {
+    return asNumber(n, t) | 0
 }
 function asBoolean(n) {
     if (n === 'true') return !0
@@ -754,12 +771,12 @@ function expand(n) {
     const r = e[1].split(','),
         o = n.slice(0, e.index),
         i = n.slice(e.index + e[0].length)
-    let s = []
+    let u = []
     for (const c of r) {
-        const u = expand(o + c + i)
-        s = s.concat(u)
+        const s = expand(o + c + i)
+        u = u.concat(s)
     }
-    return s
+    return u
 }
 function shrinkTrim(n) {
     return n.replace(/\s+/g, ' ').replace(/\s$|^\s/g, '')
@@ -983,13 +1000,13 @@ function base64ToUint8Array(n) {
     let o = 0,
         i = 0
     for (; o < n.length; ) {
-        const s = BASE64_CHARS.indexOf(n.charAt(o++)),
+        const u = BASE64_CHARS.indexOf(n.charAt(o++)),
             c = BASE64_CHARS.indexOf(n.charAt(o++)),
-            u = BASE64_CHARS.indexOf(n.charAt(o++)),
+            s = BASE64_CHARS.indexOf(n.charAt(o++)),
             f = BASE64_CHARS.indexOf(n.charAt(o++)),
-            l = (s << 2) | (c >> 4),
-            a = ((c & 15) << 4) | (u >> 2),
-            h = ((u & 3) << 6) | f
+            l = (u << 2) | (c >> 4),
+            a = ((c & 15) << 4) | (s >> 2),
+            h = ((s & 3) << 6) | f
         ;(r[i++] = l), i < e && (r[i++] = a), i < e && (r[i++] = h)
     }
     return r
@@ -1000,12 +1017,12 @@ function uint8ArrayToBase64(n) {
     for (let r = 0; r < n.length; r += 3) {
         const o = n[r],
             i = n[r + 1],
-            s = n[r + 2],
+            u = n[r + 2],
             c = o >> 2,
-            u = ((o & 3) << 4) | (i >> 4),
-            f = ((i & 15) << 2) | (s >> 6),
-            l = s & 63
-        ;(t += BASE64_CHARS[c] + BASE64_CHARS[u]),
+            s = ((o & 3) << 4) | (i >> 4),
+            f = ((i & 15) << 2) | (u >> 6),
+            l = u & 63
+        ;(t += BASE64_CHARS[c] + BASE64_CHARS[s]),
             r + 1 < n.length ? (t += BASE64_CHARS[f]) : e++,
             r + 2 < n.length ? (t += BASE64_CHARS[l]) : e++
     }
@@ -1032,9 +1049,9 @@ function route(n, t) {
     if (e.length !== r.length) return null
     const o = {}
     for (let i = 0; i < e.length; i++) {
-        const s = e[i]
-        if (s.startsWith(':')) o[s.slice(1)] = r[i]
-        else if (s !== r[i]) return null
+        const u = e[i]
+        if (u.startsWith(':')) o[u.slice(1)] = r[i]
+        else if (u !== r[i]) return null
     }
     return o
 }
@@ -1045,25 +1062,25 @@ function explodeReplace(n, t, e) {
 }
 function generateVariants(n, t, e, r = Math.random) {
     const o = exports.Arrays.shuffle(
-            t.map(s => ({
+            t.map(u => ({
                 variants: exports.Arrays.shuffle(
-                    s.variants.map(c => c),
+                    u.variants.map(c => c),
                     r
                 ),
-                avoid: s.avoid
+                avoid: u.avoid
             })),
             r
         ),
         i = []
-    for (const s of o) {
-        const c = s.variants.filter(f => f !== s.avoid),
-            u = c.find(f => n.includes(f))
-        if (u && (pushAll(i, explodeReplace(n, u, c)), i.length >= e)) break
+    for (const u of o) {
+        const c = u.variants.filter(f => f !== u.avoid),
+            s = c.find(f => n.includes(f))
+        if (s && (pushAll(i, explodeReplace(n, s, c)), i.length >= e)) break
     }
     if (i.length < e)
-        for (const s of o) {
-            const c = s.variants.find(u => n.includes(u))
-            if (c && (pushAll(i, explodeReplace(n, c, s.variants)), i.length >= e)) break
+        for (const u of o) {
+            const c = u.variants.find(s => n.includes(s))
+            if (c && (pushAll(i, explodeReplace(n, c, u.variants)), i.length >= e)) break
         }
     return i.slice(0, e)
 }
@@ -1097,10 +1114,10 @@ function toLines(n, t, e = {}) {
     const r = []
     let o = '',
         i = 0
-    for (let s = 0; s < n.length; s++) {
-        const c = n[s],
-            u = e[c] || 1
-        if (((o += c), (i += u), i > t)) {
+    for (let u = 0; u < n.length; u++) {
+        const c = n[u],
+            s = e[c] || 1
+        if (((o += c), (i += s), i > t)) {
             const { line: f, rest: l } = breakLine(o)
             r.push(f),
                 (o = l),
@@ -1170,8 +1187,8 @@ function resolveRemainingVariablesWithDefaults(n, t = '$', e = ':') {
         if (n[r + o.length + 1] === e)
             if (n[r + o.length + 2] === e) n = n.replace(`${t}${o}${e}${e}`, '')
             else {
-                const s = readNextWord(n, r + o.length + 2)
-                n = n.replace(`${t}${o}${e}${s}`, s)
+                const u = readNextWord(n, r + o.length + 2)
+                n = n.replace(`${t}${o}${e}${u}`, u)
             }
         r = n.indexOf(t, r + 1)
     }
@@ -1183,8 +1200,8 @@ function resolveMarkdownLinks(n, t) {
         const r = lastIndexOfBefore(n, '[', e),
             o = n.indexOf(')', e)
         if (r !== -1 && o !== -1) {
-            const [i, s] = n.slice(r + 1, o).split(']('),
-                c = t(i, s)
+            const [i, u] = n.slice(r + 1, o).split(']('),
+                c = t(i, u)
             n = n.slice(0, r) + c + n.slice(o + 1)
         }
         e = n.indexOf('](', e + 1)
@@ -1214,17 +1231,17 @@ function selectMax(n, t) {
     let e = null,
         r = -1 / 0
     for (const [o, i] of Object.entries(n)) {
-        const s = t(i)
-        s > r && ((r = s), (e = o))
+        const u = t(i)
+        u > r && ((r = u), (e = o))
     }
     return e ? [e, n[e]] : null
 }
 function reposition(n, t, e, r) {
-    const o = n.find(s => s[t] === e),
-        i = n.find(s => s[t] === e + r)
+    const o = n.find(u => u[t] === e),
+        i = n.find(u => u[t] === e + r)
     o && i ? ((o[t] = e + r), (i[t] = e)) : o && (o[t] = e + r),
-        n.sort((s, c) => asNumber(s[t]) - asNumber(c[t])),
-        n.forEach((s, c) => (s[t] = c + 1))
+        n.sort((u, c) => asNumber(u[t]) - asNumber(c[t])),
+        n.forEach((u, c) => (u[t] = c + 1))
 }
 function unwrapSingleKey(n) {
     const t = Object.keys(n)
@@ -1238,8 +1255,8 @@ function parseCsv(n, t = ',', e = '"') {
     const r = []
     let o = '',
         i = !1
-    const s = n.split('')
-    for (const c of s) c === t && !i ? (r.push(o), (o = '')) : c === e && ((!o && !i) || i) ? (i = !i) : (o += c)
+    const u = n.split('')
+    for (const c of u) c === t && !i ? (r.push(o), (o = '')) : c === e && ((!o && !i) || i) ? (i = !i) : (o += c)
     return r.push(o), r
 }
 function humanizeProgress(n) {
@@ -1332,18 +1349,18 @@ function getTimeDelta(n, t) {
     const r = (e = t?.now) !== null && e !== void 0 ? e : Date.now(),
         o = t?.labels || DefaultTimeDeltaLabels,
         i = exports.Types.isDate(n) ? n.getTime() : n
-    let s = (r - i) / 1e3
-    return s < 10
+    let u = (r - i) / 1e3
+    return u < 10
         ? o.now()
-        : s < 120
-        ? o.seconds(Math.floor(s))
-        : ((s /= 60),
-          s < 120
-              ? o.minutes(Math.floor(s))
-              : ((s /= 60),
-                s < 48
-                    ? o.hours(Math.floor(s))
-                    : ((s /= 24), s < 14 ? o.days(Math.floor(s)) : ((s /= 7), o.weeks(Math.floor(s))))))
+        : u < 120
+        ? o.seconds(Math.floor(u))
+        : ((u /= 60),
+          u < 120
+              ? o.minutes(Math.floor(u))
+              : ((u /= 60),
+                u < 48
+                    ? o.hours(Math.floor(u))
+                    : ((u /= 24), u < 14 ? o.days(Math.floor(u)) : ((u /= 7), o.weeks(Math.floor(u))))))
 }
 function secondsToHumanTime(n, t = DefaultTimeDeltaLabels) {
     return getTimeDelta(0, { now: n * 1e3, labels: t })
@@ -1351,11 +1368,11 @@ function secondsToHumanTime(n, t = DefaultTimeDeltaLabels) {
 function countCycles(n, t, e) {
     var r, o, i
     const c = ((r = e?.now) !== null && r !== void 0 ? r : Date.now()) - n,
-        u = Math.floor(c / t),
+        s = Math.floor(c / t),
         f =
             t / ((o = e?.precision) !== null && o !== void 0 ? o : 1) -
             Math.ceil((c % t) / ((i = e?.precision) !== null && i !== void 0 ? i : 1))
-    return { cycles: u, remaining: f }
+    return { cycles: s, remaining: f }
 }
 const throttleTimers = {}
 function throttle(n, t) {
@@ -1371,10 +1388,10 @@ function getProgress(n, t, e, r) {
     r || (r = Date.now())
     const o = t / e,
         i = r - n,
-        s = i / t,
-        c = s * e,
-        u = c - i
-    return { deltaMs: i, progress: o, baseTimeMs: s, totalTimeMs: c, remainingTimeMs: u }
+        u = i / t,
+        c = u * e,
+        s = c - i
+    return { deltaMs: i, progress: o, baseTimeMs: u, totalTimeMs: c, remainingTimeMs: s }
 }
 const dayNumberIndex = {
     0: 'sunday',
@@ -1443,8 +1460,8 @@ async function getCached(n, t, e) {
         o = tinyCache[n]
     if (o && o.validUntil > r) return o.value
     const i = await e(),
-        s = r + t
-    return (tinyCache[n] = { value: i, validUntil: s }), i
+        u = r + t
+    return (tinyCache[n] = { value: i, validUntil: u }), i
 }
 function joinUrl(...n) {
     return n
@@ -1454,9 +1471,9 @@ function joinUrl(...n) {
 }
 function replaceBetweenStrings(n, t, e, r, o = !0) {
     const i = n.indexOf(t),
-        s = n.indexOf(e, i + t.length)
-    if (i === -1 || s === -1) throw Error('Start or end not found')
-    return o ? n.substring(0, i + t.length) + r + n.substring(s) : n.substring(0, i) + r + n.substring(s + e.length)
+        u = n.indexOf(e, i + t.length)
+    if (i === -1 || u === -1) throw Error('Start or end not found')
+    return o ? n.substring(0, i + t.length) + r + n.substring(u) : n.substring(0, i) + r + n.substring(u + e.length)
 }
 function describeMarkdown(n) {
     let t = 'p'
@@ -1536,12 +1553,12 @@ function createStatefulToggle(n) {
 }
 function organiseWithLimits(n, t, e, r, o) {
     const i = {}
-    for (const s of Object.keys(t)) i[s] = []
+    for (const u of Object.keys(t)) i[u] = []
     ;(i[r] = []), o && (n = n.sort(o))
-    for (const s of n) {
-        const c = s[e],
-            u = t[c] ? c : r
-        i[u].length >= t[u] ? i[r].push(s) : i[u].push(s)
+    for (const u of n) {
+        const c = u[e],
+            s = t[c] ? c : r
+        i[s].length >= t[s] ? i[r].push(u) : i[s].push(u)
     }
     return i
 }
@@ -1609,12 +1626,12 @@ function formatNumber(n, t) {
     var e, r
     const o = (e = t?.longForm) !== null && e !== void 0 ? e : !1,
         i = t?.unit ? ` ${t.unit}` : '',
-        s = o ? longNumberUnits : shortNumberUnits,
+        u = o ? longNumberUnits : shortNumberUnits,
         c = (r = t?.precision) !== null && r !== void 0 ? r : 1
     if (n < thresholds[0]) return `${n}${i}`
-    for (let u = 0; u < thresholds.length - 1; u++)
-        if (n < thresholds[u + 1]) return `${(n / thresholds[u]).toFixed(c)}${o ? ' ' : ''}${s[u]}${i}`
-    return `${(n / thresholds[thresholds.length - 1]).toFixed(c)}${o ? ' ' : ''}${s[thresholds.length - 1]}${i}`
+    for (let s = 0; s < thresholds.length - 1; s++)
+        if (n < thresholds[s + 1]) return `${(n / thresholds[s]).toFixed(c)}${o ? ' ' : ''}${u[s]}${i}`
+    return `${(n / thresholds[thresholds.length - 1]).toFixed(c)}${o ? ' ' : ''}${u[thresholds.length - 1]}${i}`
 }
 function makeNumber(n) {
     const t = parseFloat(n)
@@ -1694,21 +1711,21 @@ function flip(n) {
 function getAllPermutations(n) {
     const t = Object.keys(n),
         e = t.map(c => n[c].length),
-        r = e.reduce((c, u) => (c *= u))
+        r = e.reduce((c, s) => (c *= s))
     let o = 1
     const i = [1]
     for (let c = 0; c < e.length - 1; c++) (o *= e[c]), i.push(o)
-    const s = []
+    const u = []
     for (let c = 0; c < r; c++) {
-        const u = {}
+        const s = {}
         for (let f = 0; f < t.length; f++) {
             const l = n[t[f]],
                 a = Math.floor(c / i[f]) % l.length
-            u[t[f]] = l[a]
+            s[t[f]] = l[a]
         }
-        s.push(u)
+        u.push(s)
     }
-    return s
+    return u
 }
 function countTruthyValues(n) {
     return Object.values(n).filter(t => t).length
@@ -1718,15 +1735,15 @@ function getFlatNotation(n, t, e) {
 }
 function flattenInner(n, t, e, r, o) {
     if (!isObject(t)) return t
-    for (const [i, s] of Object.entries(t)) {
+    for (const [i, u] of Object.entries(t)) {
         const c = getFlatNotation(e, i, r)
-        Array.isArray(s)
+        Array.isArray(u)
             ? o
-                ? flattenInner(n, s, c, !0, o)
-                : (n[c] = s.map(u => flattenInner(Array.isArray(u) ? [] : {}, u, '', !1, o)))
-            : isObject(s)
-            ? flattenInner(n, s, c, !1, o)
-            : (n[c] = s)
+                ? flattenInner(n, u, c, !0, o)
+                : (n[c] = u.map(s => flattenInner(Array.isArray(s) ? [] : {}, s, '', !1, o)))
+            : isObject(u)
+            ? flattenInner(n, u, c, !1, o)
+            : (n[c] = u)
     }
     return n
 }
@@ -1791,9 +1808,9 @@ function makeUnique(n, t) {
 }
 function countUnique(n, t, e, r, o) {
     const i = t ? n.map(t) : n,
-        s = {}
-    for (const u of i) s[u] = (s[u] || 0) + 1
-    const c = r ? sortObjectValues(s, o ? (u, f) => u[1] - f[1] : (u, f) => f[1] - u[1]) : s
+        u = {}
+    for (const s of i) u[s] = (u[s] || 0) + 1
+    const c = r ? sortObjectValues(u, o ? (s, f) => s[1] - f[1] : (s, f) => f[1] - s[1]) : u
     return e ? Object.keys(c) : c
 }
 function sortObjectValues(n, t) {
@@ -1805,7 +1822,7 @@ function transformToArray(n) {
         r = n[e[0]].length
     for (let o = 0; o < r; o++) {
         const i = {}
-        for (const s of e) i[s] = n[s][o]
+        for (const u of e) i[u] = n[u][o]
         t.push(i)
     }
     return t
@@ -1866,9 +1883,9 @@ function makeAsyncQueue(n = 1) {
     async function o() {
         if (t.length > 0 && r < n) {
             r++
-            const s = t.shift()
+            const u = t.shift()
             try {
-                s && (await s())
+                u && (await u())
             } finally {
                 if (--r === 0) for (; e.length > 0; ) e.shift()()
                 o()
@@ -1877,14 +1894,14 @@ function makeAsyncQueue(n = 1) {
     }
     async function i() {
         return r
-            ? new Promise(s => {
-                  e.push(s)
+            ? new Promise(u => {
+                  e.push(u)
               })
             : Promise.resolve()
     }
     return {
-        enqueue(s) {
-            t.push(s), o()
+        enqueue(u) {
+            t.push(u), o()
         },
         drain: i
     }
@@ -1934,29 +1951,29 @@ class Node {
 }
 function createHierarchy(n, t, e, r, o = !1) {
     const i = new Map(),
-        s = []
-    n.forEach(u => {
-        const f = new Node(u)
-        i.set(u[t], f)
+        u = []
+    n.forEach(s => {
+        const f = new Node(s)
+        i.set(s[t], f)
     }),
-        n.forEach(u => {
-            const f = i.get(u[t])
+        n.forEach(s => {
+            const f = i.get(s[t])
             if (!f) return
-            const l = u[e]
+            const l = s[e]
             if (l) {
                 const a = i.get(l)
                 a && a.children.push(f)
-            } else s.push(f)
+            } else u.push(f)
         })
-    const c = u => {
-        u.children.sort((f, l) => {
+    const c = s => {
+        s.children.sort((f, l) => {
             const a = f.value[r],
                 h = l.value[r]
             return o ? h - a : a - h
         }),
-            u.children.forEach(c)
+            s.children.forEach(c)
     }
-    return s.forEach(c), s
+    return u.forEach(c), u
 }
 function log2Reduce(n, t) {
     if (Math.log2(n.length) % 1 !== 0) throw new Error('Array length must be a power of 2')
@@ -2066,7 +2083,7 @@ async function merkleAppend(n, t, e, r = 0) {
     const o = new Uint8ArrayReader(t)
     for (; o.max() !== 0; ) {
         const i = n[r].writer.write(o)
-        if (r === 0) for (let s = 0; s < n.length; s++) n[s].span += i
+        if (r === 0) for (let u = 0; u < n.length; u++) n[u].span += i
         n[r].writer.max() === 0 && o.max() > 0 && (await merkleElevate(n, e, r))
     }
     return n
@@ -2087,8 +2104,8 @@ function getArgument(n, t, e, r) {
         i = n[o]
     if (!i) return (e || {})[r || t || ''] || null
     if (i.includes('=')) return i.split('=')[1]
-    const s = n[o + 1]
-    return s && !s.startsWith('-') ? s : (e || {})[r || t || ''] || null
+    const u = n[o + 1]
+    return u && !u.startsWith('-') ? u : (e || {})[r || t || ''] || null
 }
 function getNumberArgument(n, t, e, r) {
     const o = getArgument(n, t, e, r)
@@ -2100,13 +2117,13 @@ function getNumberArgument(n, t, e, r) {
     }
 }
 function getBooleanArgument(n, t, e, r) {
-    const o = n.some(u => u.endsWith('-' + t)),
+    const o = n.some(s => s.endsWith('-' + t)),
         i = getArgument(n, t, e, r)
     if (!i && o) return !0
     if (!i && !o) return null
-    const s = ['true', '1', 'yes', 'y', 'on'],
+    const u = ['true', '1', 'yes', 'y', 'on'],
         c = ['false', '0', 'no', 'n', 'off']
-    if (s.includes(i.toLowerCase())) return !0
+    if (u.includes(i.toLowerCase())) return !0
     if (c.includes(i.toLowerCase())) return !1
     throw Error(`Invalid boolean argument ${t}: ${i}`)
 }
@@ -2190,7 +2207,7 @@ function isBottommost(n, t, e) {
     return !n[t][e + 1]
 }
 function getCorners(n, t, e) {
-    var r, o, i, s, c, u, f, l
+    var r, o, i, u, c, s, f, l
     const a = []
     return n[t][e]
         ? isHorizontalLine(n, t, e) || isVerticalLine(n, t, e)
@@ -2199,7 +2216,7 @@ function getCorners(n, t, e) {
                   isLeftmost(n, t, e) &&
                   isTopmost(n, t, e) &&
                   a.push({ x: t, y: e }),
-              !(!((u = n[t + 1]) === null || u === void 0) && u[e - 1]) &&
+              !(!((s = n[t + 1]) === null || s === void 0) && s[e - 1]) &&
                   isRightmost(n, t, e) &&
                   isTopmost(n, t, e) &&
                   a.push({ x: t + 1, y: e }),
@@ -2215,7 +2232,7 @@ function getCorners(n, t, e) {
         : (!((r = n[t - 1]) === null || r === void 0) && r[e] && n[t][e - 1] && a.push({ x: t, y: e }),
           !((o = n[t + 1]) === null || o === void 0) && o[e] && n[t][e - 1] && a.push({ x: t + 1, y: e }),
           !((i = n[t - 1]) === null || i === void 0) && i[e] && n[t][e + 1] && a.push({ x: t, y: e + 1 }),
-          !((s = n[t + 1]) === null || s === void 0) && s[e] && n[t][e + 1] && a.push({ x: t + 1, y: e + 1 }),
+          !((u = n[t + 1]) === null || u === void 0) && u[e] && n[t][e + 1] && a.push({ x: t + 1, y: e + 1 }),
           a)
 }
 function findCorners(n, t, e, r) {
@@ -2226,43 +2243,43 @@ function findCorners(n, t, e, r) {
         { x: e, y: r }
     ]
     for (let i = 0; i < n.length; i++)
-        for (let s = 0; s < n[0].length; s++) {
-            const c = getCorners(n, i, s)
-            for (const u of c) o.some(f => f.x === u.x && f.y === u.y) || o.push(u)
+        for (let u = 0; u < n[0].length; u++) {
+            const c = getCorners(n, i, u)
+            for (const s of c) o.some(f => f.x === s.x && f.y === s.y) || o.push(s)
         }
     return o.map(i => ({ x: i.x * t, y: i.y * t }))
 }
 function findLines(n, t) {
-    const e = filterCoordinates(n, (u, f) => n[u][f] === 0 && n[u][f + 1] !== 0, 'row-first').map(u =>
-            Object.assign(Object.assign({}, u), { dx: 1, dy: 0 })
+    const e = filterCoordinates(n, (s, f) => n[s][f] === 0 && n[s][f + 1] !== 0, 'row-first').map(s =>
+            Object.assign(Object.assign({}, s), { dx: 1, dy: 0 })
         ),
-        r = filterCoordinates(n, (u, f) => n[u][f] === 0 && n[u][f - 1] !== 0, 'row-first').map(u =>
-            Object.assign(Object.assign({}, u), { dx: 1, dy: 0 })
+        r = filterCoordinates(n, (s, f) => n[s][f] === 0 && n[s][f - 1] !== 0, 'row-first').map(s =>
+            Object.assign(Object.assign({}, s), { dx: 1, dy: 0 })
         ),
         o = filterCoordinates(
             n,
-            (u, f) => {
+            (s, f) => {
                 var l
-                return n[u][f] === 0 && ((l = n[u - 1]) === null || l === void 0 ? void 0 : l[f]) !== 0
+                return n[s][f] === 0 && ((l = n[s - 1]) === null || l === void 0 ? void 0 : l[f]) !== 0
             },
             'column-first'
-        ).map(u => Object.assign(Object.assign({}, u), { dx: 0, dy: 1 })),
+        ).map(s => Object.assign(Object.assign({}, s), { dx: 0, dy: 1 })),
         i = filterCoordinates(
             n,
-            (u, f) => {
+            (s, f) => {
                 var l
-                return n[u][f] === 0 && ((l = n[u + 1]) === null || l === void 0 ? void 0 : l[f]) !== 0
+                return n[s][f] === 0 && ((l = n[s + 1]) === null || l === void 0 ? void 0 : l[f]) !== 0
             },
             'column-first'
-        ).map(u => Object.assign(Object.assign({}, u), { dx: 0, dy: 1 }))
-    e.forEach(u => u.y++), i.forEach(u => u.x++)
-    const s = group([...o, ...i], (u, f) => u.x === f.x && u.y - 1 === f.y),
-        c = group([...r, ...e], (u, f) => u.y === f.y && u.x - 1 === f.x)
-    return [...s, ...c]
-        .map(u => ({ start: u[0], end: last(u) }))
-        .map(u => ({
-            start: multiplyPoint(u.start, t),
-            end: multiplyPoint(addPoint(u.end, { x: u.start.dx, y: u.start.dy }), t)
+        ).map(s => Object.assign(Object.assign({}, s), { dx: 0, dy: 1 }))
+    e.forEach(s => s.y++), i.forEach(s => s.x++)
+    const u = group([...o, ...i], (s, f) => s.x === f.x && s.y - 1 === f.y),
+        c = group([...r, ...e], (s, f) => s.y === f.y && s.x - 1 === f.x)
+    return [...u, ...c]
+        .map(s => ({ start: s[0], end: last(s) }))
+        .map(s => ({
+            start: multiplyPoint(s.start, t),
+            end: multiplyPoint(addPoint(s.end, { x: s.start.dx, y: s.start.dy }), t)
         }))
 }
 function getAngleInRadians(n, t) {
@@ -2275,37 +2292,37 @@ function getLineIntersectionPoint(n, t, e, r) {
     const o = (r.y - e.y) * (t.x - n.x) - (r.x - e.x) * (t.y - n.y)
     if (o === 0) return null
     let i = n.y - e.y,
-        s = n.x - e.x
-    const c = (r.x - e.x) * i - (r.y - e.y) * s,
-        u = (t.x - n.x) * i - (t.y - n.y) * s
+        u = n.x - e.x
+    const c = (r.x - e.x) * i - (r.y - e.y) * u,
+        s = (t.x - n.x) * i - (t.y - n.y) * u
     return (
         (i = c / o),
-        (s = u / o),
-        i > 0 && i < 1 && s > 0 && s < 1 ? { x: n.x + i * (t.x - n.x), y: n.y + i * (t.y - n.y) } : null
+        (u = s / o),
+        i > 0 && i < 1 && u > 0 && u < 1 ? { x: n.x + i * (t.x - n.x), y: n.y + i * (t.y - n.y) } : null
     )
 }
 function raycast(n, t, e) {
     const r = [],
         o = pushPoint(n, e, 1e4)
     for (const i of t) {
-        const s = getLineIntersectionPoint(n, o, i.start, i.end)
-        s && r.push(s)
+        const u = getLineIntersectionPoint(n, o, i.start, i.end)
+        u && r.push(u)
     }
     return r.length
-        ? r.reduce((i, s) => {
-              const c = getDistanceBetweenPoints(n, s),
-                  u = getDistanceBetweenPoints(n, i)
-              return c < u ? s : i
+        ? r.reduce((i, u) => {
+              const c = getDistanceBetweenPoints(n, u),
+                  s = getDistanceBetweenPoints(n, i)
+              return c < s ? u : i
           })
         : null
 }
 function raycastCircle(n, t, e) {
     const o = getSortedRayAngles(n, e),
         i = []
-    for (const s of o) {
-        const c = raycast(n, t, s - 0.001),
-            u = raycast(n, t, s + 0.001)
-        c && i.push(c), u && i.push(u)
+    for (const u of o) {
+        const c = raycast(n, t, u - 0.001),
+            s = raycast(n, t, u + 0.001)
+        c && i.push(c), s && i.push(s)
     }
     return i
 }

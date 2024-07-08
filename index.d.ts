@@ -75,10 +75,19 @@ declare function randomUnicodeString(length: number, generator?: () => number): 
 declare function searchHex(string: string, length: number): string | null;
 declare function searchSubstring(string: string, predicate: (string: string) => boolean, separators?: string[]): string | null;
 declare function randomHexString(length: number, generator?: () => number): string;
-declare function asString(string: any): string;
+declare function asString(string: any, limits?: {
+    min?: number;
+    max?: number;
+}): string;
 declare function asSafeString(string: any): string;
-declare function asNumber(number: any): number;
-declare function asInteger(number: any): number;
+declare function asNumber(number: any, limits?: {
+    min?: number;
+    max?: number;
+}): number;
+declare function asInteger(number: any, limits?: {
+    min?: number;
+    max?: number;
+}): number;
 declare function asBoolean(bool: any): boolean;
 declare function asDate(date: any): Date;
 declare function asNullableString(string: any): string | null;
