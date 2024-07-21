@@ -248,6 +248,7 @@ declare function dateTimeSlug(optionalDate?: Date): string;
 declare function fromUtcString(string: string): Date;
 declare function fromMillis(millis: number): Date;
 declare function createTimeDigits(value: number): string;
+declare function normalizeTime(time: string): string;
 declare function humanizeTime(millis: number): string;
 interface TimestampLabels {
     today: (hour: number, minute: number, pm: boolean) => string;
@@ -644,6 +645,7 @@ export declare const Dates: {
     minutes: typeof minutes;
     hours: typeof hours;
     make: typeof makeDate;
+    normalizeTime: typeof normalizeTime;
 };
 export declare const Objects: {
     safeParse: typeof safeParse;

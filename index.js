@@ -1300,6 +1300,13 @@ function fromMillis(n) {
 function createTimeDigits(n) {
     return String(Math.floor(n)).padStart(2, '0')
 }
+function normalizeTime(n) {
+    let [t, e] = n.split(':')
+    isNumber(parseInt(t, 10)) || (t = '0'), isNumber(parseInt(e, 10)) || (e = '0')
+    let r = clamp(asInteger(t), 0, 23),
+        o = clamp(asInteger(e), 0, 59)
+    return `${createTimeDigits(r)}:${createTimeDigits(o)}`
+}
 function humanizeTime(n) {
     const t = Math.floor(n / 36e5)
     n = n % 36e5
@@ -2442,7 +2449,8 @@ function raycastCircle(n, t, e) {
         seconds,
         minutes,
         hours,
-        make: makeDate
+        make: makeDate,
+        normalizeTime
     }),
     (exports.Objects = {
         safeParse,
