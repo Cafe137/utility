@@ -746,10 +746,10 @@ function getBasename(n) {
 }
 function normalizeEmail(n) {
     let [t, e] = n.split('@')
-    t = t.replaceAll('.', '').toLowerCase()
+    t = shrinkTrim(t.replaceAll('.', '').toLowerCase()).replaceAll(' ', '')
     const [r] = t.split('+')
     if (!r || !e || e.indexOf('.') === -1 || e.indexOf('.') === e.length - 1) throw new Error('Invalid email')
-    return `${r}@${e.toLowerCase()}`
+    return (e = shrinkTrim(e.toLowerCase()).replaceAll(' ', '')), `${r}@${e}`
 }
 function normalizeFilename(n) {
     const t = getBasename(n),
@@ -779,7 +779,14 @@ function expand(n) {
     return u
 }
 function shrinkTrim(n) {
-    return n.replace(/\s+/g, ' ').replace(/\s$|^\s/g, '')
+    return n
+        .split(
+            `
+`
+        )
+        .map(t => t.trim().replace(/\s+/g, ' '))
+        .filter(t => t.length > 0).join(`
+`)
 }
 function capitalize(n) {
     return n.charAt(0).toUpperCase() + n.slice(1)
