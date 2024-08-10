@@ -75,31 +75,58 @@ declare function randomUnicodeString(length: number, generator?: () => number): 
 declare function searchHex(string: string, length: number): string | null;
 declare function searchSubstring(string: string, predicate: (string: string) => boolean, separators?: string[]): string | null;
 declare function randomHexString(length: number, generator?: () => number): string;
-declare function asString(string: any, limits?: {
+declare function asString(string: any, options?: {
+    name?: string;
     min?: number;
     max?: number;
 }): string;
-declare function asSafeString(string: any): string;
-declare function asNumber(number: any, limits?: {
+declare function asSafeString(string: any, options?: {
+    name?: string;
+    min?: number;
+    max?: number;
+}): string;
+declare function asNumber(number: any, options?: {
+    name?: string;
     min?: number;
     max?: number;
 }): number;
-declare function asInteger(number: any, limits?: {
+declare function asInteger(number: any, options?: {
+    name?: string;
     min?: number;
     max?: number;
 }): number;
-declare function asBoolean(bool: any): boolean;
-declare function asDate(date: any): Date;
+declare function asBoolean(bool: any, options?: {
+    name: string;
+}): boolean;
+declare function asDate(date: any, options?: {
+    name: string;
+}): Date;
 declare function asNullableString(string: any): string | null;
-declare function asEmptiableString(string: any): string;
-declare function asId(value: any): number;
-declare function asTime(value: any): string;
-declare function asArray(value: any): unknown[];
-declare function asObject(value: any): Record<string, unknown>;
-declare function asNullableObject(value: any): Record<string, unknown> | null;
-declare function asNumericDictionary(value: any): Record<string, number>;
+declare function asEmptiableString(string: any, options?: {
+    name: string;
+}): string;
+declare function asId(value: any, options?: {
+    name: string;
+}): number;
+declare function asTime(value: any, options?: {
+    name: string;
+}): string;
+declare function asArray(value: any, options?: {
+    name: string;
+}): unknown[];
+declare function asObject(value: any, options?: {
+    name: string;
+}): Record<string, unknown>;
+declare function asNullableObject(value: any, options?: {
+    name: string;
+}): Record<string, unknown> | null;
+declare function asNumericDictionary(value: any, options?: {
+    name: string;
+}): Record<string, number>;
 declare function isUrl(value: any): boolean;
-declare function asUrl(value: any): string;
+declare function asUrl(value: any, options?: {
+    name: string;
+}): string;
 declare function isNullable(typeFn: (value: any) => boolean, value: any): boolean;
 declare function asNullable<T>(typeFn: (value: any) => T, value: any): T | null;
 declare function enforceObjectShape(value: Record<string, any>, shape: Record<string, (value: any) => boolean>): boolean;
