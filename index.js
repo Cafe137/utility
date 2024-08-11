@@ -117,6 +117,11 @@ function randomPoint(n, t, e, r = Math.random) {
     while (e && containsPoint(e, o, i))
     return [o, i]
 }
+function procs(n, t = Math.random) {
+    const e = Math.floor(n),
+        r = n - e
+    return chance(r, t) ? e + 1 : e
+}
 function chance(n, t = Math.random) {
     return t() < n
 }
@@ -2358,7 +2363,15 @@ function raycastCircle(n, t, e) {
     numberToUint64BE,
     uint64BEToNumber
 }),
-    (exports.Random = { intBetween, floatBetween, chance, signed: signedRandom, makeSeededRng, point: randomPoint }),
+    (exports.Random = {
+        intBetween,
+        floatBetween,
+        chance,
+        signed: signedRandom,
+        makeSeededRng,
+        point: randomPoint,
+        procs
+    }),
     (exports.Arrays = {
         countUnique,
         makeUnique,

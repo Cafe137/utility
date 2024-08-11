@@ -26,6 +26,7 @@ interface Rectangle {
     height: number;
 }
 declare function randomPoint(width: number, height: number, exclude?: Rectangle, generator?: () => number): [number, number];
+declare function procs(probabilty: number, generator?: () => number): number;
 declare function chance(threshold: number, generator?: () => number): boolean;
 declare function pick<T>(array: T[], generator?: () => number): T;
 declare function pickMany<T>(array: T[], count: number, generator?: () => number): T[];
@@ -560,6 +561,7 @@ export declare const Random: {
     signed: typeof signedRandom;
     makeSeededRng: typeof makeSeededRng;
     point: typeof randomPoint;
+    procs: typeof procs;
 };
 export declare const Arrays: {
     countUnique: typeof countUnique;
