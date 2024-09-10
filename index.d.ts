@@ -538,6 +538,11 @@ declare function findLines(grid: Truthy[][], tileSize: number): Line[];
 declare function getLineIntersectionPoint(line1Start: Point, line1End: Point, line2Start: Point, line2End: Point): Point | null;
 declare function raycast(origin: Point, lines: Line[], angle: number): Point | null;
 declare function raycastCircle(origin: Point, lines: Line[], corners: Point[]): Point[];
+export declare class PubSubSystem {
+    private subscribers;
+    subscribe(event: string, callback: (data: unknown) => void): () => void;
+    publish(event: string, data: unknown): void;
+}
 export declare const Binary: {
     hexToUint8Array: typeof hexToUint8Array;
     uint8ArrayToHex: typeof uint8ArrayToHex;
