@@ -15,4 +15,4 @@ export const System = utility.System
 export const Types = utility.Types
 export const Optional = utility.Optional
 export const Vector = utility.Vector
-export const PubSubSystem = utility.PubSubSystem
+export const PubSubChannel = utility.PubSubChannel
