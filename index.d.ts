@@ -540,7 +540,7 @@ declare function raycast(origin: Point, lines: Line[], angle: number): Point | n
 declare function raycastCircle(origin: Point, lines: Line[], corners: Point[]): Point[];
 export declare class PubSubChannel<T> {
     private subscribers;
-    subscribe(callback: (data: unknown) => void): () => void;
+    subscribe(callback: (data: T) => void): () => void;
     publish(data: T): void;
 }
 export declare const Binary: {
