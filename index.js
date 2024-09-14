@@ -276,6 +276,9 @@ function formatDistance(n) {
         ? roundToNearest(n, 50) + ' m'
         : roundToNearest(n, 10) + ' m'
 }
+function triangularNumber(n) {
+    return (n * (n + 1)) / 2
+}
 function isObject(n, t = !0) {
     return !n ||
         (t && !isUndefined(n._readableState)) ||
@@ -2464,7 +2467,8 @@ class PubSubChannel {
         rgbToHex,
         haversineDistanceToMeters,
         roundToNearest,
-        formatDistance
+        formatDistance,
+        triangularNumber
     }),
     (exports.Promises = { raceFulfilled, invert: invertPromise, runInParallelBatches, makeAsyncQueue }),
     (exports.Dates = {
