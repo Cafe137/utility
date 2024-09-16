@@ -2494,7 +2494,8 @@ class PubSubChannel {
         minutes,
         hours,
         make: makeDate,
-        normalizeTime
+        normalizeTime,
+        absoluteDays
     }),
     (exports.Objects = {
         safeParse,

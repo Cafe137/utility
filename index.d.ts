@@ -279,6 +279,7 @@ declare function fromMillis(millis: number): Date;
 declare function createTimeDigits(value: number): string;
 declare function normalizeTime(time: string): string;
 declare function humanizeTime(millis: number): string;
+declare function absoluteDays(date: Date | number): number;
 interface TimestampLabels {
     today: (hour: number, minute: number, pm: boolean) => string;
     yesterday: () => string;
@@ -682,6 +683,7 @@ export declare const Dates: {
     hours: typeof hours;
     make: typeof makeDate;
     normalizeTime: typeof normalizeTime;
+    absoluteDays: typeof absoluteDays;
 };
 export declare const Objects: {
     safeParse: typeof safeParse;
