@@ -1488,6 +1488,9 @@ async function getCached(n, t, e) {
         u = r + t
     return (tinyCache[n] = { value: i, validUntil: u }), i
 }
+function invalidateCache(n) {
+    delete tinyCache[n]
+}
 function joinUrl(...n) {
     return n
         .filter(t => t)
@@ -2685,7 +2688,7 @@ class PubSubChannel {
         levenshteinDistance
     }),
     (exports.Assertions = { asEqual, asTrue, asTruthy, asFalse, asFalsy, asEither }),
-    (exports.Cache = { get: getCached }),
+    (exports.Cache = { get: getCached, invalidate: invalidateCache }),
     (exports.Vector = {
         addPoint,
         subtractPoint,

@@ -351,6 +351,7 @@ declare function hours(value: number): number;
 declare function makeDate(numberWithUnit: string): number;
 declare function getPreLine(string: string): string;
 declare function getCached<T>(key: string, ttlMillis: number, handler: () => Promise<T>): Promise<T>;
+declare function invalidateCache(key: string): void;
 declare function joinUrl(...parts: unknown[]): string;
 declare function replaceBetweenStrings(string: string, start: string, end: string, replacement: string, keepBoundaries?: boolean): string;
 type MarkdownDescription = {
@@ -882,6 +883,7 @@ export declare const Assertions: {
 };
 export declare const Cache: {
     get: typeof getCached;
+    invalidate: typeof invalidateCache;
 };
 export declare const Vector: {
     addPoint: typeof addPoint;
