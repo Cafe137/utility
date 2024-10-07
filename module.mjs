@@ -16,3 +16,5 @@ export const Types = utility.Types
 export const Optional = utility.Optional
 export const Vector = utility.Vector
 export const PubSubChannel = utility.PubSubChannel
+export const Lazy = utility.Lazy
+export const AsyncLazy = utility.AsyncLazy

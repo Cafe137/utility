@@ -453,6 +453,18 @@ export declare class Optional<T> {
     ifPresent(fn: (value: T) => void): this;
     orElse(fn: () => void): void;
 }
+export declare class Lazy<T> {
+    private readonly supplier;
+    private value;
+    constructor(supplier: () => T);
+    get(): T;
+}
+export declare class AsyncLazy<T> {
+    private readonly supplier;
+    private value;
+    constructor(supplier: () => Promise<T>);
+    get(): Promise<T>;
+}
 interface Newable<T> extends Function {
     new (...args: any[]): T;
 }
