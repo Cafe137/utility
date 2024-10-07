@@ -1976,6 +1976,9 @@ class AsyncLazy {
     }
 }
 exports.AsyncLazy = AsyncLazy
+function multicall(n) {
+    return () => n.forEach(t => t())
+}
 function findInstance(n, t) {
     const e = n.find(r => r instanceof t)
     return Optional.of(e)
@@ -2467,7 +2470,8 @@ class PubSubChannel {
         filterInstances,
         interleave,
         toggle,
-        createHierarchy
+        createHierarchy,
+        multicall
     }),
     (exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError }),
     (exports.Numbers = {

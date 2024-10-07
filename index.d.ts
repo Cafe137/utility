@@ -468,6 +468,7 @@ export declare class AsyncLazy<T> {
 interface Newable<T> extends Function {
     new (...args: any[]): T;
 }
+declare function multicall(functions: (() => void)[]): () => void;
 declare function findInstance<T, K extends T>(array: T[], type: Newable<K>): Optional<K>;
 declare function filterInstances<T, K extends T>(array: T[], type: Newable<K>): K[];
 declare function interleave<T, K>(arrayA: T[], arrayB: K[]): (T | K)[];
@@ -635,6 +636,7 @@ export declare const Arrays: {
     interleave: typeof interleave;
     toggle: typeof toggle;
     createHierarchy: typeof createHierarchy;
+    multicall: typeof multicall;
 };
 export declare const System: {
     sleepMillis: typeof sleepMillis;
