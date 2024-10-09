@@ -48,6 +48,7 @@ declare function deleteDeep(object: CafeObject, path: string): void;
 declare function replaceDeep(object: CafeObject, path: string, value: unknown): unknown;
 declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAnyKey?: boolean): unknown;
 declare function forever(callable: (() => Promise<void>) | (() => void), millis: number, log?: (message: string, metadata: object) => void): Promise<never>;
+declare function runAndSetInterval(callable: () => void, millis: number): () => void;
 declare function asMegabytes(number: number): number;
 declare function convertBytes(bytes: number): string;
 declare function hexToRgb(hex: string): [number, number, number];
@@ -644,6 +645,7 @@ export declare const System: {
     scheduleMany: typeof scheduleMany;
     waitFor: typeof waitFor;
     expandError: typeof expandError;
+    runAndSetInterval: typeof runAndSetInterval;
 };
 export declare const Numbers: {
     make: typeof makeNumber;

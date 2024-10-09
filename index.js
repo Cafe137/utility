@@ -238,6 +238,13 @@ async function forever(n, t, e) {
         await sleepMillis(t)
     }
 }
+function runAndSetInterval(n, t) {
+    n()
+    const e = setInterval(() => {
+        n()
+    }, t)
+    return () => clearInterval(e)
+}
 function asMegabytes(n) {
     return n / 1024 / 1024
 }
@@ -2473,7 +2480,7 @@ class PubSubChannel {
         createHierarchy,
         multicall
     }),
-    (exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError }),
+    (exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError, runAndSetInterval }),
     (exports.Numbers = {
         make: makeNumber,
         sum,
