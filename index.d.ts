@@ -83,6 +83,10 @@ declare function asString(string: any, options?: {
     min?: number;
     max?: number;
 }): string;
+declare function asHexString(string: any, options?: {
+    name?: string;
+    byteLength?: number;
+}): string;
 declare function asSafeString(string: any, options?: {
     name?: string;
     min?: number;
@@ -779,6 +783,7 @@ export declare const Types: {
     isUrl: typeof isUrl;
     isNullable: typeof isNullable;
     asString: typeof asString;
+    asHexString: typeof asHexString;
     asSafeString: typeof asSafeString;
     asNumber: typeof asNumber;
     asInteger: typeof asInteger;
