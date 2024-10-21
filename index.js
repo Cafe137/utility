@@ -288,6 +288,11 @@ function formatDistance(n) {
 function triangularNumber(n) {
     return (n * (n + 1)) / 2
 }
+function searchFloat(n) {
+    const e = n.match(/-?\d+(\.\d+)?/)
+    if (!e) throw Error('No float found in ' + n)
+    return parseFloat(e[0])
+}
 function isObject(n, e = !0) {
     return !n ||
         (e && !isUndefined(n._readableState)) ||
@@ -2511,7 +2516,8 @@ class PubSubChannel {
         haversineDistanceToMeters,
         roundToNearest,
         formatDistance,
-        triangularNumber
+        triangularNumber,
+        searchFloat
     }),
     (exports.Promises = { raceFulfilled, invert: invertPromise, runInParallelBatches, makeAsyncQueue }),
     (exports.Dates = {
