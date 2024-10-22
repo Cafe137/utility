@@ -1289,6 +1289,14 @@ function unwrapSingleKey(n) {
     if (e.length === 1) return n[e[0]]
     throw new Error('Expected object to have a single key')
 }
+function parseKeyValues(n, e = ':') {
+    return Object.fromEntries(
+        n
+            .map(t => splitOnce(t, e))
+            .map(t => (t[0] && t[1] ? [shrinkTrim(t[0]), shrinkTrim(t[1])] : null))
+            .filter(t => t)
+    )
+}
 function buildUrl(n, e, t) {
     return joinUrl(n, e) + toQueryString(t || {})
 }
@@ -2603,7 +2611,8 @@ class PubSubChannel {
         hasKey,
         selectMax,
         reposition,
-        unwrapSingleKey
+        unwrapSingleKey,
+        parseKeyValues
     }),
     (exports.Types = {
         isFunction,

@@ -271,6 +271,7 @@ declare function hasKey(object: Record<string, any>, key: string): boolean;
 declare function selectMax<T>(object: Record<string, T>, mapper: (item: T) => number): [string, T] | null;
 declare function reposition(array: Record<string, unknown>[], key: string, current: number, delta: number): void;
 declare function unwrapSingleKey(object: Record<string, unknown>): unknown;
+declare function parseKeyValues(lines: string[], separator?: string): Record<string, string>;
 declare function buildUrl(baseUrl?: string | null, path?: string | null, query?: Record<string, any> | null): string;
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[];
 declare function humanizeProgress(state: Progress): string;
@@ -766,6 +767,7 @@ export declare const Objects: {
     selectMax: typeof selectMax;
     reposition: typeof reposition;
     unwrapSingleKey: typeof unwrapSingleKey;
+    parseKeyValues: typeof parseKeyValues;
 };
 export declare const Types: {
     isFunction: typeof isFunction;
