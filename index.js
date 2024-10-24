@@ -1032,42 +1032,47 @@ function splitUrls(n) {
     }
     return e
 }
-const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+    BASE32_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
 function base64ToUint8Array(n) {
-    let e = 0
-    n.charAt(n.length - 1) === '=' && (e++, n.charAt(n.length - 2) === '=' && e++)
-    const t = (n.length * 6) / 8 - e,
-        r = new Uint8Array(t)
-    let o = 0,
-        i = 0
-    for (; o < n.length; ) {
-        const u = BASE64_CHARS.indexOf(n.charAt(o++)),
-            s = BASE64_CHARS.indexOf(n.charAt(o++)),
-            c = BASE64_CHARS.indexOf(n.charAt(o++)),
-            f = BASE64_CHARS.indexOf(n.charAt(o++)),
-            l = (u << 2) | (s >> 4),
-            a = ((s & 15) << 4) | (c >> 2),
-            h = ((c & 3) << 6) | f
-        ;(r[i++] = l), i < t && (r[i++] = a), i < t && (r[i++] = h)
-    }
-    return r
+    return baseToUint8Array(n, BASE64_CHARS)
 }
 function uint8ArrayToBase64(n) {
-    let e = '',
-        t = 0
-    for (let r = 0; r < n.length; r += 3) {
-        const o = n[r],
-            i = n[r + 1],
-            u = n[r + 2],
-            s = o >> 2,
-            c = ((o & 3) << 4) | (i >> 4),
-            f = ((i & 15) << 2) | (u >> 6),
-            l = u & 63
-        ;(e += BASE64_CHARS[s] + BASE64_CHARS[c]),
-            r + 1 < n.length ? (e += BASE64_CHARS[f]) : t++,
-            r + 2 < n.length ? (e += BASE64_CHARS[l]) : t++
+    return uint8ArrayToBase(n, BASE64_CHARS)
+}
+function base32ToUint8Array(n) {
+    return baseToUint8Array(n, BASE32_CHARS)
+}
+function uint8ArrayToBase32(n) {
+    return uint8ArrayToBase(n, BASE32_CHARS)
+}
+function baseToUint8Array(n, e) {
+    const t = '=',
+        r = e.length
+    let o = 0,
+        i = 0
+    const u = []
+    for (let s = 0; s < n.length; s++) {
+        const c = n[s]
+        if (c === t) break
+        const f = e.indexOf(c)
+        if (f === -1) throw new Error(`Invalid character: ${c}`)
+        ;(i = (i << Math.log2(r)) | f), (o += Math.log2(r)), o >= 8 && ((o -= 8), u.push((i >> o) & 255))
     }
-    return t && (e += t === 1 ? '=' : '=='), e
+    return new Uint8Array(u)
+}
+function uint8ArrayToBase(n, e) {
+    const t = e.length
+    let r = 0,
+        o = 0,
+        i = ''
+    for (let u = 0; u < n.length; u++)
+        for (o = (o << 8) | n[u], r += 8; r >= Math.log2(t); ) (r -= Math.log2(t)), (i += e[(o >> r) & (t - 1)])
+    return (
+        r > 0 && (i += e[(o << (Math.log2(t) - r)) & (t - 1)]),
+        i.length % 4 !== 0 && (i += '='.repeat(4 - (i.length % 4))),
+        i
+    )
 }
 function hexToUint8Array(n) {
     n.startsWith('0x') && (n = n.slice(2))
@@ -2428,6 +2433,8 @@ class PubSubChannel {
         uint8ArrayToHex,
         base64ToUint8Array,
         uint8ArrayToBase64,
+        base32ToUint8Array,
+        uint8ArrayToBase32,
         log2Reduce,
         partition,
         concatBytes,

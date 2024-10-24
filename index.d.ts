@@ -235,8 +235,10 @@ type StringSegment = {
 declare function splitFormatting(string: string, symbol: string): StringSegment[];
 declare function splitHashtags(string: string): StringSegment[];
 declare function splitUrls(string: string): StringSegment[];
-declare function base64ToUint8Array(base64: string): Uint8Array;
+declare function base64ToUint8Array(base64String: string): Uint8Array;
 declare function uint8ArrayToBase64(array: Uint8Array): string;
+declare function base32ToUint8Array(base32String: string): Uint8Array;
+declare function uint8ArrayToBase32(array: Uint8Array): string;
 declare function hexToUint8Array(hex: string): Uint8Array;
 declare function uint8ArrayToHex(array: Uint8Array): string;
 declare function route(pattern: string, actual: string): Record<string, unknown> | null;
@@ -571,6 +573,8 @@ export declare const Binary: {
     uint8ArrayToHex: typeof uint8ArrayToHex;
     base64ToUint8Array: typeof base64ToUint8Array;
     uint8ArrayToBase64: typeof uint8ArrayToBase64;
+    base32ToUint8Array: typeof base32ToUint8Array;
+    uint8ArrayToBase32: typeof uint8ArrayToBase32;
     log2Reduce: typeof log2Reduce;
     partition: typeof partition;
     concatBytes: typeof concatBytes;
