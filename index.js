@@ -2013,6 +2013,9 @@ exports.AsyncLazy = AsyncLazy
 function multicall(n) {
     return () => n.forEach(e => e())
 }
+function maxBy(n, e) {
+    return n.reduce((t, r) => (e(t) > e(r) ? t : r))
+}
 function findInstance(n, e) {
     const t = n.find(r => r instanceof e)
     return Optional.of(t)
@@ -2507,7 +2510,8 @@ class PubSubChannel {
         interleave,
         toggle,
         createHierarchy,
-        multicall
+        multicall,
+        maxBy
     }),
     (exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError, runAndSetInterval }),
     (exports.Numbers = {

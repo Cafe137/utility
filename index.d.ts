@@ -478,6 +478,7 @@ interface Newable<T> extends Function {
     new (...args: any[]): T;
 }
 declare function multicall(functions: (() => void)[]): () => void;
+declare function maxBy<T>(array: T[], fn: (item: T) => number): T;
 declare function findInstance<T, K extends T>(array: T[], type: Newable<K>): Optional<K>;
 declare function filterInstances<T, K extends T>(array: T[], type: Newable<K>): K[];
 declare function interleave<T, K>(arrayA: T[], arrayB: K[]): (T | K)[];
@@ -648,6 +649,7 @@ export declare const Arrays: {
     toggle: typeof toggle;
     createHierarchy: typeof createHierarchy;
     multicall: typeof multicall;
+    maxBy: typeof maxBy;
 };
 export declare const System: {
     sleepMillis: typeof sleepMillis;
