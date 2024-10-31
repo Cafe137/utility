@@ -449,11 +449,6 @@ declare function pushToBidirectionalMap<K, T>(object: BidirectionalMap<K, T>, ke
 declare function unshiftToBidirectionalMap<K, T>(object: BidirectionalMap<K, T>, key: K, item: T, limit?: number): void;
 declare function addToTemporalBidirectionalMap<K, T>(object: BidirectionalMap<K, TemporalData<T>>, key: K, item: T, expiration: number, limit?: number): void;
 declare function getFromTemporalBidirectionalMap<K, T>(object: BidirectionalMap<K, TemporalData<T>>, key: K): T | null;
-declare function makeAsyncQueue(concurrency?: number): {
-    enqueue(fn: () => Promise<void>): void;
-    drain: () => Promise<void>;
-    getSize(): number;
-};
 export declare class Optional<T> {
     value: T | null | undefined;
     private constructor();
@@ -569,6 +564,20 @@ export declare class PubSubChannel<T> {
     private subscribers;
     subscribe(callback: (data: T) => void): () => void;
     publish(data: T): void;
+    clear(): void;
+    getSubscriberCount(): number;
+}
+export declare class AsyncQueue {
+    queue: (() => Promise<void>)[];
+    concurrency: number;
+    capacity: number;
+    running: number;
+    onProcessed: PubSubChannel<void>;
+    onDrained: PubSubChannel<void>;
+    constructor(concurrency: number, capacity: number);
+    private process;
+    enqueue(fn: () => Promise<void>): Promise<void>;
+    drain(): Promise<void>;
 }
 export declare const Binary: {
     hexToUint8Array: typeof hexToUint8Array;
@@ -688,7 +697,6 @@ export declare const Promises: {
     raceFulfilled: typeof raceFulfilled;
     invert: typeof invertPromise;
     runInParallelBatches: typeof runInParallelBatches;
-    makeAsyncQueue: typeof makeAsyncQueue;
 };
 export declare const Dates: {
     getTimestamp: typeof getTimestamp;
