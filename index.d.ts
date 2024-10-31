@@ -452,6 +452,7 @@ declare function getFromTemporalBidirectionalMap<K, T>(object: BidirectionalMap<
 declare function makeAsyncQueue(concurrency?: number): {
     enqueue(fn: () => Promise<void>): void;
     drain: () => Promise<void>;
+    getSize(): number;
 };
 export declare class Optional<T> {
     value: T | null | undefined;

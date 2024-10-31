@@ -1957,17 +1957,19 @@ function makeAsyncQueue(n = 1) {
         }
     }
     async function i() {
-        return r
-            ? new Promise(u => {
-                  t.push(u)
-              })
-            : Promise.resolve()
+        if (r)
+            return new Promise(u => {
+                t.push(u)
+            })
     }
     return {
         enqueue(u) {
             e.push(u), o()
         },
-        drain: i
+        drain: i,
+        getSize() {
+            return e.length
+        }
     }
 }
 class Optional {
