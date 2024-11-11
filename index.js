@@ -2076,6 +2076,34 @@ function isWebp(n) {
 function isImage(n) {
     return isPng(n) || isJpg(n) || isWebp(n)
 }
+function numberToUint8(n) {
+    return new Uint8Array([n])
+}
+function uint8ToNumber(n) {
+    return n[0]
+}
+function numberToUint16(n, e) {
+    const t = new ArrayBuffer(2)
+    return new DataView(t).setUint16(0, n, e === 'LE'), new Uint8Array(t)
+}
+function uint16ToNumber(n, e) {
+    return new DataView(n.buffer).getUint16(0, e === 'LE')
+}
+function numberToUint32(n, e) {
+    const t = new ArrayBuffer(4)
+    return new DataView(t).setUint32(0, n, e === 'LE'), new Uint8Array(t)
+}
+function uint32ToNumber(n, e) {
+    return new DataView(n.buffer).getUint32(0, e === 'LE')
+}
+function numberToUint64(n, e) {
+    const t = new ArrayBuffer(8)
+    return new DataView(t).setBigUint64(0, BigInt(n), e === 'LE'), new Uint8Array(t)
+}
+function uint64ToNumber(n, e) {
+    const t = new DataView(n.buffer)
+    return Number(t.getBigUint64(0, e === 'LE'))
+}
 function numberToUint256(n, e) {
     const r = new Uint8Array(32)
     let o = n
@@ -2091,20 +2119,6 @@ function uint256ToNumber(n, e) {
     }
     for (let o = 0; o < 32; o++) r = (r << BigInt(8)) | BigInt(n[o])
     return r
-}
-function numberToUint64(n, e) {
-    const t = new ArrayBuffer(8)
-    return new DataView(t).setBigUint64(0, BigInt(n), e === 'LE'), new Uint8Array(t)
-}
-function uint64ToNumber(n, e) {
-    const t = new DataView(n.buffer)
-    return Number(t.getBigUint64(0, e === 'LE'))
-}
-function numberToUint8(n) {
-    return new Uint8Array([n])
-}
-function uint8ToNumber(n) {
-    return n[0]
 }
 function sliceBytes(n, e) {
     const t = []
@@ -2482,12 +2496,16 @@ class AsyncQueue {
         merkleStart,
         merkleAppend,
         merkleFinalize,
+        numberToUint8,
+        uint8ToNumber,
+        numberToUint16,
+        uint16ToNumber,
+        numberToUint32,
+        uint32ToNumber,
         numberToUint64,
         uint64ToNumber,
         numberToUint256,
         uint256ToNumber,
-        numberToUint8,
-        uint8ToNumber,
         sliceBytes
     }),
     (exports.Random = {
