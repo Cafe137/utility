@@ -492,10 +492,10 @@ declare function isPng(bytes: Uint8Array): boolean;
 declare function isJpg(bytes: Uint8Array): boolean;
 declare function isWebp(bytes: Uint8Array): boolean;
 declare function isImage(bytes: Uint8Array): boolean;
-declare function numberToUint64LE(number: number): Uint8Array;
-declare function uint64LEToNumber(bytes: Uint8Array): number;
-declare function numberToUint64BE(number: number): Uint8Array;
-declare function uint64BEToNumber(bytes: Uint8Array): number;
+declare function numberToUint256(number: bigint, endian: 'LE' | 'BE'): Uint8Array;
+declare function uint256ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): bigint;
+declare function numberToUint64(number: number, endian: 'LE' | 'BE'): Uint8Array;
+declare function uint64ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): number;
 interface Uint8ArrayIO {
     max: () => number;
 }
@@ -592,10 +592,10 @@ export declare const Binary: {
     merkleStart: typeof merkleStart;
     merkleAppend: typeof merkleAppend;
     merkleFinalize: typeof merkleFinalize;
-    numberToUint64LE: typeof numberToUint64LE;
-    uint64LEToNumber: typeof uint64LEToNumber;
-    numberToUint64BE: typeof numberToUint64BE;
-    uint64BEToNumber: typeof uint64BEToNumber;
+    numberToUint64: typeof numberToUint64;
+    uint64ToNumber: typeof uint64ToNumber;
+    numberToUint256: typeof numberToUint256;
+    uint256ToNumber: typeof uint256ToNumber;
 };
 export declare const Random: {
     intBetween: typeof intBetween;

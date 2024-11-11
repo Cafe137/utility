@@ -2076,21 +2076,29 @@ function isWebp(n) {
 function isImage(n) {
     return isPng(n) || isJpg(n) || isWebp(n)
 }
-function numberToUint64LE(n) {
-    const e = new ArrayBuffer(8)
-    return new DataView(e).setBigUint64(0, BigInt(n), !0), new Uint8Array(e)
+function numberToUint256(n, e) {
+    const r = new Uint8Array(32)
+    let o = n
+    if (e === 'LE') for (let i = 0; i < 32; i++) return (r[i] = Number(o & BigInt(255))), (o >>= BigInt(8)), r
+    for (let i = 32 - 1; i >= 0; i--) (r[i] = Number(o & BigInt(255))), (o >>= BigInt(8))
+    return r
 }
-function uint64LEToNumber(n) {
-    const e = new DataView(n.buffer)
-    return Number(e.getBigUint64(0, !0))
+function uint256ToNumber(n, e) {
+    let r = BigInt(0)
+    if (e === 'LE') {
+        for (let o = 32 - 1; o >= 0; o--) r = (r << BigInt(8)) | BigInt(n[o])
+        return r
+    }
+    for (let o = 0; o < 32; o++) r = (r << BigInt(8)) | BigInt(n[o])
+    return r
 }
-function numberToUint64BE(n) {
-    const e = new ArrayBuffer(8)
-    return new DataView(e).setBigUint64(0, BigInt(n), !1), new Uint8Array(e)
+function numberToUint64(n, e) {
+    const t = new ArrayBuffer(8)
+    return new DataView(t).setBigUint64(0, BigInt(n), e === 'LE'), new Uint8Array(t)
 }
-function uint64BEToNumber(n) {
-    const e = new DataView(n.buffer)
-    return Number(e.getBigUint64(0, !1))
+function uint64ToNumber(n, e) {
+    const t = new DataView(n.buffer)
+    return Number(t.getBigUint64(0, e === 'LE'))
 }
 class Uint8ArrayReader {
     constructor(e) {
@@ -2121,11 +2129,11 @@ class Chunk {
         ;(this.span = r), (this.writer = new Uint8ArrayWriter(new Uint8Array(e))), (this.hashFn = t)
     }
     build() {
-        return concatBytes(numberToUint64LE(this.span), this.writer.buffer)
+        return concatBytes(numberToUint64(this.span, 'LE'), this.writer.buffer)
     }
     hash() {
         const e = log2Reduce(partition(this.writer.buffer, 32), this.hashFn)
-        return this.hashFn(numberToUint64LE(this.span), e)
+        return this.hashFn(numberToUint64(this.span, 'LE'), e)
     }
 }
 function merkleStart(n, e) {
@@ -2462,10 +2470,10 @@ class AsyncQueue {
         merkleStart,
         merkleAppend,
         merkleFinalize,
-        numberToUint64LE,
-        uint64LEToNumber,
-        numberToUint64BE,
-        uint64BEToNumber
+        numberToUint64,
+        uint64ToNumber,
+        numberToUint256,
+        uint256ToNumber
     }),
     (exports.Random = {
         intBetween,
