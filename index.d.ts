@@ -496,6 +496,9 @@ declare function numberToUint256(number: bigint, endian: 'LE' | 'BE'): Uint8Arra
 declare function uint256ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): bigint;
 declare function numberToUint64(number: number, endian: 'LE' | 'BE'): Uint8Array;
 declare function uint64ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): number;
+declare function numberToUint8(number: number): Uint8Array;
+declare function uint8ToNumber(bytes: Uint8Array): number;
+declare function sliceBytes(bytes: Uint8Array, lengths: number[]): Uint8Array[];
 interface Uint8ArrayIO {
     max: () => number;
 }
@@ -596,6 +599,9 @@ export declare const Binary: {
     uint64ToNumber: typeof uint64ToNumber;
     numberToUint256: typeof numberToUint256;
     uint256ToNumber: typeof uint256ToNumber;
+    numberToUint8: typeof numberToUint8;
+    uint8ToNumber: typeof uint8ToNumber;
+    sliceBytes: typeof sliceBytes;
 };
 export declare const Random: {
     intBetween: typeof intBetween;

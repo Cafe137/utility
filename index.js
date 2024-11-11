@@ -2100,6 +2100,18 @@ function uint64ToNumber(n, e) {
     const t = new DataView(n.buffer)
     return Number(t.getBigUint64(0, e === 'LE'))
 }
+function numberToUint8(n) {
+    return new Uint8Array([n])
+}
+function uint8ToNumber(n) {
+    return n[0]
+}
+function sliceBytes(n, e) {
+    const t = []
+    let r = 0
+    for (const o of e) t.push(n.subarray(r, r + o)), (r += o)
+    return t
+}
 class Uint8ArrayReader {
     constructor(e) {
         ;(this.cursor = 0), (this.buffer = e)
@@ -2473,7 +2485,10 @@ class AsyncQueue {
         numberToUint64,
         uint64ToNumber,
         numberToUint256,
-        uint256ToNumber
+        uint256ToNumber,
+        numberToUint8,
+        uint8ToNumber,
+        sliceBytes
     }),
     (exports.Random = {
         intBetween,
