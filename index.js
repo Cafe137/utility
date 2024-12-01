@@ -2146,9 +2146,9 @@ function keccakPermutate(n) {
             x = u ^ En,
             b = s ^ Tn,
             kn = (t << 1) | (r >>> 31),
-            Dn = (r << 1) | (t >>> 31),
+            Sn = (r << 1) | (t >>> 31),
             $ = c ^ kn,
-            A = f ^ Dn
+            A = f ^ Sn
         ;(n[0] ^= p),
             (n[1] ^= d),
             (n[2] ^= m),
@@ -2204,9 +2204,9 @@ function keccakPermutate(n) {
             E = (n[2] << 1) | (n[3] >>> 31),
             T = (n[3] << 1) | (n[2] >>> 31),
             k = (n[5] << 30) | (n[4] >>> 2),
-            D = (n[4] << 30) | (n[5] >>> 2),
-            R = (n[6] << 28) | (n[7] >>> 4),
-            S = (n[7] << 28) | (n[6] >>> 4),
+            S = (n[4] << 30) | (n[5] >>> 2),
+            D = (n[6] << 28) | (n[7] >>> 4),
+            R = (n[7] << 28) | (n[6] >>> 4),
             C = (n[8] << 27) | (n[9] >>> 5),
             I = (n[9] << 27) | (n[8] >>> 5),
             L = (n[11] << 4) | (n[10] >>> 28),
@@ -2259,16 +2259,16 @@ function keccakPermutate(n) {
             (n[7] = cn ^ (~xn & O)),
             (n[8] = yn ^ (~M & B)),
             (n[9] = xn ^ (~O & N)),
-            (n[10] = R ^ (~W & H)),
-            (n[11] = S ^ (~q & V)),
+            (n[10] = D ^ (~W & H)),
+            (n[11] = R ^ (~q & V)),
             (n[12] = W ^ (~H & en)),
             (n[13] = q ^ (~V & tn)),
             (n[14] = H ^ (~en & dn)),
             (n[15] = V ^ (~tn & mn)),
-            (n[16] = en ^ (~dn & R)),
-            (n[17] = tn ^ (~mn & S)),
-            (n[18] = dn ^ (~R & W)),
-            (n[19] = mn ^ (~S & q)),
+            (n[16] = en ^ (~dn & D)),
+            (n[17] = tn ^ (~mn & R)),
+            (n[18] = dn ^ (~D & W)),
+            (n[19] = mn ^ (~R & q)),
             (n[20] = E ^ (~j & _)),
             (n[21] = T ^ (~U & Q)),
             (n[22] = j ^ (~_ & sn)),
@@ -2290,15 +2290,15 @@ function keccakPermutate(n) {
             (n[38] = gn ^ (~C & L)),
             (n[39] = wn ^ (~I & P)),
             (n[40] = k ^ (~F & G)),
-            (n[41] = D ^ (~z & Y)),
+            (n[41] = S ^ (~z & Y)),
             (n[42] = F ^ (~G & X)),
             (n[43] = z ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
             (n[45] = Y ^ (~nn & pn)),
             (n[46] = X ^ (~hn & k)),
-            (n[47] = nn ^ (~pn & D)),
+            (n[47] = nn ^ (~pn & S)),
             (n[48] = hn ^ (~k & F)),
-            (n[49] = pn ^ (~D & z)),
+            (n[49] = pn ^ (~S & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
     }
@@ -2308,22 +2308,22 @@ function bytesToNumbers(n) {
     for (let t = 0; t < n.length; t += 4) e.push(n[t] | (n[t + 1] << 8) | (n[t + 2] << 16) | (n[t + 3] << 24))
     return e
 }
-function divideToBlocks(n) {
+function divideToBlocks(n, e) {
     if (!n.length) {
-        const r = new Uint8Array(136)
-        return (r[0] = 1), (r[135] = 128), [bytesToNumbers(r)]
+        const o = new Uint8Array(136)
+        return (o[0] = e), (o[135] = 128), [bytesToNumbers(o)]
     }
-    const e = partition(n, 136),
-        t = e[e.length - 1]
-    if (t.length < 136) {
-        const r = new Uint8Array(136)
-        r.set(t), (r[t.length] = 1), (r[135] |= 128), (e[e.length - 1] = r)
+    const t = partition(n, 136),
+        r = t[t.length - 1]
+    if (r.length < 136) {
+        const o = new Uint8Array(136)
+        o.set(r), (o[r.length] = e), (o[135] |= 128), (t[t.length - 1] = o)
     }
-    if (t.length === 136) {
-        const r = new Uint8Array(136)
-        ;(r[0] = 1), (r[135] = 128), e.push(r)
+    if (r.length === 136) {
+        const o = new Uint8Array(136)
+        ;(o[0] = e), (o[135] = 128), t.push(o)
     }
-    return e.map(bytesToNumbers)
+    return t.map(bytesToNumbers)
 }
 function absorb(n, e) {
     for (const t of e) {
@@ -2369,7 +2369,10 @@ function squeeze(n) {
     ])
 }
 function keccak256(n) {
-    return squeeze(absorb(new Array(50).fill(0), divideToBlocks(n)))
+    return squeeze(absorb(new Array(50).fill(0), divideToBlocks(n, 1)))
+}
+function sha3_256(n) {
+    return squeeze(absorb(new Array(50).fill(0), divideToBlocks(n, 6)))
 }
 class Uint8ArrayReader {
     constructor(e) {
@@ -2723,7 +2726,8 @@ class AsyncQueue {
         numberToUint256,
         uint256ToNumber,
         sliceBytes,
-        keccak256
+        keccak256,
+        sha3_256
     }),
     (exports.Random = {
         intBetween,
@@ -3043,4 +3047,7 @@ class AsyncQueue {
         raycast,
         raycastCircle,
         getLineIntersectionPoint
-    })
+    }),
+    console.log(exports.Strings.randomAlphanumeric(135)),
+    console.log(exports.Strings.randomAlphanumeric(136)),
+    console.log(exports.Strings.randomAlphanumeric(137))

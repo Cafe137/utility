@@ -503,6 +503,7 @@ declare function uint256ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): bigint
 declare function sliceBytes(bytes: Uint8Array, lengths: number[]): Uint8Array[];
 declare function partition(bytes: Uint8Array, size: number): Uint8Array[];
 declare function keccak256(bytes: Uint8Array): Uint8Array;
+declare function sha3_256(bytes: Uint8Array): Uint8Array;
 interface Uint8ArrayIO {
     max: () => number;
 }
@@ -611,6 +612,7 @@ export declare const Binary: {
     uint256ToNumber: typeof uint256ToNumber;
     sliceBytes: typeof sliceBytes;
     keccak256: typeof keccak256;
+    sha3_256: typeof sha3_256;
 };
 export declare const Random: {
     intBetween: typeof intBetween;
