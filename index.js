@@ -2146,9 +2146,9 @@ function keccakPermutate(n) {
             x = u ^ En,
             b = s ^ Tn,
             kn = (t << 1) | (r >>> 31),
-            Sn = (r << 1) | (t >>> 31),
+            Dn = (r << 1) | (t >>> 31),
             $ = c ^ kn,
-            A = f ^ Sn
+            A = f ^ Dn
         ;(n[0] ^= p),
             (n[1] ^= d),
             (n[2] ^= m),
@@ -2204,9 +2204,9 @@ function keccakPermutate(n) {
             E = (n[2] << 1) | (n[3] >>> 31),
             T = (n[3] << 1) | (n[2] >>> 31),
             k = (n[5] << 30) | (n[4] >>> 2),
-            S = (n[4] << 30) | (n[5] >>> 2),
-            D = (n[6] << 28) | (n[7] >>> 4),
-            R = (n[7] << 28) | (n[6] >>> 4),
+            D = (n[4] << 30) | (n[5] >>> 2),
+            R = (n[6] << 28) | (n[7] >>> 4),
+            S = (n[7] << 28) | (n[6] >>> 4),
             C = (n[8] << 27) | (n[9] >>> 5),
             I = (n[9] << 27) | (n[8] >>> 5),
             L = (n[11] << 4) | (n[10] >>> 28),
@@ -2259,16 +2259,16 @@ function keccakPermutate(n) {
             (n[7] = cn ^ (~xn & O)),
             (n[8] = yn ^ (~M & B)),
             (n[9] = xn ^ (~O & N)),
-            (n[10] = D ^ (~W & H)),
-            (n[11] = R ^ (~q & V)),
+            (n[10] = R ^ (~W & H)),
+            (n[11] = S ^ (~q & V)),
             (n[12] = W ^ (~H & en)),
             (n[13] = q ^ (~V & tn)),
             (n[14] = H ^ (~en & dn)),
             (n[15] = V ^ (~tn & mn)),
-            (n[16] = en ^ (~dn & D)),
-            (n[17] = tn ^ (~mn & R)),
-            (n[18] = dn ^ (~D & W)),
-            (n[19] = mn ^ (~R & q)),
+            (n[16] = en ^ (~dn & R)),
+            (n[17] = tn ^ (~mn & S)),
+            (n[18] = dn ^ (~R & W)),
+            (n[19] = mn ^ (~S & q)),
             (n[20] = E ^ (~j & _)),
             (n[21] = T ^ (~U & Q)),
             (n[22] = j ^ (~_ & sn)),
@@ -2290,15 +2290,15 @@ function keccakPermutate(n) {
             (n[38] = gn ^ (~C & L)),
             (n[39] = wn ^ (~I & P)),
             (n[40] = k ^ (~F & G)),
-            (n[41] = S ^ (~z & Y)),
+            (n[41] = D ^ (~z & Y)),
             (n[42] = F ^ (~G & X)),
             (n[43] = z ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
             (n[45] = Y ^ (~nn & pn)),
             (n[46] = X ^ (~hn & k)),
-            (n[47] = nn ^ (~pn & S)),
+            (n[47] = nn ^ (~pn & D)),
             (n[48] = hn ^ (~k & F)),
-            (n[49] = pn ^ (~S & z)),
+            (n[49] = pn ^ (~D & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
     }
@@ -2399,25 +2399,25 @@ class Uint8ArrayWriter {
     }
 }
 class Chunk {
-    constructor(e, t, r = 0n) {
-        ;(this.span = r), (this.writer = new Uint8ArrayWriter(new Uint8Array(e))), (this.hashFn = t)
+    constructor(e, t = 0n) {
+        ;(this.span = t), (this.writer = new Uint8ArrayWriter(new Uint8Array(e)))
     }
     build() {
         return concatBytes(numberToUint64(this.span, 'LE'), this.writer.buffer)
     }
     hash() {
-        const e = log2Reduce(partition(this.writer.buffer, 32), this.hashFn)
-        return this.hashFn(numberToUint64(this.span, 'LE'), e)
+        const e = log2Reduce(partition(this.writer.buffer, 32), keccak256)
+        return keccak256(concatBytes(numberToUint64(this.span, 'LE'), e))
     }
 }
-function merkleStart(n, e) {
-    return [new Chunk(n, e)]
+function merkleStart(n) {
+    return [new Chunk(n)]
 }
 async function merkleElevate(n, e, t) {
     await e(n[t]),
-        n[t + 1] || n.push(new Chunk(n[t].writer.buffer.length, n[t].hashFn, n[t].span)),
+        n[t + 1] || n.push(new Chunk(n[t].writer.buffer.length, n[t].span)),
         merkleAppend(n, n[t].hash(), e, t + 1),
-        (n[t] = new Chunk(n[t].writer.buffer.length, n[t].hashFn))
+        (n[t] = new Chunk(n[t].writer.buffer.length))
 }
 async function merkleAppend(n, e, t, r = 0) {
     n[r].writer.max() === 0 && (await merkleElevate(n, t, r))
@@ -3047,7 +3047,4 @@ class AsyncQueue {
         raycast,
         raycastCircle,
         getLineIntersectionPoint
-    }),
-    console.log(exports.Strings.randomAlphanumeric(135)),
-    console.log(exports.Strings.randomAlphanumeric(136)),
-    console.log(exports.Strings.randomAlphanumeric(137))
+    })

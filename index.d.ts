@@ -524,12 +524,11 @@ declare class Uint8ArrayWriter implements Uint8ArrayIO {
 declare class Chunk {
     span: bigint;
     writer: Uint8ArrayWriter;
-    hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array;
-    constructor(capacity: number, hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array, span?: bigint);
+    constructor(capacity: number, span?: bigint);
     build(): Uint8Array;
     hash(): Uint8Array;
 }
-declare function merkleStart(capacity: number, hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array): Chunk[];
+declare function merkleStart(capacity: number): Chunk[];
 declare function merkleAppend(levels: Chunk[], data: Uint8Array, onChunk: (chunk: Chunk) => Promise<void>, level?: number): Promise<Chunk[]>;
 declare function merkleFinalize(levels: Chunk[], onChunk: (chunk: Chunk) => Promise<void>, level?: number): Promise<Chunk>;
 type Playbook<T> = {
