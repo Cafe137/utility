@@ -248,7 +248,6 @@ type VariantGroup = {
 };
 declare function explodeReplace(string: string, substring: string, variants: string[]): string[];
 declare function generateVariants(string: string, groups: VariantGroup[], count: number, generator?: () => number): string[];
-declare function hashCode(string: string): number;
 declare function replaceWord(string: string, search: string, replace: string, whitespaceOnly?: boolean): string;
 declare function replacePascalCaseWords(string: string, replacer: (word: string) => string): string;
 declare function stripHtml(string: string): string;
@@ -486,7 +485,6 @@ declare class Node<T> {
 }
 declare function createHierarchy<T>(items: T[], idKey: keyof T, parentKey: keyof T, sortKey: keyof T, reverse?: boolean): Node<T>[];
 declare function log2Reduce<T>(array: T[], reducer: (a: T, b: T) => T): T;
-declare function partition(bytes: Uint8Array, size: number): Uint8Array[];
 declare function concatBytes(...arrays: Uint8Array[]): Uint8Array;
 declare function isPng(bytes: Uint8Array): boolean;
 declare function isJpg(bytes: Uint8Array): boolean;
@@ -498,11 +496,13 @@ declare function numberToUint16(number: number, endian: 'LE' | 'BE'): Uint8Array
 declare function uint16ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): number;
 declare function numberToUint32(number: number, endian: 'LE' | 'BE'): Uint8Array;
 declare function uint32ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): number;
-declare function numberToUint64(number: number, endian: 'LE' | 'BE'): Uint8Array;
-declare function uint64ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): number;
+declare function numberToUint64(number: bigint, endian: 'LE' | 'BE'): Uint8Array;
+declare function uint64ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): bigint;
 declare function numberToUint256(number: bigint, endian: 'LE' | 'BE'): Uint8Array;
 declare function uint256ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): bigint;
 declare function sliceBytes(bytes: Uint8Array, lengths: number[]): Uint8Array[];
+declare function partition(bytes: Uint8Array, size: number): Uint8Array[];
+declare function keccak256(bytes: Uint8Array): Uint8Array;
 interface Uint8ArrayIO {
     max: () => number;
 }
@@ -521,10 +521,10 @@ declare class Uint8ArrayWriter implements Uint8ArrayIO {
     max(): number;
 }
 declare class Chunk {
-    span: number;
+    span: bigint;
     writer: Uint8ArrayWriter;
     hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array;
-    constructor(capacity: number, hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array, span?: number);
+    constructor(capacity: number, hashFn: (a: Uint8Array, b: Uint8Array) => Uint8Array, span?: bigint);
     build(): Uint8Array;
     hash(): Uint8Array;
 }
@@ -610,6 +610,7 @@ export declare const Binary: {
     numberToUint256: typeof numberToUint256;
     uint256ToNumber: typeof uint256ToNumber;
     sliceBytes: typeof sliceBytes;
+    keccak256: typeof keccak256;
 };
 export declare const Random: {
     intBetween: typeof intBetween;
@@ -918,7 +919,6 @@ export declare const Strings: {
     route: typeof route;
     explodeReplace: typeof explodeReplace;
     generateVariants: typeof generateVariants;
-    hashCode: typeof hashCode;
     replaceWord: typeof replaceWord;
     replacePascalCaseWords: typeof replacePascalCaseWords;
     stripHtml: typeof stripHtml;

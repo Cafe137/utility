@@ -146,13 +146,13 @@ function pickManyUnique(n, e, t, r = Math.random) {
     return o
 }
 function pickGuaranteed(n, e, t, r, o, i = Math.random) {
-    const u = n.filter(s => s !== e && s !== t),
-        c = []
-    for (e !== null && c.push(e); u.length && c.length < r; ) {
-        const s = exports.Random.intBetween(0, u.length - 1, i)
-        o(u[s], c) && c.push(u[s]), u.splice(s, 1)
+    const u = n.filter(c => c !== e && c !== t),
+        s = []
+    for (e !== null && s.push(e); u.length && s.length < r; ) {
+        const c = exports.Random.intBetween(0, u.length - 1, i)
+        o(u[c], s) && s.push(u[c]), u.splice(c, 1)
     }
-    return shuffle(c, i), { values: c, indexOfGuaranteed: e !== null ? c.indexOf(e) : -1 }
+    return shuffle(s, i), { values: s, indexOfGuaranteed: e !== null ? s.indexOf(e) : -1 }
 }
 function last(n) {
     if (!n.length) throw Error('Received empty array')
@@ -192,10 +192,10 @@ function setDeep(n, e, t) {
     let o = n
     for (let i = 0; i < r.length; i++) {
         const u = r[i],
-            c = i < r.length - 1 && r[i + 1].includes(']'),
+            s = i < r.length - 1 && r[i + 1].includes(']'),
             f = u.includes(']') ? u.replace(/\[|\]/g, '') : u
         if (i === r.length - 1) return (o[f] = t), t
-        isObject(o[f]) || (c ? (o[f] = []) : (o[f] = {})), (o = o[f])
+        isObject(o[f]) || (s ? (o[f] = []) : (o[f] = {})), (o = o[f])
     }
     return t
 }
@@ -269,9 +269,9 @@ function rgbToHex(n) {
 function haversineDistanceToMeters(n, e, t, r) {
     const i = (n * Math.PI) / 180,
         u = (t * Math.PI) / 180,
-        c = ((t - n) * Math.PI) / 180,
-        s = ((r - e) * Math.PI) / 180,
-        f = Math.sin(c / 2) * Math.sin(c / 2) + Math.cos(i) * Math.cos(u) * Math.sin(s / 2) * Math.sin(s / 2)
+        s = ((t - n) * Math.PI) / 180,
+        c = ((r - e) * Math.PI) / 180,
+        f = Math.sin(s / 2) * Math.sin(s / 2) + Math.cos(i) * Math.cos(u) * Math.sin(c / 2) * Math.sin(c / 2)
     return 6371e3 * (2 * Math.atan2(Math.sqrt(f), Math.sqrt(1 - f)))
 }
 function roundToNearest(n, e) {
@@ -407,13 +407,12 @@ function randomHexString(n, e = Math.random) {
     return t
 }
 function asString(n, e) {
-    var t, r
     if (isBlank(n)) throw new TypeError(`Expected string${e?.name ? ` for ${e.name}` : ''}, got: ` + n)
     if (e && ((e.min !== void 0 && n.length < e.min) || (e.max !== void 0 && n.length > e.max)))
         throw RangeError(
-            `Expected string${e?.name ? ` for ${e.name}` : ''} length in range: ${
-                (t = e.min) !== null && t !== void 0 ? t : '-inf'
-            }..${(r = e.max) !== null && r !== void 0 ? r : 'inf'}; got: ${n.length}`
+            `Expected string${e?.name ? ` for ${e.name}` : ''} length in range: ${e.min ?? '-inf'}..${
+                e.max ?? 'inf'
+            }; got: ${n.length}`
         )
     return n
 }
@@ -436,12 +435,11 @@ function asSafeString(n, e) {
     return n
 }
 function checkLimits(n, e) {
-    var t, r
     if ((e.min !== void 0 && n < e.min) || (e.max !== void 0 && n > e.max))
         throw RangeError(
-            `Expected value${e?.name ? ` for ${e.name}` : ''} in range: ${
-                (t = e.min) !== null && t !== void 0 ? t : '-inf'
-            }..${(r = e.max) !== null && r !== void 0 ? r : 'inf'}; got: ${n}`
+            `Expected value${e?.name ? ` for ${e.name}` : ''} in range: ${e.min ?? '-inf'}..${
+                e.max ?? 'inf'
+            }; got: ${n}`
         )
 }
 function asNumber(n, e) {
@@ -807,9 +805,9 @@ function expand(n) {
         o = n.slice(0, t.index),
         i = n.slice(t.index + t[0].length)
     let u = []
-    for (const c of r) {
-        const s = expand(o + c + i)
-        u = u.concat(s)
+    for (const s of r) {
+        const c = expand(o + s + i)
+        u = u.concat(c)
     }
     return u
 }
@@ -942,7 +940,7 @@ function extractAllBlocks(n, e) {
         : n.indexOf(e.opening, e.start || 0)
     for (;;) {
         if (r === -1) return t
-        const o = extractBlock(n, Object.assign(Object.assign({}, e), { start: r }))
+        const o = extractBlock(n, { ...e, start: r })
         if (!o) return t
         t.push(o),
             (r = e.wordBoundary
@@ -961,7 +959,7 @@ function extractAllBlocks(n, e) {
 function replaceBlocks(n, e, t) {
     let r = 0
     for (;;) {
-        const o = exports.Strings.extractBlock(n, Object.assign(Object.assign({}, t), { start: r }))
+        const o = exports.Strings.extractBlock(n, { ...t, start: r })
         if (!o) return n
         const i = e(o)
         ;(r = n.indexOf(o, r) + i.length), (n = n.replace(o, i))
@@ -1053,11 +1051,11 @@ function baseToUint8Array(n, e) {
     let o = 0,
         i = 0
     const u = []
-    for (let c = 0; c < n.length; c++) {
-        const s = n[c]
-        if (s === t) break
-        const f = e.indexOf(s)
-        if (f === -1) throw new Error(`Invalid character: ${s}`)
+    for (let s = 0; s < n.length; s++) {
+        const c = n[s]
+        if (c === t) break
+        const f = e.indexOf(c)
+        if (f === -1) throw new Error(`Invalid character: ${c}`)
         ;(i = (i << Math.log2(r)) | f), (o += Math.log2(r)), o >= 8 && ((o -= 8), u.push((i >> o) & 255))
     }
     return new Uint8Array(u)
@@ -1111,7 +1109,7 @@ function generateVariants(n, e, t, r = Math.random) {
     const o = exports.Arrays.shuffle(
             e.map(u => ({
                 variants: exports.Arrays.shuffle(
-                    u.variants.map(c => c),
+                    u.variants.map(s => s),
                     r
                 ),
                 avoid: u.avoid
@@ -1120,21 +1118,16 @@ function generateVariants(n, e, t, r = Math.random) {
         ),
         i = []
     for (const u of o) {
-        const c = u.variants.filter(f => f !== u.avoid),
-            s = c.find(f => n.includes(f))
-        if (s && (pushAll(i, explodeReplace(n, s, c)), i.length >= t)) break
+        const s = u.variants.filter(f => f !== u.avoid),
+            c = s.find(f => n.includes(f))
+        if (c && (pushAll(i, explodeReplace(n, c, s)), i.length >= t)) break
     }
     if (i.length < t)
         for (const u of o) {
-            const c = u.variants.find(s => n.includes(s))
-            if (c && (pushAll(i, explodeReplace(n, c, u.variants)), i.length >= t)) break
+            const s = u.variants.find(c => n.includes(c))
+            if (s && (pushAll(i, explodeReplace(n, s, u.variants)), i.length >= t)) break
         }
     return i.slice(0, t)
-}
-function hashCode(n) {
-    let e = 0
-    for (let t = 0; t < n.length; t++) (e = (e << 5) - e + n.charCodeAt(t)), (e |= 0)
-    return e
 }
 function replaceWord(n, e, t, r = !1) {
     const o = new RegExp(r ? `(?<=\\s|^)${e}(?=\\s|$)` : `\\b${e}\\b`, 'g')
@@ -1162,9 +1155,9 @@ function toLines(n, e, t = {}) {
     let o = '',
         i = 0
     for (let u = 0; u < n.length; u++) {
-        const c = n[u],
-            s = t[c] || 1
-        if (((o += c), (i += s), i > e)) {
+        const s = n[u],
+            c = t[s] || 1
+        if (((o += s), (i += c), i > e)) {
             const { line: f, rest: l } = breakLine(o)
             r.push(f),
                 (o = l),
@@ -1219,8 +1212,8 @@ function resolveVariableWithDefaultSyntax(n, e, t, r = '$', o = ':') {
         if (n[i + e.length + 1] === o)
             if (n[i + e.length + 2] === o) n = n.replace(`${r}${e}${o}${o}`, t)
             else {
-                const c = readNextWord(n, i + e.length + 2, ['_'])
-                n = n.replace(`${r}${e}${o}${c}`, t)
+                const s = readNextWord(n, i + e.length + 2, ['_'])
+                n = n.replace(`${r}${e}${o}${s}`, t)
             }
         else n = n.replace(`${r}${e}`, t)
         i = n.indexOf(`${r}${e}`, i + t.length)
@@ -1248,8 +1241,8 @@ function resolveMarkdownLinks(n, e) {
             o = n.indexOf(')', t)
         if (r !== -1 && o !== -1) {
             const [i, u] = n.slice(r + 1, o).split(']('),
-                c = e(i, u)
-            n = n.slice(0, r) + c + n.slice(o + 1)
+                s = e(i, u)
+            n = n.slice(0, r) + s + n.slice(o + 1)
         }
         t = n.indexOf('](', t + 1)
     }
@@ -1287,8 +1280,8 @@ function reposition(n, e, t, r) {
     const o = n.find(u => u[e] === t),
         i = n.find(u => u[e] === t + r)
     o && i ? ((o[e] = t + r), (i[e] = t)) : o && (o[e] = t + r),
-        n.sort((u, c) => asNumber(u[e]) - asNumber(c[e])),
-        n.forEach((u, c) => (u[e] = c + 1))
+        n.sort((u, s) => asNumber(u[e]) - asNumber(s[e])),
+        n.forEach((u, s) => (u[e] = s + 1))
 }
 function unwrapSingleKey(n) {
     const e = Object.keys(n)
@@ -1311,7 +1304,7 @@ function parseCsv(n, e = ',', t = '"') {
     let o = '',
         i = !1
     const u = n.split('')
-    for (const c of u) c === e && !i ? (r.push(o), (o = '')) : c === t && ((!o && !i) || i) ? (i = !i) : (o += c)
+    for (const s of u) s === e && !i ? (r.push(o), (o = '')) : s === t && ((!o && !i) || i) ? (i = !i) : (o += s)
     return r.push(o), r
 }
 function humanizeProgress(n) {
@@ -1407,34 +1400,30 @@ const DefaultTimeDeltaLabels = {
     weeks: n => `${n} weeks`
 }
 function getTimeDelta(n, e) {
-    var t
-    const r = (t = e?.now) !== null && t !== void 0 ? t : Date.now(),
-        o = e?.labels || DefaultTimeDeltaLabels,
-        i = exports.Types.isDate(n) ? n.getTime() : n
-    let u = (r - i) / 1e3
-    return u < 10
-        ? o.now()
-        : u < 120
-        ? o.seconds(Math.floor(u))
-        : ((u /= 60),
-          u < 120
-              ? o.minutes(Math.floor(u))
-              : ((u /= 60),
-                u < 48
-                    ? o.hours(Math.floor(u))
-                    : ((u /= 24), u < 14 ? o.days(Math.floor(u)) : ((u /= 7), o.weeks(Math.floor(u))))))
+    const t = e?.now ?? Date.now(),
+        r = e?.labels || DefaultTimeDeltaLabels,
+        o = exports.Types.isDate(n) ? n.getTime() : n
+    let i = (t - o) / 1e3
+    return i < 10
+        ? r.now()
+        : i < 120
+        ? r.seconds(Math.floor(i))
+        : ((i /= 60),
+          i < 120
+              ? r.minutes(Math.floor(i))
+              : ((i /= 60),
+                i < 48
+                    ? r.hours(Math.floor(i))
+                    : ((i /= 24), i < 14 ? r.days(Math.floor(i)) : ((i /= 7), r.weeks(Math.floor(i))))))
 }
 function secondsToHumanTime(n, e = DefaultTimeDeltaLabels) {
     return getTimeDelta(0, { now: n * 1e3, labels: e })
 }
 function countCycles(n, e, t) {
-    var r, o, i
-    const c = ((r = t?.now) !== null && r !== void 0 ? r : Date.now()) - n,
-        s = Math.floor(c / e),
-        f =
-            e / ((o = t?.precision) !== null && o !== void 0 ? o : 1) -
-            Math.ceil((c % e) / ((i = t?.precision) !== null && i !== void 0 ? i : 1))
-    return { cycles: s, remaining: f }
+    const o = (t?.now ?? Date.now()) - n,
+        i = Math.floor(o / e),
+        u = e / (t?.precision ?? 1) - Math.ceil((o % e) / (t?.precision ?? 1))
+    return { cycles: i, remaining: u }
 }
 const throttleTimers = {}
 function throttle(n, e) {
@@ -1451,9 +1440,9 @@ function getProgress(n, e, t, r) {
     const o = e / t,
         i = r - n,
         u = i / e,
-        c = u * t,
-        s = c - i
-    return { deltaMs: i, progress: o, baseTimeMs: u, totalTimeMs: c, remainingTimeMs: s }
+        s = u * t,
+        c = s - i
+    return { deltaMs: i, progress: o, baseTimeMs: u, totalTimeMs: s, remainingTimeMs: c }
 }
 const dayNumberIndex = {
     0: 'sunday',
@@ -1621,9 +1610,9 @@ function organiseWithLimits(n, e, t, r, o) {
     for (const u of Object.keys(e)) i[u] = []
     ;(i[r] = []), o && (n = n.sort(o))
     for (const u of n) {
-        const c = u[t],
-            s = e[c] ? c : r
-        i[s].length >= e[s] ? i[r].push(u) : i[s].push(u)
+        const s = u[t],
+            c = e[s] ? s : r
+        i[c].length >= e[c] ? i[r].push(u) : i[c].push(u)
     }
     return i
 }
@@ -1688,15 +1677,14 @@ function fromDecimals(n, e, t) {
     return o === '' && (o = '0'), o + '.' + i + (t ? ' ' + t : '')
 }
 function formatNumber(n, e) {
-    var t, r
-    const o = (t = e?.longForm) !== null && t !== void 0 ? t : !1,
-        i = e?.unit ? ` ${e.unit}` : '',
-        u = o ? longNumberUnits : shortNumberUnits,
-        c = (r = e?.precision) !== null && r !== void 0 ? r : 1
-    if (n < thresholds[0]) return `${n}${i}`
-    for (let s = 0; s < thresholds.length - 1; s++)
-        if (n < thresholds[s + 1]) return `${(n / thresholds[s]).toFixed(c)}${o ? ' ' : ''}${u[s]}${i}`
-    return `${(n / thresholds[thresholds.length - 1]).toFixed(c)}${o ? ' ' : ''}${u[thresholds.length - 1]}${i}`
+    const t = e?.longForm ?? !1,
+        r = e?.unit ? ` ${e.unit}` : '',
+        o = t ? longNumberUnits : shortNumberUnits,
+        i = e?.precision ?? 1
+    if (n < thresholds[0]) return `${n}${r}`
+    for (let u = 0; u < thresholds.length - 1; u++)
+        if (n < thresholds[u + 1]) return `${(n / thresholds[u]).toFixed(i)}${t ? ' ' : ''}${o[u]}${r}`
+    return `${(n / thresholds[thresholds.length - 1]).toFixed(i)}${t ? ' ' : ''}${o[thresholds.length - 1]}${r}`
 }
 function makeNumber(n) {
     const e = parseFloat(n)
@@ -1775,20 +1763,20 @@ function flip(n) {
 }
 function getAllPermutations(n) {
     const e = Object.keys(n),
-        t = e.map(c => n[c].length),
-        r = t.reduce((c, s) => (c *= s))
+        t = e.map(s => n[s].length),
+        r = t.reduce((s, c) => (s *= c))
     let o = 1
     const i = [1]
-    for (let c = 0; c < t.length - 1; c++) (o *= t[c]), i.push(o)
+    for (let s = 0; s < t.length - 1; s++) (o *= t[s]), i.push(o)
     const u = []
-    for (let c = 0; c < r; c++) {
-        const s = {}
+    for (let s = 0; s < r; s++) {
+        const c = {}
         for (let f = 0; f < e.length; f++) {
             const l = n[e[f]],
-                a = Math.floor(c / i[f]) % l.length
-            s[e[f]] = l[a]
+                a = Math.floor(s / i[f]) % l.length
+            c[e[f]] = l[a]
         }
-        u.push(s)
+        u.push(c)
     }
     return u
 }
@@ -1801,14 +1789,14 @@ function getFlatNotation(n, e, t) {
 function flattenInner(n, e, t, r, o) {
     if (!isObject(e)) return e
     for (const [i, u] of Object.entries(e)) {
-        const c = getFlatNotation(t, i, r)
+        const s = getFlatNotation(t, i, r)
         Array.isArray(u)
             ? o
-                ? flattenInner(n, u, c, !0, o)
-                : (n[c] = u.map(s => flattenInner(Array.isArray(s) ? [] : {}, s, '', !1, o)))
+                ? flattenInner(n, u, s, !0, o)
+                : (n[s] = u.map(c => flattenInner(Array.isArray(c) ? [] : {}, c, '', !1, o)))
             : isObject(u)
-            ? flattenInner(n, u, c, !1, o)
-            : (n[c] = u)
+            ? flattenInner(n, u, s, !1, o)
+            : (n[s] = u)
     }
     return n
 }
@@ -1874,9 +1862,9 @@ function makeUnique(n, e) {
 function countUnique(n, e, t, r, o) {
     const i = e ? n.map(e) : n,
         u = {}
-    for (const s of i) u[s] = (u[s] || 0) + 1
-    const c = r ? sortObjectValues(u, o ? (s, f) => s[1] - f[1] : (s, f) => f[1] - s[1]) : u
-    return t ? Object.keys(c) : c
+    for (const c of i) u[c] = (u[c] || 0) + 1
+    const s = r ? sortObjectValues(u, o ? (c, f) => c[1] - f[1] : (c, f) => f[1] - c[1]) : u
+    return t ? Object.keys(s) : s
 }
 function sortObjectValues(n, e) {
     return Object.fromEntries(Object.entries(n).sort(e))
@@ -1958,8 +1946,7 @@ class Optional {
         return this.value && e(this.value), this
     }
     orElse(e) {
-        var t
-        ;((t = this.value) !== null && t !== void 0) || e()
+        this.value ?? e()
     }
 }
 exports.Optional = Optional
@@ -2011,28 +1998,28 @@ class Node {
 function createHierarchy(n, e, t, r, o = !1) {
     const i = new Map(),
         u = []
-    n.forEach(s => {
-        const f = new Node(s)
-        i.set(s[e], f)
+    n.forEach(c => {
+        const f = new Node(c)
+        i.set(c[e], f)
     }),
-        n.forEach(s => {
-            const f = i.get(s[e])
+        n.forEach(c => {
+            const f = i.get(c[e])
             if (!f) return
-            const l = s[t]
+            const l = c[t]
             if (l) {
                 const a = i.get(l)
                 a && a.children.push(f)
             } else u.push(f)
         })
-    const c = s => {
-        s.children.sort((f, l) => {
+    const s = c => {
+        c.children.sort((f, l) => {
             const a = f.value[r],
                 h = l.value[r]
             return o ? h - a : a - h
         }),
-            s.children.forEach(c)
+            c.children.forEach(s)
     }
-    return u.forEach(c), u
+    return u.forEach(s), u
 }
 function log2Reduce(n, e) {
     if (Math.log2(n.length) % 1 !== 0) throw new Error('Array length must be a power of 2')
@@ -2046,12 +2033,6 @@ function log2Reduce(n, e) {
         t = r
     }
     return t[0]
-}
-function partition(n, e) {
-    if (n.length % e !== 0) throw Error('Bytes length must be a multiple of size')
-    const t = []
-    for (let r = 0; r < n.length; r += e) t.push(n.subarray(r, r + e))
-    return t
 }
 function concatBytes(...n) {
     const e = n.reduce((o, i) => o + i.length, 0),
@@ -2101,23 +2082,22 @@ function numberToUint64(n, e) {
     return new DataView(t).setBigUint64(0, BigInt(n), e === 'LE'), new Uint8Array(t)
 }
 function uint64ToNumber(n, e) {
-    const t = new DataView(n.buffer)
-    return Number(t.getBigUint64(0, e === 'LE'))
+    return new DataView(n.buffer).getBigUint64(0, e === 'LE')
 }
 function numberToUint256(n, e) {
     const r = new Uint8Array(32)
     let o = n
-    if (e === 'LE') for (let i = 0; i < 32; i++) return (r[i] = Number(o & BigInt(255))), (o >>= BigInt(8)), r
-    for (let i = 32 - 1; i >= 0; i--) (r[i] = Number(o & BigInt(255))), (o >>= BigInt(8))
+    if (e === 'LE') for (let i = 0; i < 32; i++) return (r[i] = Number(o & 0xffn)), (o >>= 8n), r
+    for (let i = 32 - 1; i >= 0; i--) (r[i] = Number(o & 0xffn)), (o >>= 8n)
     return r
 }
 function uint256ToNumber(n, e) {
-    let r = BigInt(0)
+    let r = 0n
     if (e === 'LE') {
-        for (let o = 32 - 1; o >= 0; o--) r = (r << BigInt(8)) | BigInt(n[o])
+        for (let o = 32 - 1; o >= 0; o--) r = (r << 8n) | BigInt(n[o])
         return r
     }
-    for (let o = 0; o < 32; o++) r = (r << BigInt(8)) | BigInt(n[o])
+    for (let o = 0; o < 32; o++) r = (r << 8n) | BigInt(n[o])
     return r
 }
 function sliceBytes(n, e) {
@@ -2125,6 +2105,271 @@ function sliceBytes(n, e) {
     let r = 0
     for (const o of e) t.push(n.subarray(r, r + o)), (r += o)
     return t
+}
+function partition(n, e) {
+    const t = []
+    for (let r = 0; r < n.length; r += e) t.push(n.subarray(r, r + e))
+    return t
+}
+const IOTA_CONSTANTS = [
+    0, 1, 0, 32898, 2147483648, 32906, 2147483648, 2147516416, 0, 32907, 0, 2147483649, 2147483648, 2147516545,
+    2147483648, 32777, 0, 138, 0, 136, 0, 2147516425, 0, 2147483658, 0, 2147516555, 2147483648, 139, 2147483648, 32905,
+    2147483648, 32771, 2147483648, 32770, 2147483648, 128, 0, 32778, 2147483648, 2147483658, 2147483648, 2147516545,
+    2147483648, 32896, 0, 2147483649, 2147483648, 2147516424
+]
+function keccakPermutate(n) {
+    for (let e = 0; e < 24; e++) {
+        const t = n[0] ^ n[10] ^ n[20] ^ n[30] ^ n[40],
+            r = n[1] ^ n[11] ^ n[21] ^ n[31] ^ n[41],
+            o = n[2] ^ n[12] ^ n[22] ^ n[32] ^ n[42],
+            i = n[3] ^ n[13] ^ n[23] ^ n[33] ^ n[43],
+            u = n[4] ^ n[14] ^ n[24] ^ n[34] ^ n[44],
+            s = n[5] ^ n[15] ^ n[25] ^ n[35] ^ n[45],
+            c = n[6] ^ n[16] ^ n[26] ^ n[36] ^ n[46],
+            f = n[7] ^ n[17] ^ n[27] ^ n[37] ^ n[47],
+            l = n[8] ^ n[18] ^ n[28] ^ n[38] ^ n[48],
+            a = n[9] ^ n[19] ^ n[29] ^ n[39] ^ n[49],
+            h = (o << 1) | (i >>> 31),
+            bn = (i << 1) | (o >>> 31),
+            p = l ^ h,
+            d = a ^ bn,
+            $n = (u << 1) | (s >>> 31),
+            An = (s << 1) | (u >>> 31),
+            m = t ^ $n,
+            g = r ^ An,
+            Mn = (c << 1) | (f >>> 31),
+            On = (f << 1) | (c >>> 31),
+            w = o ^ Mn,
+            y = i ^ On,
+            En = (l << 1) | (a >>> 31),
+            Tn = (a << 1) | (l >>> 31),
+            x = u ^ En,
+            b = s ^ Tn,
+            kn = (t << 1) | (r >>> 31),
+            Dn = (r << 1) | (t >>> 31),
+            $ = c ^ kn,
+            A = f ^ Dn
+        ;(n[0] ^= p),
+            (n[1] ^= d),
+            (n[2] ^= m),
+            (n[3] ^= g),
+            (n[4] ^= w),
+            (n[5] ^= y),
+            (n[6] ^= x),
+            (n[7] ^= b),
+            (n[8] ^= $),
+            (n[9] ^= A),
+            (n[10] ^= p),
+            (n[11] ^= d),
+            (n[12] ^= m),
+            (n[13] ^= g),
+            (n[14] ^= w),
+            (n[15] ^= y),
+            (n[16] ^= x),
+            (n[17] ^= b),
+            (n[18] ^= $),
+            (n[19] ^= A),
+            (n[20] ^= p),
+            (n[21] ^= d),
+            (n[22] ^= m),
+            (n[23] ^= g),
+            (n[24] ^= w),
+            (n[25] ^= y),
+            (n[26] ^= x),
+            (n[27] ^= b),
+            (n[28] ^= $),
+            (n[29] ^= A),
+            (n[30] ^= p),
+            (n[31] ^= d),
+            (n[32] ^= m),
+            (n[33] ^= g),
+            (n[34] ^= w),
+            (n[35] ^= y),
+            (n[36] ^= x),
+            (n[37] ^= b),
+            (n[38] ^= $),
+            (n[39] ^= A),
+            (n[40] ^= p),
+            (n[41] ^= d),
+            (n[42] ^= m),
+            (n[43] ^= g),
+            (n[44] ^= w),
+            (n[45] ^= y),
+            (n[46] ^= x),
+            (n[47] ^= b),
+            (n[48] ^= $),
+            (n[49] ^= A)
+        const M = n[0],
+            O = n[1],
+            E = (n[2] << 1) | (n[3] >>> 31),
+            T = (n[3] << 1) | (n[2] >>> 31),
+            k = (n[5] << 30) | (n[4] >>> 2),
+            D = (n[4] << 30) | (n[5] >>> 2),
+            R = (n[6] << 28) | (n[7] >>> 4),
+            S = (n[7] << 28) | (n[6] >>> 4),
+            C = (n[8] << 27) | (n[9] >>> 5),
+            I = (n[9] << 27) | (n[8] >>> 5),
+            L = (n[11] << 4) | (n[10] >>> 28),
+            P = (n[10] << 4) | (n[11] >>> 28),
+            B = (n[13] << 12) | (n[12] >>> 20),
+            N = (n[12] << 12) | (n[13] >>> 20),
+            j = (n[14] << 6) | (n[15] >>> 26),
+            U = (n[15] << 6) | (n[14] >>> 26),
+            F = (n[17] << 23) | (n[16] >>> 9),
+            z = (n[16] << 23) | (n[17] >>> 9),
+            W = (n[18] << 20) | (n[19] >>> 12),
+            q = (n[19] << 20) | (n[18] >>> 12),
+            H = (n[20] << 3) | (n[21] >>> 29),
+            V = (n[21] << 3) | (n[20] >>> 29),
+            v = (n[22] << 10) | (n[23] >>> 22),
+            J = (n[23] << 10) | (n[22] >>> 22),
+            K = (n[25] << 11) | (n[24] >>> 21),
+            Z = (n[24] << 11) | (n[25] >>> 21),
+            _ = (n[26] << 25) | (n[27] >>> 7),
+            Q = (n[27] << 25) | (n[26] >>> 7),
+            G = (n[29] << 7) | (n[28] >>> 25),
+            Y = (n[28] << 7) | (n[29] >>> 25),
+            X = (n[31] << 9) | (n[30] >>> 23),
+            nn = (n[30] << 9) | (n[31] >>> 23),
+            en = (n[33] << 13) | (n[32] >>> 19),
+            tn = (n[32] << 13) | (n[33] >>> 19),
+            rn = (n[34] << 15) | (n[35] >>> 17),
+            on = (n[35] << 15) | (n[34] >>> 17),
+            un = (n[36] << 21) | (n[37] >>> 11),
+            cn = (n[37] << 21) | (n[36] >>> 11),
+            sn = (n[38] << 8) | (n[39] >>> 24),
+            fn = (n[39] << 8) | (n[38] >>> 24),
+            ln = (n[40] << 18) | (n[41] >>> 14),
+            an = (n[41] << 18) | (n[40] >>> 14),
+            hn = (n[42] << 2) | (n[43] >>> 30),
+            pn = (n[43] << 2) | (n[42] >>> 30),
+            dn = (n[45] << 29) | (n[44] >>> 3),
+            mn = (n[44] << 29) | (n[45] >>> 3),
+            gn = (n[47] << 24) | (n[46] >>> 8),
+            wn = (n[46] << 24) | (n[47] >>> 8),
+            yn = (n[48] << 14) | (n[49] >>> 18),
+            xn = (n[49] << 14) | (n[48] >>> 18)
+        ;(n[0] = M ^ (~B & K)),
+            (n[1] = O ^ (~N & Z)),
+            (n[2] = B ^ (~K & un)),
+            (n[3] = N ^ (~Z & cn)),
+            (n[4] = K ^ (~un & yn)),
+            (n[5] = Z ^ (~cn & xn)),
+            (n[6] = un ^ (~yn & M)),
+            (n[7] = cn ^ (~xn & O)),
+            (n[8] = yn ^ (~M & B)),
+            (n[9] = xn ^ (~O & N)),
+            (n[10] = R ^ (~W & H)),
+            (n[11] = S ^ (~q & V)),
+            (n[12] = W ^ (~H & en)),
+            (n[13] = q ^ (~V & tn)),
+            (n[14] = H ^ (~en & dn)),
+            (n[15] = V ^ (~tn & mn)),
+            (n[16] = en ^ (~dn & R)),
+            (n[17] = tn ^ (~mn & S)),
+            (n[18] = dn ^ (~R & W)),
+            (n[19] = mn ^ (~S & q)),
+            (n[20] = E ^ (~j & _)),
+            (n[21] = T ^ (~U & Q)),
+            (n[22] = j ^ (~_ & sn)),
+            (n[23] = U ^ (~Q & fn)),
+            (n[24] = _ ^ (~sn & ln)),
+            (n[25] = Q ^ (~fn & an)),
+            (n[26] = sn ^ (~ln & E)),
+            (n[27] = fn ^ (~an & T)),
+            (n[28] = ln ^ (~E & j)),
+            (n[29] = an ^ (~T & U)),
+            (n[30] = C ^ (~L & v)),
+            (n[31] = I ^ (~P & J)),
+            (n[32] = L ^ (~v & rn)),
+            (n[33] = P ^ (~J & on)),
+            (n[34] = v ^ (~rn & gn)),
+            (n[35] = J ^ (~on & wn)),
+            (n[36] = rn ^ (~gn & C)),
+            (n[37] = on ^ (~wn & I)),
+            (n[38] = gn ^ (~C & L)),
+            (n[39] = wn ^ (~I & P)),
+            (n[40] = k ^ (~F & G)),
+            (n[41] = D ^ (~z & Y)),
+            (n[42] = F ^ (~G & X)),
+            (n[43] = z ^ (~Y & nn)),
+            (n[44] = G ^ (~X & hn)),
+            (n[45] = Y ^ (~nn & pn)),
+            (n[46] = X ^ (~hn & k)),
+            (n[47] = nn ^ (~pn & D)),
+            (n[48] = hn ^ (~k & F)),
+            (n[49] = pn ^ (~D & z)),
+            (n[0] ^= IOTA_CONSTANTS[e * 2]),
+            (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
+    }
+}
+function bytesToNumbers(n) {
+    const e = []
+    for (let t = 0; t < n.length; t += 4) e.push(n[t] | (n[t + 1] << 8) | (n[t + 2] << 16) | (n[t + 3] << 24))
+    return e
+}
+function divideToBlocks(n) {
+    if (!n.length) {
+        const r = new Uint8Array(136)
+        return (r[0] = 1), (r[135] = 128), [bytesToNumbers(r)]
+    }
+    const e = partition(n, 136),
+        t = e[e.length - 1]
+    if (t.length < 136) {
+        const r = new Uint8Array(136)
+        r.set(t), (r[t.length] = 1), (r[135] |= 128), (e[e.length - 1] = r)
+    }
+    if (t.length === 136) {
+        const r = new Uint8Array(136)
+        ;(r[0] = 1), (r[135] = 128), e.push(r)
+    }
+    return e.map(bytesToNumbers)
+}
+function absorb(n, e) {
+    for (const t of e) {
+        for (let r = 0; r < 34; r += 2) (n[r] ^= t[r + 1]), (n[r + 1] ^= t[r])
+        keccakPermutate(n)
+    }
+    return n
+}
+function squeeze(n) {
+    return new Uint8Array([
+        n[1],
+        n[1] >> -24,
+        n[1] >> -16,
+        n[1] >> -8,
+        n[0],
+        n[0] >> 8,
+        n[0] >> 16,
+        n[0] >> 24,
+        n[3],
+        n[3] >> -24,
+        n[3] >> -16,
+        n[3] >> -8,
+        n[2],
+        n[2] >> 8,
+        n[2] >> 16,
+        n[2] >> 24,
+        n[5],
+        n[5] >> -24,
+        n[5] >> -16,
+        n[5] >> -8,
+        n[4],
+        n[4] >> 8,
+        n[4] >> 16,
+        n[4] >> 24,
+        n[7],
+        n[7] >> -24,
+        n[7] >> -16,
+        n[7] >> -8,
+        n[6],
+        n[6] >> 8,
+        n[6] >> 16,
+        n[6] >> 24
+    ])
+}
+function keccak256(n) {
+    return squeeze(absorb(new Array(50).fill(0), divideToBlocks(n)))
 }
 class Uint8ArrayReader {
     constructor(e) {
@@ -2151,7 +2396,7 @@ class Uint8ArrayWriter {
     }
 }
 class Chunk {
-    constructor(e, t, r = 0) {
+    constructor(e, t, r = 0n) {
         ;(this.span = r), (this.writer = new Uint8ArrayWriter(new Uint8Array(e))), (this.hashFn = t)
     }
     build() {
@@ -2176,7 +2421,7 @@ async function merkleAppend(n, e, t, r = 0) {
     const o = new Uint8ArrayReader(e)
     for (; o.max() !== 0; ) {
         const i = n[r].writer.write(o)
-        if (r === 0) for (let u = 0; u < n.length; u++) n[u].span += i
+        if (r === 0) for (let u = 0; u < n.length; u++) n[u].span += BigInt(i)
         n[r].writer.max() === 0 && o.max() > 0 && (await merkleElevate(n, t, r))
     }
     return n
@@ -2193,7 +2438,7 @@ function tickPlaybook(n) {
     )
 }
 function getArgument(n, e, t, r) {
-    const o = n.findIndex(c => c === `--${e}` || c.startsWith(`--${e}=`)),
+    const o = n.findIndex(s => s === `--${e}` || s.startsWith(`--${e}=`)),
         i = n[o]
     if (!i) return (t || {})[r || e || ''] || null
     if (i.includes('=')) return i.split('=')[1]
@@ -2210,14 +2455,14 @@ function getNumberArgument(n, e, t, r) {
     }
 }
 function getBooleanArgument(n, e, t, r) {
-    const o = n.some(s => s.endsWith('-' + e)),
+    const o = n.some(c => c.endsWith('-' + e)),
         i = getArgument(n, e, t, r)
     if (!i && o) return !0
     if (!i && !o) return null
     const u = ['true', '1', 'yes', 'y', 'on'],
-        c = ['false', '0', 'no', 'n', 'off']
+        s = ['false', '0', 'no', 'n', 'off']
     if (u.includes(i.toLowerCase())) return !0
-    if (c.includes(i.toLowerCase())) return !1
+    if (s.includes(i.toLowerCase())) return !1
     throw Error(`Invalid boolean argument ${e}: ${i}`)
 }
 function requireStringArgument(n, e, t, r) {
@@ -2268,30 +2513,16 @@ function filterCoordinates(n, e, t = 'row-first') {
     return r
 }
 function isHorizontalLine(n, e, t) {
-    var r, o
-    return (
-        ((r = n[e + 1]) === null || r === void 0 ? void 0 : r[t]) &&
-        ((o = n[e - 1]) === null || o === void 0 ? void 0 : o[t]) &&
-        !n[e][t - 1] &&
-        !n[e][t + 1]
-    )
+    return n[e + 1]?.[t] && n[e - 1]?.[t] && !n[e][t - 1] && !n[e][t + 1]
 }
 function isVerticalLine(n, e, t) {
-    var r, o
-    return (
-        n[e][t + 1] &&
-        n[e][t - 1] &&
-        !(!((r = n[e - 1]) === null || r === void 0) && r[t]) &&
-        !(!((o = n[e + 1]) === null || o === void 0) && o[t])
-    )
+    return n[e][t + 1] && n[e][t - 1] && !n[e - 1]?.[t] && !n[e + 1]?.[t]
 }
 function isLeftmost(n, e, t) {
-    var r
-    return !(!((r = n[e - 1]) === null || r === void 0) && r[t])
+    return !n[e - 1]?.[t]
 }
 function isRightmost(n, e, t) {
-    var r
-    return !(!((r = n[e + 1]) === null || r === void 0) && r[t])
+    return !n[e + 1]?.[t]
 }
 function isTopmost(n, e, t) {
     return !n[e][t - 1]
@@ -2300,33 +2531,20 @@ function isBottommost(n, e, t) {
     return !n[e][t + 1]
 }
 function getCorners(n, e, t) {
-    var r, o, i, u, c, s, f, l
-    const a = []
+    const r = []
     return n[e][t]
         ? isHorizontalLine(n, e, t) || isVerticalLine(n, e, t)
             ? []
-            : (!(!((c = n[e - 1]) === null || c === void 0) && c[t - 1]) &&
-                  isLeftmost(n, e, t) &&
-                  isTopmost(n, e, t) &&
-                  a.push({ x: e, y: t }),
-              !(!((s = n[e + 1]) === null || s === void 0) && s[t - 1]) &&
-                  isRightmost(n, e, t) &&
-                  isTopmost(n, e, t) &&
-                  a.push({ x: e + 1, y: t }),
-              !(!((f = n[e - 1]) === null || f === void 0) && f[t + 1]) &&
-                  isLeftmost(n, e, t) &&
-                  isBottommost(n, e, t) &&
-                  a.push({ x: e, y: t + 1 }),
-              !(!((l = n[e + 1]) === null || l === void 0) && l[t + 1]) &&
-                  isRightmost(n, e, t) &&
-                  isBottommost(n, e, t) &&
-                  a.push({ x: e + 1, y: t + 1 }),
-              a)
-        : (!((r = n[e - 1]) === null || r === void 0) && r[t] && n[e][t - 1] && a.push({ x: e, y: t }),
-          !((o = n[e + 1]) === null || o === void 0) && o[t] && n[e][t - 1] && a.push({ x: e + 1, y: t }),
-          !((i = n[e - 1]) === null || i === void 0) && i[t] && n[e][t + 1] && a.push({ x: e, y: t + 1 }),
-          !((u = n[e + 1]) === null || u === void 0) && u[t] && n[e][t + 1] && a.push({ x: e + 1, y: t + 1 }),
-          a)
+            : (!n[e - 1]?.[t - 1] && isLeftmost(n, e, t) && isTopmost(n, e, t) && r.push({ x: e, y: t }),
+              !n[e + 1]?.[t - 1] && isRightmost(n, e, t) && isTopmost(n, e, t) && r.push({ x: e + 1, y: t }),
+              !n[e - 1]?.[t + 1] && isLeftmost(n, e, t) && isBottommost(n, e, t) && r.push({ x: e, y: t + 1 }),
+              !n[e + 1]?.[t + 1] && isRightmost(n, e, t) && isBottommost(n, e, t) && r.push({ x: e + 1, y: t + 1 }),
+              r)
+        : (n[e - 1]?.[t] && n[e][t - 1] && r.push({ x: e, y: t }),
+          n[e + 1]?.[t] && n[e][t - 1] && r.push({ x: e + 1, y: t }),
+          n[e - 1]?.[t] && n[e][t + 1] && r.push({ x: e, y: t + 1 }),
+          n[e + 1]?.[t] && n[e][t + 1] && r.push({ x: e + 1, y: t + 1 }),
+          r)
 }
 function findCorners(n, e, t, r) {
     const o = [
@@ -2337,42 +2555,40 @@ function findCorners(n, e, t, r) {
     ]
     for (let i = 0; i < n.length; i++)
         for (let u = 0; u < n[0].length; u++) {
-            const c = getCorners(n, i, u)
-            for (const s of c) o.some(f => f.x === s.x && f.y === s.y) || o.push(s)
+            const s = getCorners(n, i, u)
+            for (const c of s) o.some(f => f.x === c.x && f.y === c.y) || o.push(c)
         }
     return o.map(i => ({ x: i.x * e, y: i.y * e }))
 }
 function findLines(n, e) {
-    const t = filterCoordinates(n, (s, f) => n[s][f] === 0 && n[s][f + 1] !== 0, 'row-first').map(s =>
-            Object.assign(Object.assign({}, s), { dx: 1, dy: 0 })
-        ),
-        r = filterCoordinates(n, (s, f) => n[s][f] === 0 && n[s][f - 1] !== 0, 'row-first').map(s =>
-            Object.assign(Object.assign({}, s), { dx: 1, dy: 0 })
-        ),
-        o = filterCoordinates(
-            n,
-            (s, f) => {
-                var l
-                return n[s][f] === 0 && ((l = n[s - 1]) === null || l === void 0 ? void 0 : l[f]) !== 0
-            },
-            'column-first'
-        ).map(s => Object.assign(Object.assign({}, s), { dx: 0, dy: 1 })),
-        i = filterCoordinates(
-            n,
-            (s, f) => {
-                var l
-                return n[s][f] === 0 && ((l = n[s + 1]) === null || l === void 0 ? void 0 : l[f]) !== 0
-            },
-            'column-first'
-        ).map(s => Object.assign(Object.assign({}, s), { dx: 0, dy: 1 }))
-    t.forEach(s => s.y++), i.forEach(s => s.x++)
-    const u = group([...o, ...i], (s, f) => s.x === f.x && s.y - 1 === f.y),
-        c = group([...r, ...t], (s, f) => s.y === f.y && s.x - 1 === f.x)
-    return [...u, ...c]
-        .map(s => ({ start: s[0], end: last(s) }))
-        .map(s => ({
-            start: multiplyPoint(s.start, e),
-            end: multiplyPoint(addPoint(s.end, { x: s.start.dx, y: s.start.dy }), e)
+    const t = filterCoordinates(n, (c, f) => n[c][f] === 0 && n[c][f + 1] !== 0, 'row-first').map(c => ({
+            ...c,
+            dx: 1,
+            dy: 0
+        })),
+        r = filterCoordinates(n, (c, f) => n[c][f] === 0 && n[c][f - 1] !== 0, 'row-first').map(c => ({
+            ...c,
+            dx: 1,
+            dy: 0
+        })),
+        o = filterCoordinates(n, (c, f) => n[c][f] === 0 && n[c - 1]?.[f] !== 0, 'column-first').map(c => ({
+            ...c,
+            dx: 0,
+            dy: 1
+        })),
+        i = filterCoordinates(n, (c, f) => n[c][f] === 0 && n[c + 1]?.[f] !== 0, 'column-first').map(c => ({
+            ...c,
+            dx: 0,
+            dy: 1
+        }))
+    t.forEach(c => c.y++), i.forEach(c => c.x++)
+    const u = group([...o, ...i], (c, f) => c.x === f.x && c.y - 1 === f.y),
+        s = group([...r, ...t], (c, f) => c.y === f.y && c.x - 1 === f.x)
+    return [...u, ...s]
+        .map(c => ({ start: c[0], end: last(c) }))
+        .map(c => ({
+            start: multiplyPoint(c.start, e),
+            end: multiplyPoint(addPoint(c.end, { x: c.start.dx, y: c.start.dy }), e)
         }))
 }
 function getAngleInRadians(n, e) {
@@ -2386,11 +2602,11 @@ function getLineIntersectionPoint(n, e, t, r) {
     if (o === 0) return null
     let i = n.y - t.y,
         u = n.x - t.x
-    const c = (r.x - t.x) * i - (r.y - t.y) * u,
-        s = (e.x - n.x) * i - (e.y - n.y) * u
+    const s = (r.x - t.x) * i - (r.y - t.y) * u,
+        c = (e.x - n.x) * i - (e.y - n.y) * u
     return (
-        (i = c / o),
-        (u = s / o),
+        (i = s / o),
+        (u = c / o),
         i > 0 && i < 1 && u > 0 && u < 1 ? { x: n.x + i * (e.x - n.x), y: n.y + i * (e.y - n.y) } : null
     )
 }
@@ -2403,9 +2619,9 @@ function raycast(n, e, t) {
     }
     return r.length
         ? r.reduce((i, u) => {
-              const c = getDistanceBetweenPoints(n, u),
-                  s = getDistanceBetweenPoints(n, i)
-              return c < s ? u : i
+              const s = getDistanceBetweenPoints(n, u),
+                  c = getDistanceBetweenPoints(n, i)
+              return s < c ? u : i
           })
         : null
 }
@@ -2413,9 +2629,9 @@ function raycastCircle(n, e, t) {
     const o = getSortedRayAngles(n, t),
         i = []
     for (const u of o) {
-        const c = raycast(n, e, u - 0.001),
-            s = raycast(n, e, u + 0.001)
-        c && i.push(c), s && i.push(s)
+        const s = raycast(n, e, u - 0.001),
+            c = raycast(n, e, u + 0.001)
+        s && i.push(s), c && i.push(c)
     }
     return i
 }
@@ -2506,7 +2722,8 @@ class AsyncQueue {
         uint64ToNumber,
         numberToUint256,
         uint256ToNumber,
-        sliceBytes
+        sliceBytes,
+        keccak256
     }),
     (exports.Random = {
         intBetween,
@@ -2804,7 +3021,6 @@ class AsyncQueue {
         route,
         explodeReplace,
         generateVariants,
-        hashCode,
         replaceWord,
         replacePascalCaseWords,
         stripHtml,
