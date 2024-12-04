@@ -15,6 +15,7 @@ Object.defineProperty(exports, '__esModule', { value: !0 }),
         exports.Binary =
         exports.AsyncQueue =
         exports.PubSubChannel =
+        exports.Chunk =
         exports.AsyncLazy =
         exports.Lazy =
         exports.Optional =
@@ -250,7 +251,9 @@ function asMegabytes(n) {
     return n / 1024 / 1024
 }
 function convertBytes(n) {
-    return n >= 1024 * 1024 * 1024
+    return n >= 1024 * 1024 * 1024 * 1024
+        ? (n / 1024 / 1024 / 1024 / 1024).toFixed(3) + ' TB'
+        : n >= 1024 * 1024 * 1024
         ? (n / 1024 / 1024 / 1024).toFixed(3) + ' GB'
         : n >= 1024 * 1024
         ? (n / 1024 / 1024).toFixed(3) + ' MB'
@@ -1471,36 +1474,68 @@ function minutes(n) {
 function hours(n) {
     return n * 36e5
 }
-const dateUnits = [
-    ['ms', 1],
-    ['milli', 1],
-    ['millis', 1],
-    ['millisecond', 1],
-    ['milliseconds', 1],
-    ['s', 1e3],
-    ['sec', 1e3],
-    ['second', 1e3],
-    ['seconds', 1e3],
-    ['m', 6e4],
-    ['min', 6e4],
-    ['minute', 6e4],
-    ['minutes', 6e4],
-    ['h', 36e5],
-    ['hour', 36e5],
-    ['hours', 36e5],
-    ['d', 864e5],
-    ['day', 864e5],
-    ['days', 864e5],
-    ['w', 6048e5],
-    ['week', 6048e5],
-    ['weeks', 6048e5]
-]
+const dateUnits = {
+    ms: 1,
+    milli: 1,
+    millis: 1,
+    millisecond: 1,
+    milliseconds: 1,
+    s: 1e3,
+    sec: 1e3,
+    second: 1e3,
+    seconds: 1e3,
+    m: 6e4,
+    min: 6e4,
+    minute: 6e4,
+    minutes: 6e4,
+    h: 36e5,
+    hour: 36e5,
+    hours: 36e5,
+    d: 864e5,
+    day: 864e5,
+    days: 864e5,
+    w: 6048e5,
+    week: 6048e5,
+    weeks: 6048e5
+}
 function makeDate(n) {
     const e = parseFloat(n)
     if (isNaN(e)) throw Error('makeDate got NaN for input')
-    const t = n.replace(/^-?[0-9.]+/, '').trim(),
-        r = dateUnits.findIndex(o => o[0] === t.toLowerCase())
-    return r === -1 ? e : e * dateUnits[r][1]
+    const t = n
+            .replace(/^-?[0-9.]+/, '')
+            .trim()
+            .toLowerCase(),
+        r = dateUnits[t]
+    if (!r) throw Error(`Unknown unit: "${t}"`)
+    return e * r
+}
+const storageUnits = {
+    b: 1,
+    byte: 1,
+    bytes: 1,
+    kb: 1024,
+    kilobyte: 1024,
+    kilobytes: 1024,
+    mb: 1024 ** 2,
+    megabyte: 1024 ** 2,
+    megabytes: 1024 ** 2,
+    gb: 1024 ** 3,
+    gigabyte: 1024 ** 3,
+    gigabytes: 1024 ** 3,
+    tb: 1024 ** 4,
+    terabyte: 1024 ** 4,
+    terabytes: 1024 ** 4
+}
+function makeStorage(n) {
+    const e = parseFloat(n)
+    if (isNaN(e)) throw Error('makeDate got NaN for input')
+    const t = n
+            .replace(/^-?[0-9.]+/, '')
+            .trim()
+            .toLowerCase(),
+        r = storageUnits[t]
+    if (!r) throw Error(`Unknown unit: "${t}"`)
+    return e * r
 }
 function getPreLine(n) {
     return n.replace(/ +/g, ' ').replace(/^ /gm, '')
@@ -2211,14 +2246,14 @@ function keccakPermutate(n) {
             I = (n[9] << 27) | (n[8] >>> 5),
             L = (n[11] << 4) | (n[10] >>> 28),
             P = (n[10] << 4) | (n[11] >>> 28),
-            B = (n[13] << 12) | (n[12] >>> 20),
-            N = (n[12] << 12) | (n[13] >>> 20),
-            j = (n[14] << 6) | (n[15] >>> 26),
-            U = (n[15] << 6) | (n[14] >>> 26),
+            N = (n[13] << 12) | (n[12] >>> 20),
+            B = (n[12] << 12) | (n[13] >>> 20),
+            U = (n[14] << 6) | (n[15] >>> 26),
+            j = (n[15] << 6) | (n[14] >>> 26),
             F = (n[17] << 23) | (n[16] >>> 9),
             z = (n[16] << 23) | (n[17] >>> 9),
-            W = (n[18] << 20) | (n[19] >>> 12),
-            q = (n[19] << 20) | (n[18] >>> 12),
+            q = (n[18] << 20) | (n[19] >>> 12),
+            W = (n[19] << 20) | (n[18] >>> 12),
             H = (n[20] << 3) | (n[21] >>> 29),
             V = (n[21] << 3) | (n[20] >>> 29),
             v = (n[22] << 10) | (n[23] >>> 22),
@@ -2249,36 +2284,36 @@ function keccakPermutate(n) {
             wn = (n[46] << 24) | (n[47] >>> 8),
             yn = (n[48] << 14) | (n[49] >>> 18),
             xn = (n[49] << 14) | (n[48] >>> 18)
-        ;(n[0] = M ^ (~B & K)),
-            (n[1] = O ^ (~N & Z)),
-            (n[2] = B ^ (~K & un)),
-            (n[3] = N ^ (~Z & cn)),
+        ;(n[0] = M ^ (~N & K)),
+            (n[1] = O ^ (~B & Z)),
+            (n[2] = N ^ (~K & un)),
+            (n[3] = B ^ (~Z & cn)),
             (n[4] = K ^ (~un & yn)),
             (n[5] = Z ^ (~cn & xn)),
             (n[6] = un ^ (~yn & M)),
             (n[7] = cn ^ (~xn & O)),
-            (n[8] = yn ^ (~M & B)),
-            (n[9] = xn ^ (~O & N)),
-            (n[10] = R ^ (~W & H)),
-            (n[11] = S ^ (~q & V)),
-            (n[12] = W ^ (~H & en)),
-            (n[13] = q ^ (~V & tn)),
+            (n[8] = yn ^ (~M & N)),
+            (n[9] = xn ^ (~O & B)),
+            (n[10] = R ^ (~q & H)),
+            (n[11] = S ^ (~W & V)),
+            (n[12] = q ^ (~H & en)),
+            (n[13] = W ^ (~V & tn)),
             (n[14] = H ^ (~en & dn)),
             (n[15] = V ^ (~tn & mn)),
             (n[16] = en ^ (~dn & R)),
             (n[17] = tn ^ (~mn & S)),
-            (n[18] = dn ^ (~R & W)),
-            (n[19] = mn ^ (~S & q)),
-            (n[20] = E ^ (~j & _)),
-            (n[21] = T ^ (~U & Q)),
-            (n[22] = j ^ (~_ & sn)),
-            (n[23] = U ^ (~Q & fn)),
+            (n[18] = dn ^ (~R & q)),
+            (n[19] = mn ^ (~S & W)),
+            (n[20] = E ^ (~U & _)),
+            (n[21] = T ^ (~j & Q)),
+            (n[22] = U ^ (~_ & sn)),
+            (n[23] = j ^ (~Q & fn)),
             (n[24] = _ ^ (~sn & ln)),
             (n[25] = Q ^ (~fn & an)),
             (n[26] = sn ^ (~ln & E)),
             (n[27] = fn ^ (~an & T)),
-            (n[28] = ln ^ (~E & j)),
-            (n[29] = an ^ (~T & U)),
+            (n[28] = ln ^ (~E & U)),
+            (n[29] = an ^ (~T & j)),
             (n[30] = C ^ (~L & v)),
             (n[31] = I ^ (~P & J)),
             (n[32] = L ^ (~v & rn)),
@@ -2406,10 +2441,11 @@ class Chunk {
         return concatBytes(numberToUint64(this.span, 'LE'), this.writer.buffer)
     }
     hash() {
-        const e = log2Reduce(partition(this.writer.buffer, 32), keccak256)
+        const e = log2Reduce(partition(this.writer.buffer, 32), (t, r) => keccak256(concatBytes(t, r)))
         return keccak256(concatBytes(numberToUint64(this.span, 'LE'), e))
     }
 }
+exports.Chunk = Chunk
 function merkleStart(n) {
     return [new Chunk(n)]
 }
@@ -2808,6 +2844,7 @@ class AsyncQueue {
         decrement,
         format: formatNumber,
         fromDecimals,
+        makeStorage,
         asMegabytes,
         convertBytes,
         hexToRgb,

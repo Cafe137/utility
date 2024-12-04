@@ -357,6 +357,7 @@ declare function seconds(value: number): number;
 declare function minutes(value: number): number;
 declare function hours(value: number): number;
 declare function makeDate(numberWithUnit: string): number;
+declare function makeStorage(numberWithUnit: string): number;
 declare function getPreLine(string: string): string;
 declare function getCached<T>(key: string, ttlMillis: number, handler: () => Promise<T>): Promise<T>;
 declare function invalidateCache(key: string): void;
@@ -521,7 +522,7 @@ declare class Uint8ArrayWriter implements Uint8ArrayIO {
     write(reader: Uint8ArrayReader): number;
     max(): number;
 }
-declare class Chunk {
+export declare class Chunk {
     span: bigint;
     writer: Uint8ArrayWriter;
     constructor(capacity: number, span?: bigint);
@@ -699,6 +700,7 @@ export declare const Numbers: {
     decrement: typeof decrement;
     format: typeof formatNumber;
     fromDecimals: typeof fromDecimals;
+    makeStorage: typeof makeStorage;
     asMegabytes: typeof asMegabytes;
     convertBytes: typeof convertBytes;
     hexToRgb: typeof hexToRgb;
