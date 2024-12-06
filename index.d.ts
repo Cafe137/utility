@@ -169,6 +169,7 @@ declare function range(start: number, end: number): number[];
 declare function includesAny(string: string, substrings: string[]): boolean;
 declare function isChinese(string: string): boolean;
 declare function slugify(string: string, shouldAllowToken?: (character: string) => boolean): string;
+declare function normalForm(string: string): string;
 declare function camelToTitle(string: string): string;
 declare function slugToTitle(string: string): string;
 declare function slugToCamel(string: string): string;
@@ -855,6 +856,7 @@ export declare const Strings: {
     randomUnicode: typeof randomUnicodeString;
     includesAny: typeof includesAny;
     slugify: typeof slugify;
+    normalForm: typeof normalForm;
     enumify: typeof enumify;
     escapeHtml: typeof escapeHtml;
     decodeHtmlEntities: typeof decodeHtmlEntities;

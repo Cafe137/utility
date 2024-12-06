@@ -685,6 +685,9 @@ function slugify(n, e = () => !1) {
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '')
 }
+function normalForm(n) {
+    return slugify(n).replaceAll('-', '')
+}
 function camelToTitle(n) {
     return capitalize(n.replace(/([A-Z])/g, ' $1'))
 }
@@ -3000,6 +3003,7 @@ class AsyncQueue {
         randomUnicode: randomUnicodeString,
         includesAny,
         slugify,
+        normalForm,
         enumify,
         escapeHtml,
         decodeHtmlEntities,
