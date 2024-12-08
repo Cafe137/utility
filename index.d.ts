@@ -506,6 +506,10 @@ declare function sliceBytes(bytes: Uint8Array, lengths: number[]): Uint8Array[];
 declare function partition(bytes: Uint8Array, size: number): Uint8Array[];
 declare function keccak256(bytes: Uint8Array): Uint8Array;
 declare function sha3_256(bytes: Uint8Array): Uint8Array;
+declare function proximity(one: Uint8Array, other: Uint8Array, max: number): number;
+declare function commonPrefix(one: Uint8Array, other: Uint8Array): Uint8Array;
+declare function setBit(bytes: Uint8Array, index: number, value: 0 | 1): void;
+declare function getBit(bytes: Uint8Array, index: number): 0 | 1;
 interface Uint8ArrayIO {
     max: () => number;
 }
@@ -614,6 +618,10 @@ export declare const Binary: {
     sliceBytes: typeof sliceBytes;
     keccak256: typeof keccak256;
     sha3_256: typeof sha3_256;
+    proximity: typeof proximity;
+    commonPrefix: typeof commonPrefix;
+    setBit: typeof setBit;
+    getBit: typeof getBit;
 };
 export declare const Random: {
     intBetween: typeof intBetween;

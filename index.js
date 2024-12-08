@@ -2175,10 +2175,10 @@ function keccakPermutate(n) {
             h = (o << 1) | (i >>> 31),
             bn = (i << 1) | (o >>> 31),
             p = l ^ h,
-            d = a ^ bn,
+            m = a ^ bn,
             $n = (u << 1) | (s >>> 31),
             An = (s << 1) | (u >>> 31),
-            m = t ^ $n,
+            d = t ^ $n,
             g = r ^ An,
             Mn = (c << 1) | (f >>> 31),
             On = (f << 1) | (c >>> 31),
@@ -2193,8 +2193,8 @@ function keccakPermutate(n) {
             $ = c ^ kn,
             A = f ^ Dn
         ;(n[0] ^= p),
-            (n[1] ^= d),
-            (n[2] ^= m),
+            (n[1] ^= m),
+            (n[2] ^= d),
             (n[3] ^= g),
             (n[4] ^= y),
             (n[5] ^= w),
@@ -2203,8 +2203,8 @@ function keccakPermutate(n) {
             (n[8] ^= $),
             (n[9] ^= A),
             (n[10] ^= p),
-            (n[11] ^= d),
-            (n[12] ^= m),
+            (n[11] ^= m),
+            (n[12] ^= d),
             (n[13] ^= g),
             (n[14] ^= y),
             (n[15] ^= w),
@@ -2213,8 +2213,8 @@ function keccakPermutate(n) {
             (n[18] ^= $),
             (n[19] ^= A),
             (n[20] ^= p),
-            (n[21] ^= d),
-            (n[22] ^= m),
+            (n[21] ^= m),
+            (n[22] ^= d),
             (n[23] ^= g),
             (n[24] ^= y),
             (n[25] ^= w),
@@ -2223,8 +2223,8 @@ function keccakPermutate(n) {
             (n[28] ^= $),
             (n[29] ^= A),
             (n[30] ^= p),
-            (n[31] ^= d),
-            (n[32] ^= m),
+            (n[31] ^= m),
+            (n[32] ^= d),
             (n[33] ^= g),
             (n[34] ^= y),
             (n[35] ^= w),
@@ -2233,8 +2233,8 @@ function keccakPermutate(n) {
             (n[38] ^= $),
             (n[39] ^= A),
             (n[40] ^= p),
-            (n[41] ^= d),
-            (n[42] ^= m),
+            (n[41] ^= m),
+            (n[42] ^= d),
             (n[43] ^= g),
             (n[44] ^= y),
             (n[45] ^= w),
@@ -2254,10 +2254,10 @@ function keccakPermutate(n) {
             I = (n[9] << 27) | (n[8] >>> 5),
             L = (n[11] << 4) | (n[10] >>> 28),
             P = (n[10] << 4) | (n[11] >>> 28),
-            N = (n[13] << 12) | (n[12] >>> 20),
-            B = (n[12] << 12) | (n[13] >>> 20),
-            U = (n[14] << 6) | (n[15] >>> 26),
-            j = (n[15] << 6) | (n[14] >>> 26),
+            B = (n[13] << 12) | (n[12] >>> 20),
+            N = (n[12] << 12) | (n[13] >>> 20),
+            j = (n[14] << 6) | (n[15] >>> 26),
+            U = (n[15] << 6) | (n[14] >>> 26),
             F = (n[17] << 23) | (n[16] >>> 9),
             z = (n[16] << 23) | (n[17] >>> 9),
             q = (n[18] << 20) | (n[19] >>> 12),
@@ -2286,42 +2286,42 @@ function keccakPermutate(n) {
             an = (n[41] << 18) | (n[40] >>> 14),
             hn = (n[42] << 2) | (n[43] >>> 30),
             pn = (n[43] << 2) | (n[42] >>> 30),
-            dn = (n[45] << 29) | (n[44] >>> 3),
-            mn = (n[44] << 29) | (n[45] >>> 3),
+            mn = (n[45] << 29) | (n[44] >>> 3),
+            dn = (n[44] << 29) | (n[45] >>> 3),
             gn = (n[47] << 24) | (n[46] >>> 8),
             yn = (n[46] << 24) | (n[47] >>> 8),
             wn = (n[48] << 14) | (n[49] >>> 18),
             xn = (n[49] << 14) | (n[48] >>> 18)
-        ;(n[0] = M ^ (~N & K)),
-            (n[1] = O ^ (~B & Z)),
-            (n[2] = N ^ (~K & un)),
-            (n[3] = B ^ (~Z & cn)),
+        ;(n[0] = M ^ (~B & K)),
+            (n[1] = O ^ (~N & Z)),
+            (n[2] = B ^ (~K & un)),
+            (n[3] = N ^ (~Z & cn)),
             (n[4] = K ^ (~un & wn)),
             (n[5] = Z ^ (~cn & xn)),
             (n[6] = un ^ (~wn & M)),
             (n[7] = cn ^ (~xn & O)),
-            (n[8] = wn ^ (~M & N)),
-            (n[9] = xn ^ (~O & B)),
+            (n[8] = wn ^ (~M & B)),
+            (n[9] = xn ^ (~O & N)),
             (n[10] = R ^ (~q & H)),
             (n[11] = S ^ (~W & V)),
             (n[12] = q ^ (~H & en)),
             (n[13] = W ^ (~V & tn)),
-            (n[14] = H ^ (~en & dn)),
-            (n[15] = V ^ (~tn & mn)),
-            (n[16] = en ^ (~dn & R)),
-            (n[17] = tn ^ (~mn & S)),
-            (n[18] = dn ^ (~R & q)),
-            (n[19] = mn ^ (~S & W)),
-            (n[20] = E ^ (~U & _)),
-            (n[21] = T ^ (~j & Q)),
-            (n[22] = U ^ (~_ & sn)),
-            (n[23] = j ^ (~Q & fn)),
+            (n[14] = H ^ (~en & mn)),
+            (n[15] = V ^ (~tn & dn)),
+            (n[16] = en ^ (~mn & R)),
+            (n[17] = tn ^ (~dn & S)),
+            (n[18] = mn ^ (~R & q)),
+            (n[19] = dn ^ (~S & W)),
+            (n[20] = E ^ (~j & _)),
+            (n[21] = T ^ (~U & Q)),
+            (n[22] = j ^ (~_ & sn)),
+            (n[23] = U ^ (~Q & fn)),
             (n[24] = _ ^ (~sn & ln)),
             (n[25] = Q ^ (~fn & an)),
             (n[26] = sn ^ (~ln & E)),
             (n[27] = fn ^ (~an & T)),
-            (n[28] = ln ^ (~E & U)),
-            (n[29] = an ^ (~T & j)),
+            (n[28] = ln ^ (~E & j)),
+            (n[29] = an ^ (~T & U)),
             (n[30] = C ^ (~L & v)),
             (n[31] = I ^ (~P & J)),
             (n[32] = L ^ (~v & rn)),
@@ -2416,6 +2416,29 @@ function keccak256(n) {
 }
 function sha3_256(n) {
     return squeeze(absorb(new Array(50).fill(0), divideToBlocks(n, 6)))
+}
+function proximity(n, e, t) {
+    const r = Math.min(n.length, e.length, t / 8 + 1)
+    for (let o = 0; o < r; o++) {
+        const i = n[o] ^ e[o]
+        for (let u = 0; u < 8; u++) if ((i >> (7 - u)) & 1) return o * 8 + u
+    }
+    return t
+}
+function commonPrefix(n, e) {
+    const t = Math.min(n.length, e.length)
+    for (let r = 0; r < t; r++) if (n[r] !== e[r]) return n.subarray(0, r)
+    return n.subarray(0, t)
+}
+function setBit(n, e, t) {
+    const r = Math.floor(e / 8),
+        o = e % 8
+    t === 1 ? (n[r] |= 1 << (7 - o)) : (n[r] &= ~(1 << (7 - o)))
+}
+function getBit(n, e) {
+    const t = Math.floor(e / 8),
+        r = e % 8
+    return (n[t] >> (7 - r)) & 1
 }
 class Uint8ArrayReader {
     constructor(e) {
@@ -2771,7 +2794,11 @@ class AsyncQueue {
         uint256ToNumber,
         sliceBytes,
         keccak256,
-        sha3_256
+        sha3_256,
+        proximity,
+        commonPrefix,
+        setBit,
+        getBit
     }),
     (exports.Random = {
         intBetween,
