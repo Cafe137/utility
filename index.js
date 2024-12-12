@@ -1477,6 +1477,9 @@ function minutes(n) {
 function hours(n) {
     return n * 36e5
 }
+function days(n) {
+    return n * 864e5
+}
 const dateUnits = {
     ms: 1,
     milli: 1,
@@ -2913,6 +2916,7 @@ class AsyncQueue {
         seconds,
         minutes,
         hours,
+        days,
         make: makeDate,
         normalizeTime,
         absoluteDays

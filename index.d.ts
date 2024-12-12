@@ -357,6 +357,7 @@ declare function getDayInfoFromDateTimeString(dateTimeString: string): DayInfo;
 declare function seconds(value: number): number;
 declare function minutes(value: number): number;
 declare function hours(value: number): number;
+declare function days(value: number): number;
 declare function makeDate(numberWithUnit: string): number;
 declare function makeStorage(numberWithUnit: string): number;
 declare function getPreLine(string: string): string;
@@ -747,6 +748,7 @@ export declare const Dates: {
     seconds: typeof seconds;
     minutes: typeof minutes;
     hours: typeof hours;
+    days: typeof days;
     make: typeof makeDate;
     normalizeTime: typeof normalizeTime;
     absoluteDays: typeof absoluteDays;
