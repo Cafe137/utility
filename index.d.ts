@@ -511,7 +511,7 @@ declare function proximity(one: Uint8Array, other: Uint8Array, max: number): num
 declare function commonPrefix(one: Uint8Array, other: Uint8Array): Uint8Array;
 declare function setBit(bytes: Uint8Array, index: number, value: 0 | 1): void;
 declare function getBit(bytes: Uint8Array, index: number): 0 | 1;
-declare function binaryIndexOf(array: Uint8Array, value: Uint8Array): number;
+declare function binaryIndexOf(array: Uint8Array, value: Uint8Array, start?: number): number;
 interface Uint8ArrayIO {
     max: () => number;
 }

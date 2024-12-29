@@ -2443,9 +2443,9 @@ function getBit(n, e) {
         r = e % 8
     return (n[t] >> (7 - r)) & 1
 }
-function binaryIndexOf(n, e) {
-    for (let t = 0; t < n.length; t++)
-        for (let r = 0; r < e.length && n[t + r] === e[r]; r++) if (r === e.length - 1) return t
+function binaryIndexOf(n, e, t = 0) {
+    for (let r = t; r < n.length; r++)
+        for (let o = 0; o < e.length && n[r + o] === e[o]; o++) if (o === e.length - 1) return r
     return -1
 }
 class Uint8ArrayReader {
