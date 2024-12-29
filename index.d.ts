@@ -511,6 +511,7 @@ declare function proximity(one: Uint8Array, other: Uint8Array, max: number): num
 declare function commonPrefix(one: Uint8Array, other: Uint8Array): Uint8Array;
 declare function setBit(bytes: Uint8Array, index: number, value: 0 | 1): void;
 declare function getBit(bytes: Uint8Array, index: number): 0 | 1;
+declare function binaryIndexOf(array: Uint8Array, value: Uint8Array): number;
 interface Uint8ArrayIO {
     max: () => number;
 }
@@ -623,6 +624,7 @@ export declare const Binary: {
     commonPrefix: typeof commonPrefix;
     setBit: typeof setBit;
     getBit: typeof getBit;
+    indexOf: typeof binaryIndexOf;
 };
 export declare const Random: {
     intBetween: typeof intBetween;
