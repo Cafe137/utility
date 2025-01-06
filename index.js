@@ -12,6 +12,7 @@ Object.defineProperty(exports, '__esModule', { value: !0 }),
         exports.System =
         exports.Arrays =
         exports.Random =
+        exports.Elliptic =
         exports.Binary =
         exports.AsyncQueue =
         exports.PubSubChannel =
@@ -2133,7 +2134,10 @@ function uint64ToNumber(n, e) {
 function numberToUint256(n, e) {
     const r = new Uint8Array(32)
     let o = n
-    if (e === 'LE') for (let i = 0; i < 32; i++) return (r[i] = Number(o & 0xffn)), (o >>= 8n), r
+    if (e === 'LE') {
+        for (let i = 0; i < 32; i++) (r[i] = Number(o & 0xffn)), (o >>= 8n)
+        return r
+    }
     for (let i = 32 - 1; i >= 0; i--) (r[i] = Number(o & 0xffn)), (o >>= 8n)
     return r
 }
@@ -2183,24 +2187,24 @@ function keccakPermutate(n) {
             An = (s << 1) | (u >>> 31),
             m = t ^ $n,
             g = r ^ An,
-            Mn = (c << 1) | (f >>> 31),
-            On = (f << 1) | (c >>> 31),
-            y = o ^ Mn,
-            w = i ^ On,
-            En = (l << 1) | (a >>> 31),
+            En = (c << 1) | (f >>> 31),
+            Mn = (f << 1) | (c >>> 31),
+            w = o ^ En,
+            y = i ^ Mn,
+            On = (l << 1) | (a >>> 31),
             Tn = (a << 1) | (l >>> 31),
-            x = u ^ En,
+            x = u ^ On,
             b = s ^ Tn,
             kn = (t << 1) | (r >>> 31),
-            Dn = (r << 1) | (t >>> 31),
+            Sn = (r << 1) | (t >>> 31),
             $ = c ^ kn,
-            A = f ^ Dn
+            A = f ^ Sn
         ;(n[0] ^= p),
             (n[1] ^= d),
             (n[2] ^= m),
             (n[3] ^= g),
-            (n[4] ^= y),
-            (n[5] ^= w),
+            (n[4] ^= w),
+            (n[5] ^= y),
             (n[6] ^= x),
             (n[7] ^= b),
             (n[8] ^= $),
@@ -2209,8 +2213,8 @@ function keccakPermutate(n) {
             (n[11] ^= d),
             (n[12] ^= m),
             (n[13] ^= g),
-            (n[14] ^= y),
-            (n[15] ^= w),
+            (n[14] ^= w),
+            (n[15] ^= y),
             (n[16] ^= x),
             (n[17] ^= b),
             (n[18] ^= $),
@@ -2219,8 +2223,8 @@ function keccakPermutate(n) {
             (n[21] ^= d),
             (n[22] ^= m),
             (n[23] ^= g),
-            (n[24] ^= y),
-            (n[25] ^= w),
+            (n[24] ^= w),
+            (n[25] ^= y),
             (n[26] ^= x),
             (n[27] ^= b),
             (n[28] ^= $),
@@ -2229,8 +2233,8 @@ function keccakPermutate(n) {
             (n[31] ^= d),
             (n[32] ^= m),
             (n[33] ^= g),
-            (n[34] ^= y),
-            (n[35] ^= w),
+            (n[34] ^= w),
+            (n[35] ^= y),
             (n[36] ^= x),
             (n[37] ^= b),
             (n[38] ^= $),
@@ -2239,39 +2243,39 @@ function keccakPermutate(n) {
             (n[41] ^= d),
             (n[42] ^= m),
             (n[43] ^= g),
-            (n[44] ^= y),
-            (n[45] ^= w),
+            (n[44] ^= w),
+            (n[45] ^= y),
             (n[46] ^= x),
             (n[47] ^= b),
             (n[48] ^= $),
             (n[49] ^= A)
-        const M = n[0],
-            O = n[1],
-            E = (n[2] << 1) | (n[3] >>> 31),
+        const E = n[0],
+            M = n[1],
+            O = (n[2] << 1) | (n[3] >>> 31),
             T = (n[3] << 1) | (n[2] >>> 31),
             k = (n[5] << 30) | (n[4] >>> 2),
-            D = (n[4] << 30) | (n[5] >>> 2),
+            S = (n[4] << 30) | (n[5] >>> 2),
             R = (n[6] << 28) | (n[7] >>> 4),
-            S = (n[7] << 28) | (n[6] >>> 4),
-            C = (n[8] << 27) | (n[9] >>> 5),
-            I = (n[9] << 27) | (n[8] >>> 5),
-            L = (n[11] << 4) | (n[10] >>> 28),
-            P = (n[10] << 4) | (n[11] >>> 28),
-            B = (n[13] << 12) | (n[12] >>> 20),
+            D = (n[7] << 28) | (n[6] >>> 4),
+            I = (n[8] << 27) | (n[9] >>> 5),
+            C = (n[9] << 27) | (n[8] >>> 5),
+            P = (n[11] << 4) | (n[10] >>> 28),
+            B = (n[10] << 4) | (n[11] >>> 28),
+            L = (n[13] << 12) | (n[12] >>> 20),
             N = (n[12] << 12) | (n[13] >>> 20),
             j = (n[14] << 6) | (n[15] >>> 26),
             U = (n[15] << 6) | (n[14] >>> 26),
-            F = (n[17] << 23) | (n[16] >>> 9),
-            z = (n[16] << 23) | (n[17] >>> 9),
+            z = (n[17] << 23) | (n[16] >>> 9),
+            F = (n[16] << 23) | (n[17] >>> 9),
             q = (n[18] << 20) | (n[19] >>> 12),
-            W = (n[19] << 20) | (n[18] >>> 12),
+            v = (n[19] << 20) | (n[18] >>> 12),
             H = (n[20] << 3) | (n[21] >>> 29),
-            V = (n[21] << 3) | (n[20] >>> 29),
-            v = (n[22] << 10) | (n[23] >>> 22),
-            J = (n[23] << 10) | (n[22] >>> 22),
-            K = (n[25] << 11) | (n[24] >>> 21),
-            Z = (n[24] << 11) | (n[25] >>> 21),
-            _ = (n[26] << 25) | (n[27] >>> 7),
+            W = (n[21] << 3) | (n[20] >>> 29),
+            V = (n[22] << 10) | (n[23] >>> 22),
+            _ = (n[23] << 10) | (n[22] >>> 22),
+            J = (n[25] << 11) | (n[24] >>> 21),
+            K = (n[24] << 11) | (n[25] >>> 21),
+            Z = (n[26] << 25) | (n[27] >>> 7),
             Q = (n[27] << 25) | (n[26] >>> 7),
             G = (n[29] << 7) | (n[28] >>> 25),
             Y = (n[28] << 7) | (n[29] >>> 25),
@@ -2292,59 +2296,59 @@ function keccakPermutate(n) {
             dn = (n[45] << 29) | (n[44] >>> 3),
             mn = (n[44] << 29) | (n[45] >>> 3),
             gn = (n[47] << 24) | (n[46] >>> 8),
-            yn = (n[46] << 24) | (n[47] >>> 8),
-            wn = (n[48] << 14) | (n[49] >>> 18),
+            wn = (n[46] << 24) | (n[47] >>> 8),
+            yn = (n[48] << 14) | (n[49] >>> 18),
             xn = (n[49] << 14) | (n[48] >>> 18)
-        ;(n[0] = M ^ (~B & K)),
-            (n[1] = O ^ (~N & Z)),
-            (n[2] = B ^ (~K & un)),
-            (n[3] = N ^ (~Z & cn)),
-            (n[4] = K ^ (~un & wn)),
-            (n[5] = Z ^ (~cn & xn)),
-            (n[6] = un ^ (~wn & M)),
-            (n[7] = cn ^ (~xn & O)),
-            (n[8] = wn ^ (~M & B)),
-            (n[9] = xn ^ (~O & N)),
+        ;(n[0] = E ^ (~L & J)),
+            (n[1] = M ^ (~N & K)),
+            (n[2] = L ^ (~J & un)),
+            (n[3] = N ^ (~K & cn)),
+            (n[4] = J ^ (~un & yn)),
+            (n[5] = K ^ (~cn & xn)),
+            (n[6] = un ^ (~yn & E)),
+            (n[7] = cn ^ (~xn & M)),
+            (n[8] = yn ^ (~E & L)),
+            (n[9] = xn ^ (~M & N)),
             (n[10] = R ^ (~q & H)),
-            (n[11] = S ^ (~W & V)),
+            (n[11] = D ^ (~v & W)),
             (n[12] = q ^ (~H & en)),
-            (n[13] = W ^ (~V & tn)),
+            (n[13] = v ^ (~W & tn)),
             (n[14] = H ^ (~en & dn)),
-            (n[15] = V ^ (~tn & mn)),
+            (n[15] = W ^ (~tn & mn)),
             (n[16] = en ^ (~dn & R)),
-            (n[17] = tn ^ (~mn & S)),
+            (n[17] = tn ^ (~mn & D)),
             (n[18] = dn ^ (~R & q)),
-            (n[19] = mn ^ (~S & W)),
-            (n[20] = E ^ (~j & _)),
+            (n[19] = mn ^ (~D & v)),
+            (n[20] = O ^ (~j & Z)),
             (n[21] = T ^ (~U & Q)),
-            (n[22] = j ^ (~_ & sn)),
+            (n[22] = j ^ (~Z & sn)),
             (n[23] = U ^ (~Q & fn)),
-            (n[24] = _ ^ (~sn & ln)),
+            (n[24] = Z ^ (~sn & ln)),
             (n[25] = Q ^ (~fn & an)),
-            (n[26] = sn ^ (~ln & E)),
+            (n[26] = sn ^ (~ln & O)),
             (n[27] = fn ^ (~an & T)),
-            (n[28] = ln ^ (~E & j)),
+            (n[28] = ln ^ (~O & j)),
             (n[29] = an ^ (~T & U)),
-            (n[30] = C ^ (~L & v)),
-            (n[31] = I ^ (~P & J)),
-            (n[32] = L ^ (~v & rn)),
-            (n[33] = P ^ (~J & on)),
-            (n[34] = v ^ (~rn & gn)),
-            (n[35] = J ^ (~on & yn)),
-            (n[36] = rn ^ (~gn & C)),
-            (n[37] = on ^ (~yn & I)),
-            (n[38] = gn ^ (~C & L)),
-            (n[39] = yn ^ (~I & P)),
-            (n[40] = k ^ (~F & G)),
-            (n[41] = D ^ (~z & Y)),
-            (n[42] = F ^ (~G & X)),
-            (n[43] = z ^ (~Y & nn)),
+            (n[30] = I ^ (~P & V)),
+            (n[31] = C ^ (~B & _)),
+            (n[32] = P ^ (~V & rn)),
+            (n[33] = B ^ (~_ & on)),
+            (n[34] = V ^ (~rn & gn)),
+            (n[35] = _ ^ (~on & wn)),
+            (n[36] = rn ^ (~gn & I)),
+            (n[37] = on ^ (~wn & C)),
+            (n[38] = gn ^ (~I & P)),
+            (n[39] = wn ^ (~C & B)),
+            (n[40] = k ^ (~z & G)),
+            (n[41] = S ^ (~F & Y)),
+            (n[42] = z ^ (~G & X)),
+            (n[43] = F ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
             (n[45] = Y ^ (~nn & pn)),
             (n[46] = X ^ (~hn & k)),
-            (n[47] = nn ^ (~pn & D)),
-            (n[48] = hn ^ (~k & F)),
-            (n[49] = pn ^ (~D & z)),
+            (n[47] = nn ^ (~pn & S)),
+            (n[48] = hn ^ (~k & z)),
+            (n[49] = pn ^ (~S & F)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
     }
@@ -2447,6 +2451,114 @@ function binaryIndexOf(n, e, t = 0) {
     for (let r = t; r < n.length; r++)
         for (let o = 0; o < e.length && n[r + o] === e[o]; o++) if (o === e.length - 1) return r
     return -1
+}
+function mod(n, e) {
+    return ((n % e) + e) % e
+}
+function modInverse(n, e) {
+    n = mod(n, e)
+    let [t, r] = [0n, 1n],
+        [o, i] = [e, n]
+    for (; i !== 0n; ) {
+        const u = o / i
+        ;([t, r] = [r, t - u * r]), ([o, i] = [i, o - u * i])
+    }
+    if (o > 1n) throw new Error('a is not invertible')
+    return t < 0n && (t += e), t
+}
+function modPow(n, e, t) {
+    let r = 1n
+    for (n = mod(n, t); e > 0; ) e % 2n === 1n && (r = mod(r * n, t)), (n = mod(n * n, t)), (e = e / 2n)
+    return r
+}
+function modSqrt(n, e) {
+    return mod(n, e) === 0n ? 0n : e % 4n === 3n ? modPow(n, (e + 1n) / 4n, e) : null
+}
+const SECP256K1_P = 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2fn,
+    SECP256K1_N = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n,
+    SECP256K1_X = 0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798n,
+    SECP256K1_Y = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8n
+function ellipticDouble(n, e, t) {
+    if (e === 0n) return [0n, 0n]
+    const r = mod(3n * n * n * modInverse(2n * e, t), t),
+        o = mod(r * r - 2n * n, t),
+        i = mod(r * (n - o) - e, t)
+    return [o, i]
+}
+function ellipticAdd(n, e, t, r, o) {
+    if (n === 0n && e === 0n) return [t, r]
+    if (t === 0n && r === 0n) return [n, e]
+    if (n === t && e === mod(-r, o)) return [0n, 0n]
+    if (n === t && e === r) return ellipticDouble(n, e, o)
+    const i = mod((r - e) * modInverse(t - n, o), o),
+        u = mod(i * i - n - t, o),
+        s = mod(i * (n - u) - e, o)
+    return [u, s]
+}
+function privateKeyToPublicKey(n) {
+    if (n <= 0n || n >= SECP256K1_N) throw new Error('Invalid private key')
+    return doubleAndAdd(SECP256K1_X, SECP256K1_Y, n, SECP256K1_P)
+}
+function publicKeyToAddress(n) {
+    const e = new Uint8Array(20),
+        t = keccak256(concatBytes(numberToUint256(n[0], 'BE'), numberToUint256(n[1], 'BE')))
+    return e.set(t.subarray(12)), e
+}
+function doubleAndAdd(n, e, t, r) {
+    let o = [0n, 0n],
+        i = [n, e]
+    const u = t.toString(2)
+    for (const s of u)
+        s === '0'
+            ? ((i = ellipticAdd(o[0], o[1], i[0], i[1], r)), (o = ellipticDouble(o[0], o[1], r)))
+            : ((o = ellipticAdd(o[0], o[1], i[0], i[1], r)), (i = ellipticDouble(i[0], i[1], r)))
+    return o
+}
+function signMessage(n, e, t) {
+    return signHash(uint256ToNumber(keccak256(n), 'BE'), e, t)
+}
+function signHash(n, e, t) {
+    if (e <= 0n || e >= SECP256K1_N) throw new Error('Invalid private key')
+    if (
+        (t ||
+            (t = mod(
+                uint256ToNumber(
+                    keccak256(concatBytes(keccak256(numberToUint256(e, 'BE')), numberToUint256(n, 'BE'))),
+                    'BE'
+                ),
+                SECP256K1_N
+            )),
+        t <= 0n || t >= SECP256K1_N)
+    )
+        throw new Error('Invalid nonce')
+    const r = mod(n, SECP256K1_N),
+        o = doubleAndAdd(SECP256K1_X, SECP256K1_Y, t, SECP256K1_P),
+        i = mod(o[0], SECP256K1_N)
+    let u = mod((r + mod(i, SECP256K1_N) * e) * modInverse(t, SECP256K1_N), SECP256K1_N)
+    if (i === 0n || u === 0n) throw new Error('Invalid r or s value')
+    let s = o[1] % 2n === 0n ? 27n : 28n
+    return u > SECP256K1_N / 2n && ((u = SECP256K1_N - u), (s = s === 27n ? 28n : 27n)), [i, u, s]
+}
+function recoverPublicKey(n, e, t, r) {
+    const o = modSqrt(mod(e ** 3n + 7n, SECP256K1_P), SECP256K1_P)
+    if (!o) throw new Error('Invalid r: does not correspond to a valid curve point')
+    const i = r === 27n ? 0n : 1n,
+        u = o % 2n === i ? o : SECP256K1_P - o,
+        s = mod(uint256ToNumber(keccak256(n), 'BE'), SECP256K1_N),
+        c = doubleAndAdd(e, u, t, SECP256K1_P),
+        f = doubleAndAdd(SECP256K1_X, SECP256K1_Y, s, SECP256K1_P),
+        l = ellipticAdd(c[0], c[1], f[0], mod(-f[1], SECP256K1_P), SECP256K1_P)
+    return doubleAndAdd(l[0], l[1], modInverse(e, SECP256K1_N), SECP256K1_P)
+}
+function verifySignature(n, e, t, r) {
+    const o = mod(uint256ToNumber(keccak256(n), 'BE'), SECP256K1_N),
+        i = modInverse(r, SECP256K1_N),
+        u = mod(o * i, SECP256K1_N),
+        s = mod(t * i, SECP256K1_N),
+        c = doubleAndAdd(SECP256K1_X, SECP256K1_Y, u, SECP256K1_P),
+        f = doubleAndAdd(e[0], e[1], s, SECP256K1_P),
+        l = ellipticAdd(c[0], c[1], f[0], f[1], SECP256K1_P)
+    return t === mod(l[0], SECP256K1_N)
 }
 class Uint8ArrayReader {
     constructor(e) {
@@ -2808,6 +2920,14 @@ class AsyncQueue {
         setBit,
         getBit,
         indexOf: binaryIndexOf
+    }),
+    (exports.Elliptic = {
+        privateKeyToPublicKey,
+        publicKeyToAddress,
+        signMessage,
+        signHash,
+        verifySignature,
+        recoverPublicKey
     }),
     (exports.Random = {
         intBetween,

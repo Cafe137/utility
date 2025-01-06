@@ -512,6 +512,12 @@ declare function commonPrefix(one: Uint8Array, other: Uint8Array): Uint8Array;
 declare function setBit(bytes: Uint8Array, index: number, value: 0 | 1): void;
 declare function getBit(bytes: Uint8Array, index: number): 0 | 1;
 declare function binaryIndexOf(array: Uint8Array, value: Uint8Array, start?: number): number;
+declare function privateKeyToPublicKey(privateKey: bigint): [bigint, bigint];
+declare function publicKeyToAddress(publicKey: [bigint, bigint]): Uint8Array;
+declare function signMessage(message: Uint8Array, privateKey: bigint, nonce?: bigint): [bigint, bigint, 27n | 28n];
+declare function signHash(hash: bigint, privateKey: bigint, nonce?: bigint): [bigint, bigint, 27n | 28n];
+declare function recoverPublicKey(message: Uint8Array, r: bigint, s: bigint, v: 27n | 28n): [bigint, bigint];
+declare function verifySignature(message: Uint8Array, publicKey: [bigint, bigint], r: bigint, s: bigint): boolean;
 interface Uint8ArrayIO {
     max: () => number;
 }
@@ -625,6 +631,14 @@ export declare const Binary: {
     setBit: typeof setBit;
     getBit: typeof getBit;
     indexOf: typeof binaryIndexOf;
+};
+export declare const Elliptic: {
+    privateKeyToPublicKey: typeof privateKeyToPublicKey;
+    publicKeyToAddress: typeof publicKeyToAddress;
+    signMessage: typeof signMessage;
+    signHash: typeof signHash;
+    verifySignature: typeof verifySignature;
+    recoverPublicKey: typeof recoverPublicKey;
 };
 export declare const Random: {
     intBetween: typeof intBetween;
@@ -969,4 +983,5 @@ export declare const Vector: {
     raycastCircle: typeof raycastCircle;
     getLineIntersectionPoint: typeof getLineIntersectionPoint;
 };
-export {};
+export { };
+

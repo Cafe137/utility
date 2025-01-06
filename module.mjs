@@ -5,6 +5,7 @@ export const Assertions = utility.Assertions
 export const Binary = utility.Binary
 export const Cache = utility.Cache
 export const Dates = utility.Dates
+export const Elliptic = utility.Elliptic
 export const Numbers = utility.Numbers
 export const Objects = utility.Objects
 export const Pagination = utility.Pagination
