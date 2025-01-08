@@ -2452,6 +2452,11 @@ function binaryIndexOf(n, e, t = 0) {
         for (let o = 0; o < e.length && n[r + o] === e[o]; o++) if (o === e.length - 1) return r
     return -1
 }
+function binaryEquals(n, e) {
+    if (n.length !== e.length) return !1
+    for (let t = 0; t < n.length; t++) if (n[t] !== e[t]) return !1
+    return !0
+}
 function mod(n, e) {
     return ((n % e) + e) % e
 }
@@ -2919,7 +2924,8 @@ class AsyncQueue {
         commonPrefix,
         setBit,
         getBit,
-        indexOf: binaryIndexOf
+        indexOf: binaryIndexOf,
+        equals: binaryEquals
     }),
     (exports.Elliptic = {
         privateKeyToPublicKey,
