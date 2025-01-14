@@ -415,6 +415,7 @@ declare function removeEmptyValues(object: CafeObject): CafeObject;
 declare function filterObjectKeys<T>(object: CafeObject<T>, predicate: (key: string) => boolean): CafeObject<T>;
 declare function filterObjectValues<T>(object: CafeObject<T>, predicate: (value: T) => boolean): CafeObject<T>;
 declare function mapObject<T, K>(object: CafeObject<T>, mapper: (value: T) => K): CafeObject<K>;
+declare function mapIterable<T, K>(iterable: Iterable<T>, mapper: (value: T, index: number) => K): K[];
 declare function rethrow<T>(asyncFn: () => Promise<T>, throwable: Error): Promise<T>;
 declare function setSomeOnObject(object: CafeObject, key: string, value: unknown): void;
 declare function setSomeDeep(target: CafeObject, targetPath: string, source: CafeObject, sourcePath: string): void;
@@ -805,6 +806,7 @@ export declare const Objects: {
     match: typeof match;
     sort: typeof sortObjectValues;
     map: typeof mapObject;
+    mapIterable: typeof mapIterable;
     filterKeys: typeof filterObjectKeys;
     filterValues: typeof filterObjectValues;
     rethrow: typeof rethrow;

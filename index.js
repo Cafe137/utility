@@ -1789,6 +1789,12 @@ function mapObject(n, e) {
     for (const r of Object.entries(n)) t[r[0]] = e(r[1])
     return t
 }
+function mapIterable(n, e) {
+    const t = []
+    let r = 0
+    for (const o of n) t.push(e(o, r++))
+    return t
+}
 async function rethrow(n, e) {
     try {
         return await n()
@@ -2181,8 +2187,8 @@ function keccakPermutate(n) {
             a = n[9] ^ n[19] ^ n[29] ^ n[39] ^ n[49],
             h = (o << 1) | (i >>> 31),
             bn = (i << 1) | (o >>> 31),
-            d = l ^ h,
-            p = a ^ bn,
+            p = l ^ h,
+            d = a ^ bn,
             $n = (u << 1) | (f >>> 31),
             An = (f << 1) | (u >>> 31),
             m = t ^ $n,
@@ -2199,8 +2205,8 @@ function keccakPermutate(n) {
             Sn = (r << 1) | (t >>> 31),
             $ = c ^ kn,
             A = s ^ Sn
-        ;(n[0] ^= d),
-            (n[1] ^= p),
+        ;(n[0] ^= p),
+            (n[1] ^= d),
             (n[2] ^= m),
             (n[3] ^= g),
             (n[4] ^= w),
@@ -2209,8 +2215,8 @@ function keccakPermutate(n) {
             (n[7] ^= b),
             (n[8] ^= $),
             (n[9] ^= A),
-            (n[10] ^= d),
-            (n[11] ^= p),
+            (n[10] ^= p),
+            (n[11] ^= d),
             (n[12] ^= m),
             (n[13] ^= g),
             (n[14] ^= w),
@@ -2219,8 +2225,8 @@ function keccakPermutate(n) {
             (n[17] ^= b),
             (n[18] ^= $),
             (n[19] ^= A),
-            (n[20] ^= d),
-            (n[21] ^= p),
+            (n[20] ^= p),
+            (n[21] ^= d),
             (n[22] ^= m),
             (n[23] ^= g),
             (n[24] ^= w),
@@ -2229,8 +2235,8 @@ function keccakPermutate(n) {
             (n[27] ^= b),
             (n[28] ^= $),
             (n[29] ^= A),
-            (n[30] ^= d),
-            (n[31] ^= p),
+            (n[30] ^= p),
+            (n[31] ^= d),
             (n[32] ^= m),
             (n[33] ^= g),
             (n[34] ^= w),
@@ -2239,8 +2245,8 @@ function keccakPermutate(n) {
             (n[37] ^= b),
             (n[38] ^= $),
             (n[39] ^= A),
-            (n[40] ^= d),
-            (n[41] ^= p),
+            (n[40] ^= p),
+            (n[41] ^= d),
             (n[42] ^= m),
             (n[43] ^= g),
             (n[44] ^= w),
@@ -2292,8 +2298,8 @@ function keccakPermutate(n) {
             ln = (n[40] << 18) | (n[41] >>> 14),
             an = (n[41] << 18) | (n[40] >>> 14),
             hn = (n[42] << 2) | (n[43] >>> 30),
-            dn = (n[43] << 2) | (n[42] >>> 30),
-            pn = (n[45] << 29) | (n[44] >>> 3),
+            pn = (n[43] << 2) | (n[42] >>> 30),
+            dn = (n[45] << 29) | (n[44] >>> 3),
             mn = (n[44] << 29) | (n[45] >>> 3),
             gn = (n[47] << 24) | (n[46] >>> 8),
             wn = (n[46] << 24) | (n[47] >>> 8),
@@ -2313,11 +2319,11 @@ function keccakPermutate(n) {
             (n[11] = D ^ (~v & W)),
             (n[12] = q ^ (~H & en)),
             (n[13] = v ^ (~W & tn)),
-            (n[14] = H ^ (~en & pn)),
+            (n[14] = H ^ (~en & dn)),
             (n[15] = W ^ (~tn & mn)),
-            (n[16] = en ^ (~pn & R)),
+            (n[16] = en ^ (~dn & R)),
             (n[17] = tn ^ (~mn & D)),
-            (n[18] = pn ^ (~R & q)),
+            (n[18] = dn ^ (~R & q)),
             (n[19] = mn ^ (~D & v)),
             (n[20] = O ^ (~U & Z)),
             (n[21] = T ^ (~j & Q)),
@@ -2344,11 +2350,11 @@ function keccakPermutate(n) {
             (n[42] = F ^ (~G & X)),
             (n[43] = z ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
-            (n[45] = Y ^ (~nn & dn)),
+            (n[45] = Y ^ (~nn & pn)),
             (n[46] = X ^ (~hn & k)),
-            (n[47] = nn ^ (~dn & S)),
+            (n[47] = nn ^ (~pn & S)),
             (n[48] = hn ^ (~k & F)),
-            (n[49] = dn ^ (~S & z)),
+            (n[49] = pn ^ (~S & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
     }
@@ -3094,6 +3100,7 @@ class AsyncQueue {
         match,
         sort: sortObjectValues,
         map: mapObject,
+        mapIterable,
         filterKeys: filterObjectKeys,
         filterValues: filterObjectValues,
         rethrow,
