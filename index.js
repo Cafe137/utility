@@ -149,12 +149,12 @@ function pickManyUnique(n, e, t, r = Math.random) {
 }
 function pickGuaranteed(n, e, t, r, o, i = Math.random) {
     const u = n.filter(c => c !== e && c !== t),
-        s = []
-    for (e !== null && s.push(e); u.length && s.length < r; ) {
+        f = []
+    for (e !== null && f.push(e); u.length && f.length < r; ) {
         const c = exports.Random.intBetween(0, u.length - 1, i)
-        o(u[c], s) && s.push(u[c]), u.splice(c, 1)
+        o(u[c], f) && f.push(u[c]), u.splice(c, 1)
     }
-    return shuffle(s, i), { values: s, indexOfGuaranteed: e !== null ? s.indexOf(e) : -1 }
+    return shuffle(f, i), { values: f, indexOfGuaranteed: e !== null ? f.indexOf(e) : -1 }
 }
 function last(n) {
     if (!n.length) throw Error('Received empty array')
@@ -194,10 +194,10 @@ function setDeep(n, e, t) {
     let o = n
     for (let i = 0; i < r.length; i++) {
         const u = r[i],
-            s = i < r.length - 1 && r[i + 1].includes(']'),
-            f = u.includes(']') ? u.replace(/\[|\]/g, '') : u
-        if (i === r.length - 1) return (o[f] = t), t
-        isObject(o[f]) || (s ? (o[f] = []) : (o[f] = {})), (o = o[f])
+            f = i < r.length - 1 && r[i + 1].includes(']'),
+            s = u.includes(']') ? u.replace(/\[|\]/g, '') : u
+        if (i === r.length - 1) return (o[s] = t), t
+        isObject(o[s]) || (f ? (o[s] = []) : (o[s] = {})), (o = o[s])
     }
     return t
 }
@@ -273,10 +273,10 @@ function rgbToHex(n) {
 function haversineDistanceToMeters(n, e, t, r) {
     const i = (n * Math.PI) / 180,
         u = (t * Math.PI) / 180,
-        s = ((t - n) * Math.PI) / 180,
+        f = ((t - n) * Math.PI) / 180,
         c = ((r - e) * Math.PI) / 180,
-        f = Math.sin(s / 2) * Math.sin(s / 2) + Math.cos(i) * Math.cos(u) * Math.sin(c / 2) * Math.sin(c / 2)
-    return 6371e3 * (2 * Math.atan2(Math.sqrt(f), Math.sqrt(1 - f)))
+        s = Math.sin(f / 2) * Math.sin(f / 2) + Math.cos(i) * Math.cos(u) * Math.sin(c / 2) * Math.sin(c / 2)
+    return 6371e3 * (2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s)))
 }
 function roundToNearest(n, e) {
     return Math.round(n / e) * e
@@ -812,8 +812,8 @@ function expand(n) {
         o = n.slice(0, t.index),
         i = n.slice(t.index + t[0].length)
     let u = []
-    for (const s of r) {
-        const c = expand(o + s + i)
+    for (const f of r) {
+        const c = expand(o + f + i)
         u = u.concat(c)
     }
     return u
@@ -1058,12 +1058,12 @@ function baseToUint8Array(n, e) {
     let o = 0,
         i = 0
     const u = []
-    for (let s = 0; s < n.length; s++) {
-        const c = n[s]
+    for (let f = 0; f < n.length; f++) {
+        const c = n[f]
         if (c === t) break
-        const f = e.indexOf(c)
-        if (f === -1) throw new Error(`Invalid character: ${c}`)
-        ;(i = (i << Math.log2(r)) | f), (o += Math.log2(r)), o >= 8 && ((o -= 8), u.push((i >> o) & 255))
+        const s = e.indexOf(c)
+        if (s === -1) throw new Error(`Invalid character: ${c}`)
+        ;(i = (i << Math.log2(r)) | s), (o += Math.log2(r)), o >= 8 && ((o -= 8), u.push((i >> o) & 255))
     }
     return new Uint8Array(u)
 }
@@ -1116,7 +1116,7 @@ function generateVariants(n, e, t, r = Math.random) {
     const o = exports.Arrays.shuffle(
             e.map(u => ({
                 variants: exports.Arrays.shuffle(
-                    u.variants.map(s => s),
+                    u.variants.map(f => f),
                     r
                 ),
                 avoid: u.avoid
@@ -1125,14 +1125,14 @@ function generateVariants(n, e, t, r = Math.random) {
         ),
         i = []
     for (const u of o) {
-        const s = u.variants.filter(f => f !== u.avoid),
-            c = s.find(f => n.includes(f))
-        if (c && (pushAll(i, explodeReplace(n, c, s)), i.length >= t)) break
+        const f = u.variants.filter(s => s !== u.avoid),
+            c = f.find(s => n.includes(s))
+        if (c && (pushAll(i, explodeReplace(n, c, f)), i.length >= t)) break
     }
     if (i.length < t)
         for (const u of o) {
-            const s = u.variants.find(c => n.includes(c))
-            if (s && (pushAll(i, explodeReplace(n, s, u.variants)), i.length >= t)) break
+            const f = u.variants.find(c => n.includes(c))
+            if (f && (pushAll(i, explodeReplace(n, f, u.variants)), i.length >= t)) break
         }
     return i.slice(0, t)
 }
@@ -1162,11 +1162,11 @@ function toLines(n, e, t = {}) {
     let o = '',
         i = 0
     for (let u = 0; u < n.length; u++) {
-        const s = n[u],
-            c = t[s] || 1
-        if (((o += s), (i += c), i > e)) {
-            const { line: f, rest: l } = breakLine(o)
-            r.push(f),
+        const f = n[u],
+            c = t[f] || 1
+        if (((o += f), (i += c), i > e)) {
+            const { line: s, rest: l } = breakLine(o)
+            r.push(s),
                 (o = l),
                 (i = l
                     .split('')
@@ -1219,8 +1219,8 @@ function resolveVariableWithDefaultSyntax(n, e, t, r = '$', o = ':') {
         if (n[i + e.length + 1] === o)
             if (n[i + e.length + 2] === o) n = n.replace(`${r}${e}${o}${o}`, t)
             else {
-                const s = readNextWord(n, i + e.length + 2, ['_'])
-                n = n.replace(`${r}${e}${o}${s}`, t)
+                const f = readNextWord(n, i + e.length + 2, ['_'])
+                n = n.replace(`${r}${e}${o}${f}`, t)
             }
         else n = n.replace(`${r}${e}`, t)
         i = n.indexOf(`${r}${e}`, i + t.length)
@@ -1248,8 +1248,8 @@ function resolveMarkdownLinks(n, e) {
             o = n.indexOf(')', t)
         if (r !== -1 && o !== -1) {
             const [i, u] = n.slice(r + 1, o).split(']('),
-                s = e(i, u)
-            n = n.slice(0, r) + s + n.slice(o + 1)
+                f = e(i, u)
+            n = n.slice(0, r) + f + n.slice(o + 1)
         }
         t = n.indexOf('](', t + 1)
     }
@@ -1287,8 +1287,8 @@ function reposition(n, e, t, r) {
     const o = n.find(u => u[e] === t),
         i = n.find(u => u[e] === t + r)
     o && i ? ((o[e] = t + r), (i[e] = t)) : o && (o[e] = t + r),
-        n.sort((u, s) => asNumber(u[e]) - asNumber(s[e])),
-        n.forEach((u, s) => (u[e] = s + 1))
+        n.sort((u, f) => asNumber(u[e]) - asNumber(f[e])),
+        n.forEach((u, f) => (u[e] = f + 1))
 }
 function unwrapSingleKey(n) {
     const e = Object.keys(n)
@@ -1311,7 +1311,7 @@ function parseCsv(n, e = ',', t = '"') {
     let o = '',
         i = !1
     const u = n.split('')
-    for (const s of u) s === e && !i ? (r.push(o), (o = '')) : s === t && ((!o && !i) || i) ? (i = !i) : (o += s)
+    for (const f of u) f === e && !i ? (r.push(o), (o = '')) : f === t && ((!o && !i) || i) ? (i = !i) : (o += f)
     return r.push(o), r
 }
 function humanizeProgress(n) {
@@ -1447,9 +1447,9 @@ function getProgress(n, e, t, r) {
     const o = e / t,
         i = r - n,
         u = i / e,
-        s = u * t,
-        c = s - i
-    return { deltaMs: i, progress: o, baseTimeMs: u, totalTimeMs: s, remainingTimeMs: c }
+        f = u * t,
+        c = f - i
+    return { deltaMs: i, progress: o, baseTimeMs: u, totalTimeMs: f, remainingTimeMs: c }
 }
 const dayNumberIndex = {
     0: 'sunday',
@@ -1657,8 +1657,8 @@ function organiseWithLimits(n, e, t, r, o) {
     for (const u of Object.keys(e)) i[u] = []
     ;(i[r] = []), o && (n = n.sort(o))
     for (const u of n) {
-        const s = u[t],
-            c = e[s] ? s : r
+        const f = u[t],
+            c = e[f] ? f : r
         i[c].length >= e[c] ? i[r].push(u) : i[c].push(u)
     }
     return i
@@ -1810,18 +1810,18 @@ function flip(n) {
 }
 function getAllPermutations(n) {
     const e = Object.keys(n),
-        t = e.map(s => n[s].length),
-        r = t.reduce((s, c) => (s *= c))
+        t = e.map(f => n[f].length),
+        r = t.reduce((f, c) => (f *= c))
     let o = 1
     const i = [1]
-    for (let s = 0; s < t.length - 1; s++) (o *= t[s]), i.push(o)
+    for (let f = 0; f < t.length - 1; f++) (o *= t[f]), i.push(o)
     const u = []
-    for (let s = 0; s < r; s++) {
+    for (let f = 0; f < r; f++) {
         const c = {}
-        for (let f = 0; f < e.length; f++) {
-            const l = n[e[f]],
-                a = Math.floor(s / i[f]) % l.length
-            c[e[f]] = l[a]
+        for (let s = 0; s < e.length; s++) {
+            const l = n[e[s]],
+                a = Math.floor(f / i[s]) % l.length
+            c[e[s]] = l[a]
         }
         u.push(c)
     }
@@ -1836,14 +1836,14 @@ function getFlatNotation(n, e, t) {
 function flattenInner(n, e, t, r, o) {
     if (!isObject(e)) return e
     for (const [i, u] of Object.entries(e)) {
-        const s = getFlatNotation(t, i, r)
+        const f = getFlatNotation(t, i, r)
         Array.isArray(u)
             ? o
-                ? flattenInner(n, u, s, !0, o)
-                : (n[s] = u.map(c => flattenInner(Array.isArray(c) ? [] : {}, c, '', !1, o)))
+                ? flattenInner(n, u, f, !0, o)
+                : (n[f] = u.map(c => flattenInner(Array.isArray(c) ? [] : {}, c, '', !1, o)))
             : isObject(u)
-            ? flattenInner(n, u, s, !1, o)
-            : (n[s] = u)
+            ? flattenInner(n, u, f, !1, o)
+            : (n[f] = u)
     }
     return n
 }
@@ -1910,8 +1910,8 @@ function countUnique(n, e, t, r, o) {
     const i = e ? n.map(e) : n,
         u = {}
     for (const c of i) u[c] = (u[c] || 0) + 1
-    const s = r ? sortObjectValues(u, o ? (c, f) => c[1] - f[1] : (c, f) => f[1] - c[1]) : u
-    return t ? Object.keys(s) : s
+    const f = r ? sortObjectValues(u, o ? (c, s) => c[1] - s[1] : (c, s) => s[1] - c[1]) : u
+    return t ? Object.keys(f) : f
 }
 function sortObjectValues(n, e) {
     return Object.fromEntries(Object.entries(n).sort(e))
@@ -2046,27 +2046,27 @@ function createHierarchy(n, e, t, r, o = !1) {
     const i = new Map(),
         u = []
     n.forEach(c => {
-        const f = new Node(c)
-        i.set(c[e], f)
+        const s = new Node(c)
+        i.set(c[e], s)
     }),
         n.forEach(c => {
-            const f = i.get(c[e])
-            if (!f) return
+            const s = i.get(c[e])
+            if (!s) return
             const l = c[t]
             if (l) {
                 const a = i.get(l)
-                a && a.children.push(f)
-            } else u.push(f)
+                a && a.children.push(s)
+            } else u.push(s)
         })
-    const s = c => {
-        c.children.sort((f, l) => {
-            const a = f.value[r],
+    const f = c => {
+        c.children.sort((s, l) => {
+            const a = s.value[r],
                 h = l.value[r]
             return o ? h - a : a - h
         }),
-            c.children.forEach(s)
+            c.children.forEach(f)
     }
-    return u.forEach(s), u
+    return u.forEach(f), u
 }
 function log2Reduce(n, e) {
     if (Math.log2(n.length) % 1 !== 0) throw new Error('Array length must be a power of 2')
@@ -2174,33 +2174,33 @@ function keccakPermutate(n) {
             o = n[2] ^ n[12] ^ n[22] ^ n[32] ^ n[42],
             i = n[3] ^ n[13] ^ n[23] ^ n[33] ^ n[43],
             u = n[4] ^ n[14] ^ n[24] ^ n[34] ^ n[44],
-            s = n[5] ^ n[15] ^ n[25] ^ n[35] ^ n[45],
+            f = n[5] ^ n[15] ^ n[25] ^ n[35] ^ n[45],
             c = n[6] ^ n[16] ^ n[26] ^ n[36] ^ n[46],
-            f = n[7] ^ n[17] ^ n[27] ^ n[37] ^ n[47],
+            s = n[7] ^ n[17] ^ n[27] ^ n[37] ^ n[47],
             l = n[8] ^ n[18] ^ n[28] ^ n[38] ^ n[48],
             a = n[9] ^ n[19] ^ n[29] ^ n[39] ^ n[49],
             h = (o << 1) | (i >>> 31),
             bn = (i << 1) | (o >>> 31),
-            p = l ^ h,
-            d = a ^ bn,
-            $n = (u << 1) | (s >>> 31),
-            An = (s << 1) | (u >>> 31),
+            d = l ^ h,
+            p = a ^ bn,
+            $n = (u << 1) | (f >>> 31),
+            An = (f << 1) | (u >>> 31),
             m = t ^ $n,
             g = r ^ An,
-            En = (c << 1) | (f >>> 31),
-            Mn = (f << 1) | (c >>> 31),
+            En = (c << 1) | (s >>> 31),
+            Mn = (s << 1) | (c >>> 31),
             w = o ^ En,
             y = i ^ Mn,
             On = (l << 1) | (a >>> 31),
             Tn = (a << 1) | (l >>> 31),
             x = u ^ On,
-            b = s ^ Tn,
+            b = f ^ Tn,
             kn = (t << 1) | (r >>> 31),
             Sn = (r << 1) | (t >>> 31),
             $ = c ^ kn,
-            A = f ^ Sn
-        ;(n[0] ^= p),
-            (n[1] ^= d),
+            A = s ^ Sn
+        ;(n[0] ^= d),
+            (n[1] ^= p),
             (n[2] ^= m),
             (n[3] ^= g),
             (n[4] ^= w),
@@ -2209,8 +2209,8 @@ function keccakPermutate(n) {
             (n[7] ^= b),
             (n[8] ^= $),
             (n[9] ^= A),
-            (n[10] ^= p),
-            (n[11] ^= d),
+            (n[10] ^= d),
+            (n[11] ^= p),
             (n[12] ^= m),
             (n[13] ^= g),
             (n[14] ^= w),
@@ -2219,8 +2219,8 @@ function keccakPermutate(n) {
             (n[17] ^= b),
             (n[18] ^= $),
             (n[19] ^= A),
-            (n[20] ^= p),
-            (n[21] ^= d),
+            (n[20] ^= d),
+            (n[21] ^= p),
             (n[22] ^= m),
             (n[23] ^= g),
             (n[24] ^= w),
@@ -2229,8 +2229,8 @@ function keccakPermutate(n) {
             (n[27] ^= b),
             (n[28] ^= $),
             (n[29] ^= A),
-            (n[30] ^= p),
-            (n[31] ^= d),
+            (n[30] ^= d),
+            (n[31] ^= p),
             (n[32] ^= m),
             (n[33] ^= g),
             (n[34] ^= w),
@@ -2239,8 +2239,8 @@ function keccakPermutate(n) {
             (n[37] ^= b),
             (n[38] ^= $),
             (n[39] ^= A),
-            (n[40] ^= p),
-            (n[41] ^= d),
+            (n[40] ^= d),
+            (n[41] ^= p),
             (n[42] ^= m),
             (n[43] ^= g),
             (n[44] ^= w),
@@ -2263,10 +2263,10 @@ function keccakPermutate(n) {
             B = (n[10] << 4) | (n[11] >>> 28),
             L = (n[13] << 12) | (n[12] >>> 20),
             N = (n[12] << 12) | (n[13] >>> 20),
-            j = (n[14] << 6) | (n[15] >>> 26),
-            U = (n[15] << 6) | (n[14] >>> 26),
-            z = (n[17] << 23) | (n[16] >>> 9),
-            F = (n[16] << 23) | (n[17] >>> 9),
+            U = (n[14] << 6) | (n[15] >>> 26),
+            j = (n[15] << 6) | (n[14] >>> 26),
+            F = (n[17] << 23) | (n[16] >>> 9),
+            z = (n[16] << 23) | (n[17] >>> 9),
             q = (n[18] << 20) | (n[19] >>> 12),
             v = (n[19] << 20) | (n[18] >>> 12),
             H = (n[20] << 3) | (n[21] >>> 29),
@@ -2287,13 +2287,13 @@ function keccakPermutate(n) {
             on = (n[35] << 15) | (n[34] >>> 17),
             un = (n[36] << 21) | (n[37] >>> 11),
             cn = (n[37] << 21) | (n[36] >>> 11),
-            sn = (n[38] << 8) | (n[39] >>> 24),
-            fn = (n[39] << 8) | (n[38] >>> 24),
+            fn = (n[38] << 8) | (n[39] >>> 24),
+            sn = (n[39] << 8) | (n[38] >>> 24),
             ln = (n[40] << 18) | (n[41] >>> 14),
             an = (n[41] << 18) | (n[40] >>> 14),
             hn = (n[42] << 2) | (n[43] >>> 30),
-            pn = (n[43] << 2) | (n[42] >>> 30),
-            dn = (n[45] << 29) | (n[44] >>> 3),
+            dn = (n[43] << 2) | (n[42] >>> 30),
+            pn = (n[45] << 29) | (n[44] >>> 3),
             mn = (n[44] << 29) | (n[45] >>> 3),
             gn = (n[47] << 24) | (n[46] >>> 8),
             wn = (n[46] << 24) | (n[47] >>> 8),
@@ -2313,22 +2313,22 @@ function keccakPermutate(n) {
             (n[11] = D ^ (~v & W)),
             (n[12] = q ^ (~H & en)),
             (n[13] = v ^ (~W & tn)),
-            (n[14] = H ^ (~en & dn)),
+            (n[14] = H ^ (~en & pn)),
             (n[15] = W ^ (~tn & mn)),
-            (n[16] = en ^ (~dn & R)),
+            (n[16] = en ^ (~pn & R)),
             (n[17] = tn ^ (~mn & D)),
-            (n[18] = dn ^ (~R & q)),
+            (n[18] = pn ^ (~R & q)),
             (n[19] = mn ^ (~D & v)),
-            (n[20] = O ^ (~j & Z)),
-            (n[21] = T ^ (~U & Q)),
-            (n[22] = j ^ (~Z & sn)),
-            (n[23] = U ^ (~Q & fn)),
-            (n[24] = Z ^ (~sn & ln)),
-            (n[25] = Q ^ (~fn & an)),
-            (n[26] = sn ^ (~ln & O)),
-            (n[27] = fn ^ (~an & T)),
-            (n[28] = ln ^ (~O & j)),
-            (n[29] = an ^ (~T & U)),
+            (n[20] = O ^ (~U & Z)),
+            (n[21] = T ^ (~j & Q)),
+            (n[22] = U ^ (~Z & fn)),
+            (n[23] = j ^ (~Q & sn)),
+            (n[24] = Z ^ (~fn & ln)),
+            (n[25] = Q ^ (~sn & an)),
+            (n[26] = fn ^ (~ln & O)),
+            (n[27] = sn ^ (~an & T)),
+            (n[28] = ln ^ (~O & U)),
+            (n[29] = an ^ (~T & j)),
             (n[30] = I ^ (~P & V)),
             (n[31] = C ^ (~B & _)),
             (n[32] = P ^ (~V & rn)),
@@ -2339,16 +2339,16 @@ function keccakPermutate(n) {
             (n[37] = on ^ (~wn & C)),
             (n[38] = gn ^ (~I & P)),
             (n[39] = wn ^ (~C & B)),
-            (n[40] = k ^ (~z & G)),
-            (n[41] = S ^ (~F & Y)),
-            (n[42] = z ^ (~G & X)),
-            (n[43] = F ^ (~Y & nn)),
+            (n[40] = k ^ (~F & G)),
+            (n[41] = S ^ (~z & Y)),
+            (n[42] = F ^ (~G & X)),
+            (n[43] = z ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
-            (n[45] = Y ^ (~nn & pn)),
+            (n[45] = Y ^ (~nn & dn)),
             (n[46] = X ^ (~hn & k)),
-            (n[47] = nn ^ (~pn & S)),
-            (n[48] = hn ^ (~k & z)),
-            (n[49] = pn ^ (~S & F)),
+            (n[47] = nn ^ (~dn & S)),
+            (n[48] = hn ^ (~k & F)),
+            (n[49] = dn ^ (~S & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
     }
@@ -2452,6 +2452,15 @@ function binaryIndexOf(n, e, t = 0) {
         for (let o = 0; o < e.length && n[r + o] === e[o]; o++) if (o === e.length - 1) return r
     return -1
 }
+function binaryPad(n, e) {
+    if (n.length >= e) return n
+    const t = new Uint8Array(e)
+    return t.set(n, 0), t
+}
+function binaryPadToMultiple(n, e) {
+    const t = n.length % e
+    return t === 0 ? n : binaryPad(n, n.length + e - t)
+}
 function binaryEquals(n, e) {
     if (n.length !== e.length) return !1
     for (let t = 0; t < n.length; t++) if (n[t] !== e[t]) return !1
@@ -2497,8 +2506,8 @@ function ellipticAdd(n, e, t, r, o) {
     if (n === t && e === r) return ellipticDouble(n, e, o)
     const i = mod((r - e) * modInverse(t - n, o), o),
         u = mod(i * i - n - t, o),
-        s = mod(i * (n - u) - e, o)
-    return [u, s]
+        f = mod(i * (n - u) - e, o)
+    return [u, f]
 }
 function privateKeyToPublicKey(n) {
     if (n <= 0n || n >= SECP256K1_N) throw new Error('Invalid private key')
@@ -2513,8 +2522,8 @@ function doubleAndAdd(n, e, t, r) {
     let o = [0n, 0n],
         i = [n, e]
     const u = t.toString(2)
-    for (const s of u)
-        s === '0'
+    for (const f of u)
+        f === '0'
             ? ((i = ellipticAdd(o[0], o[1], i[0], i[1], r)), (o = ellipticDouble(o[0], o[1], r)))
             : ((o = ellipticAdd(o[0], o[1], i[0], i[1], r)), (i = ellipticDouble(i[0], i[1], r)))
     return o
@@ -2541,28 +2550,28 @@ function signHash(n, e, t) {
         i = mod(o[0], SECP256K1_N)
     let u = mod((r + mod(i, SECP256K1_N) * e) * modInverse(t, SECP256K1_N), SECP256K1_N)
     if (i === 0n || u === 0n) throw new Error('Invalid r or s value')
-    let s = o[1] % 2n === 0n ? 27n : 28n
-    return u > SECP256K1_N / 2n && ((u = SECP256K1_N - u), (s = s === 27n ? 28n : 27n)), [i, u, s]
+    let f = o[1] % 2n === 0n ? 27n : 28n
+    return u > SECP256K1_N / 2n && ((u = SECP256K1_N - u), (f = f === 27n ? 28n : 27n)), [i, u, f]
 }
 function recoverPublicKey(n, e, t, r) {
     const o = modSqrt(mod(e ** 3n + 7n, SECP256K1_P), SECP256K1_P)
     if (!o) throw new Error('Invalid r: does not correspond to a valid curve point')
     const i = r === 27n ? 0n : 1n,
         u = o % 2n === i ? o : SECP256K1_P - o,
-        s = mod(uint256ToNumber(keccak256(n), 'BE'), SECP256K1_N),
+        f = mod(uint256ToNumber(keccak256(n), 'BE'), SECP256K1_N),
         c = doubleAndAdd(e, u, t, SECP256K1_P),
-        f = doubleAndAdd(SECP256K1_X, SECP256K1_Y, s, SECP256K1_P),
-        l = ellipticAdd(c[0], c[1], f[0], mod(-f[1], SECP256K1_P), SECP256K1_P)
+        s = doubleAndAdd(SECP256K1_X, SECP256K1_Y, f, SECP256K1_P),
+        l = ellipticAdd(c[0], c[1], s[0], mod(-s[1], SECP256K1_P), SECP256K1_P)
     return doubleAndAdd(l[0], l[1], modInverse(e, SECP256K1_N), SECP256K1_P)
 }
 function verifySignature(n, e, t, r) {
     const o = mod(uint256ToNumber(keccak256(n), 'BE'), SECP256K1_N),
         i = modInverse(r, SECP256K1_N),
         u = mod(o * i, SECP256K1_N),
-        s = mod(t * i, SECP256K1_N),
+        f = mod(t * i, SECP256K1_N),
         c = doubleAndAdd(SECP256K1_X, SECP256K1_Y, u, SECP256K1_P),
-        f = doubleAndAdd(e[0], e[1], s, SECP256K1_P),
-        l = ellipticAdd(c[0], c[1], f[0], f[1], SECP256K1_P)
+        s = doubleAndAdd(e[0], e[1], f, SECP256K1_P),
+        l = ellipticAdd(c[0], c[1], s[0], s[1], SECP256K1_P)
     return t === mod(l[0], SECP256K1_N)
 }
 class Uint8ArrayReader {
@@ -2633,7 +2642,7 @@ function tickPlaybook(n) {
     )
 }
 function getArgument(n, e, t, r) {
-    const o = n.findIndex(s => s === `--${e}` || s.startsWith(`--${e}=`)),
+    const o = n.findIndex(f => f === `--${e}` || f.startsWith(`--${e}=`)),
         i = n[o]
     if (!i) return (t || {})[r || e || ''] || null
     if (i.includes('=')) return i.split('=')[1]
@@ -2655,9 +2664,9 @@ function getBooleanArgument(n, e, t, r) {
     if (!i && o) return !0
     if (!i && !o) return null
     const u = ['true', '1', 'yes', 'y', 'on'],
-        s = ['false', '0', 'no', 'n', 'off']
+        f = ['false', '0', 'no', 'n', 'off']
     if (u.includes(i.toLowerCase())) return !0
-    if (s.includes(i.toLowerCase())) return !1
+    if (f.includes(i.toLowerCase())) return !1
     throw Error(`Invalid boolean argument ${e}: ${i}`)
 }
 function requireStringArgument(n, e, t, r) {
@@ -2750,36 +2759,36 @@ function findCorners(n, e, t, r) {
     ]
     for (let i = 0; i < n.length; i++)
         for (let u = 0; u < n[0].length; u++) {
-            const s = getCorners(n, i, u)
-            for (const c of s) o.some(f => f.x === c.x && f.y === c.y) || o.push(c)
+            const f = getCorners(n, i, u)
+            for (const c of f) o.some(s => s.x === c.x && s.y === c.y) || o.push(c)
         }
     return o.map(i => ({ x: i.x * e, y: i.y * e }))
 }
 function findLines(n, e) {
-    const t = filterCoordinates(n, (c, f) => n[c][f] === 0 && n[c][f + 1] !== 0, 'row-first').map(c => ({
+    const t = filterCoordinates(n, (c, s) => n[c][s] === 0 && n[c][s + 1] !== 0, 'row-first').map(c => ({
             ...c,
             dx: 1,
             dy: 0
         })),
-        r = filterCoordinates(n, (c, f) => n[c][f] === 0 && n[c][f - 1] !== 0, 'row-first').map(c => ({
+        r = filterCoordinates(n, (c, s) => n[c][s] === 0 && n[c][s - 1] !== 0, 'row-first').map(c => ({
             ...c,
             dx: 1,
             dy: 0
         })),
-        o = filterCoordinates(n, (c, f) => n[c][f] === 0 && n[c - 1]?.[f] !== 0, 'column-first').map(c => ({
+        o = filterCoordinates(n, (c, s) => n[c][s] === 0 && n[c - 1]?.[s] !== 0, 'column-first').map(c => ({
             ...c,
             dx: 0,
             dy: 1
         })),
-        i = filterCoordinates(n, (c, f) => n[c][f] === 0 && n[c + 1]?.[f] !== 0, 'column-first').map(c => ({
+        i = filterCoordinates(n, (c, s) => n[c][s] === 0 && n[c + 1]?.[s] !== 0, 'column-first').map(c => ({
             ...c,
             dx: 0,
             dy: 1
         }))
     t.forEach(c => c.y++), i.forEach(c => c.x++)
-    const u = group([...o, ...i], (c, f) => c.x === f.x && c.y - 1 === f.y),
-        s = group([...r, ...t], (c, f) => c.y === f.y && c.x - 1 === f.x)
-    return [...u, ...s]
+    const u = group([...o, ...i], (c, s) => c.x === s.x && c.y - 1 === s.y),
+        f = group([...r, ...t], (c, s) => c.y === s.y && c.x - 1 === s.x)
+    return [...u, ...f]
         .map(c => ({ start: c[0], end: last(c) }))
         .map(c => ({
             start: multiplyPoint(c.start, e),
@@ -2797,10 +2806,10 @@ function getLineIntersectionPoint(n, e, t, r) {
     if (o === 0) return null
     let i = n.y - t.y,
         u = n.x - t.x
-    const s = (r.x - t.x) * i - (r.y - t.y) * u,
+    const f = (r.x - t.x) * i - (r.y - t.y) * u,
         c = (e.x - n.x) * i - (e.y - n.y) * u
     return (
-        (i = s / o),
+        (i = f / o),
         (u = c / o),
         i > 0 && i < 1 && u > 0 && u < 1 ? { x: n.x + i * (e.x - n.x), y: n.y + i * (e.y - n.y) } : null
     )
@@ -2814,9 +2823,9 @@ function raycast(n, e, t) {
     }
     return r.length
         ? r.reduce((i, u) => {
-              const s = getDistanceBetweenPoints(n, u),
+              const f = getDistanceBetweenPoints(n, u),
                   c = getDistanceBetweenPoints(n, i)
-              return s < c ? u : i
+              return f < c ? u : i
           })
         : null
 }
@@ -2824,9 +2833,9 @@ function raycastCircle(n, e, t) {
     const o = getSortedRayAngles(n, t),
         i = []
     for (const u of o) {
-        const s = raycast(n, e, u - 0.001),
+        const f = raycast(n, e, u - 0.001),
             c = raycast(n, e, u + 0.001)
-        s && i.push(s), c && i.push(c)
+        f && i.push(f), c && i.push(c)
     }
     return i
 }
@@ -2925,7 +2934,9 @@ class AsyncQueue {
         setBit,
         getBit,
         indexOf: binaryIndexOf,
-        equals: binaryEquals
+        equals: binaryEquals,
+        pad: binaryPad,
+        padToMultiple: binaryPadToMultiple
     }),
     (exports.Elliptic = {
         privateKeyToPublicKey,

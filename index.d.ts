@@ -511,7 +511,9 @@ declare function proximity(one: Uint8Array, other: Uint8Array, max: number): num
 declare function commonPrefix(one: Uint8Array, other: Uint8Array): Uint8Array;
 declare function setBit(bytes: Uint8Array, index: number, value: 0 | 1): void;
 declare function getBit(bytes: Uint8Array, index: number): 0 | 1;
-declare function binaryIndexOf(array: Uint8Array, value: Uint8Array, start?: number): number;
+declare function binaryIndexOf(bytes: Uint8Array, value: Uint8Array, start?: number): number;
+declare function binaryPad(bytes: Uint8Array, size: number): Uint8Array;
+declare function binaryPadToMultiple(bytes: Uint8Array, multiple: number): Uint8Array;
 declare function binaryEquals(a: Uint8Array, b: Uint8Array): boolean;
 declare function privateKeyToPublicKey(privateKey: bigint): [bigint, bigint];
 declare function publicKeyToAddress(publicKey: [bigint, bigint]): Uint8Array;
@@ -633,6 +635,8 @@ export declare const Binary: {
     getBit: typeof getBit;
     indexOf: typeof binaryIndexOf;
     equals: typeof binaryEquals;
+    pad: typeof binaryPad;
+    padToMultiple: typeof binaryPadToMultiple;
 };
 export declare const Elliptic: {
     privateKeyToPublicKey: typeof privateKeyToPublicKey;
