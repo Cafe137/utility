@@ -2467,6 +2467,11 @@ function binaryPadToMultiple(n, e) {
     const t = n.length % e
     return t === 0 ? n : binaryPad(n, n.length + e - t)
 }
+function xorCypher(n, e) {
+    const t = new Uint8Array(n.length)
+    for (let r = 0; r < n.length; r++) t[r] = n[r] ^ e[r % e.length]
+    return t
+}
 function binaryEquals(n, e) {
     if (n.length !== e.length) return !1
     for (let t = 0; t < n.length; t++) if (n[t] !== e[t]) return !1
@@ -2942,7 +2947,8 @@ class AsyncQueue {
         indexOf: binaryIndexOf,
         equals: binaryEquals,
         pad: binaryPad,
-        padToMultiple: binaryPadToMultiple
+        padToMultiple: binaryPadToMultiple,
+        xorCypher
     }),
     (exports.Elliptic = {
         privateKeyToPublicKey,
