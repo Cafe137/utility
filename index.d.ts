@@ -523,17 +523,14 @@ declare function signMessage(message: Uint8Array, privateKey: bigint, nonce?: bi
 declare function signHash(hash: bigint, privateKey: bigint, nonce?: bigint): [bigint, bigint, 27n | 28n];
 declare function recoverPublicKey(message: Uint8Array, r: bigint, s: bigint, v: 27n | 28n): [bigint, bigint];
 declare function verifySignature(message: Uint8Array, publicKey: [bigint, bigint], r: bigint, s: bigint): boolean;
-interface Uint8ArrayIO {
-    max: () => number;
-}
-declare class Uint8ArrayReader implements Uint8ArrayIO {
+export declare class Uint8ArrayReader {
     cursor: number;
     buffer: Uint8Array;
     constructor(buffer: Uint8Array);
     read(size: number): Uint8Array;
     max(): number;
 }
-declare class Uint8ArrayWriter implements Uint8ArrayIO {
+export declare class Uint8ArrayWriter {
     cursor: number;
     buffer: Uint8Array;
     constructor(buffer: Uint8Array);

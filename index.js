@@ -17,6 +17,8 @@ Object.defineProperty(exports, '__esModule', { value: !0 }),
         exports.AsyncQueue =
         exports.PubSubChannel =
         exports.Chunk =
+        exports.Uint8ArrayWriter =
+        exports.Uint8ArrayReader =
         exports.AsyncLazy =
         exports.Lazy =
         exports.Optional =
@@ -2202,9 +2204,9 @@ function keccakPermutate(n) {
             x = u ^ On,
             b = f ^ Tn,
             kn = (t << 1) | (r >>> 31),
-            Sn = (r << 1) | (t >>> 31),
+            Rn = (r << 1) | (t >>> 31),
             $ = c ^ kn,
-            A = s ^ Sn
+            A = s ^ Rn
         ;(n[0] ^= p),
             (n[1] ^= d),
             (n[2] ^= m),
@@ -2260,23 +2262,23 @@ function keccakPermutate(n) {
             O = (n[2] << 1) | (n[3] >>> 31),
             T = (n[3] << 1) | (n[2] >>> 31),
             k = (n[5] << 30) | (n[4] >>> 2),
-            S = (n[4] << 30) | (n[5] >>> 2),
-            R = (n[6] << 28) | (n[7] >>> 4),
+            R = (n[4] << 30) | (n[5] >>> 2),
+            S = (n[6] << 28) | (n[7] >>> 4),
             D = (n[7] << 28) | (n[6] >>> 4),
             I = (n[8] << 27) | (n[9] >>> 5),
             C = (n[9] << 27) | (n[8] >>> 5),
             P = (n[11] << 4) | (n[10] >>> 28),
             B = (n[10] << 4) | (n[11] >>> 28),
             L = (n[13] << 12) | (n[12] >>> 20),
-            N = (n[12] << 12) | (n[13] >>> 20),
-            U = (n[14] << 6) | (n[15] >>> 26),
+            U = (n[12] << 12) | (n[13] >>> 20),
+            N = (n[14] << 6) | (n[15] >>> 26),
             j = (n[15] << 6) | (n[14] >>> 26),
             F = (n[17] << 23) | (n[16] >>> 9),
             z = (n[16] << 23) | (n[17] >>> 9),
             q = (n[18] << 20) | (n[19] >>> 12),
             v = (n[19] << 20) | (n[18] >>> 12),
-            H = (n[20] << 3) | (n[21] >>> 29),
-            W = (n[21] << 3) | (n[20] >>> 29),
+            W = (n[20] << 3) | (n[21] >>> 29),
+            H = (n[21] << 3) | (n[20] >>> 29),
             V = (n[22] << 10) | (n[23] >>> 22),
             _ = (n[23] << 10) | (n[22] >>> 22),
             J = (n[25] << 11) | (n[24] >>> 21),
@@ -2306,34 +2308,34 @@ function keccakPermutate(n) {
             yn = (n[48] << 14) | (n[49] >>> 18),
             xn = (n[49] << 14) | (n[48] >>> 18)
         ;(n[0] = E ^ (~L & J)),
-            (n[1] = M ^ (~N & K)),
+            (n[1] = M ^ (~U & K)),
             (n[2] = L ^ (~J & un)),
-            (n[3] = N ^ (~K & cn)),
+            (n[3] = U ^ (~K & cn)),
             (n[4] = J ^ (~un & yn)),
             (n[5] = K ^ (~cn & xn)),
             (n[6] = un ^ (~yn & E)),
             (n[7] = cn ^ (~xn & M)),
             (n[8] = yn ^ (~E & L)),
-            (n[9] = xn ^ (~M & N)),
-            (n[10] = R ^ (~q & H)),
-            (n[11] = D ^ (~v & W)),
-            (n[12] = q ^ (~H & en)),
-            (n[13] = v ^ (~W & tn)),
-            (n[14] = H ^ (~en & dn)),
-            (n[15] = W ^ (~tn & mn)),
-            (n[16] = en ^ (~dn & R)),
+            (n[9] = xn ^ (~M & U)),
+            (n[10] = S ^ (~q & W)),
+            (n[11] = D ^ (~v & H)),
+            (n[12] = q ^ (~W & en)),
+            (n[13] = v ^ (~H & tn)),
+            (n[14] = W ^ (~en & dn)),
+            (n[15] = H ^ (~tn & mn)),
+            (n[16] = en ^ (~dn & S)),
             (n[17] = tn ^ (~mn & D)),
-            (n[18] = dn ^ (~R & q)),
+            (n[18] = dn ^ (~S & q)),
             (n[19] = mn ^ (~D & v)),
-            (n[20] = O ^ (~U & Z)),
+            (n[20] = O ^ (~N & Z)),
             (n[21] = T ^ (~j & Q)),
-            (n[22] = U ^ (~Z & fn)),
+            (n[22] = N ^ (~Z & fn)),
             (n[23] = j ^ (~Q & sn)),
             (n[24] = Z ^ (~fn & ln)),
             (n[25] = Q ^ (~sn & an)),
             (n[26] = fn ^ (~ln & O)),
             (n[27] = sn ^ (~an & T)),
-            (n[28] = ln ^ (~O & U)),
+            (n[28] = ln ^ (~O & N)),
             (n[29] = an ^ (~T & j)),
             (n[30] = I ^ (~P & V)),
             (n[31] = C ^ (~B & _)),
@@ -2346,15 +2348,15 @@ function keccakPermutate(n) {
             (n[38] = gn ^ (~I & P)),
             (n[39] = wn ^ (~C & B)),
             (n[40] = k ^ (~F & G)),
-            (n[41] = S ^ (~z & Y)),
+            (n[41] = R ^ (~z & Y)),
             (n[42] = F ^ (~G & X)),
             (n[43] = z ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
             (n[45] = Y ^ (~nn & pn)),
             (n[46] = X ^ (~hn & k)),
-            (n[47] = nn ^ (~pn & S)),
+            (n[47] = nn ^ (~pn & R)),
             (n[48] = hn ^ (~k & F)),
-            (n[49] = pn ^ (~S & z)),
+            (n[49] = pn ^ (~R & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
     }
@@ -2597,6 +2599,7 @@ class Uint8ArrayReader {
         return this.buffer.length - this.cursor
     }
 }
+exports.Uint8ArrayReader = Uint8ArrayReader
 class Uint8ArrayWriter {
     constructor(e) {
         ;(this.buffer = e), (this.cursor = 0)
@@ -2609,6 +2612,7 @@ class Uint8ArrayWriter {
         return this.buffer.length - this.cursor
     }
 }
+exports.Uint8ArrayWriter = Uint8ArrayWriter
 class Chunk {
     constructor(e, t = 0n) {
         ;(this.span = t), (this.writer = new Uint8ArrayWriter(new Uint8Array(e)))
