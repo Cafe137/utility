@@ -2460,23 +2460,23 @@ function binaryIndexOf(n, e, t = 0) {
         for (let o = 0; o < e.length && n[r + o] === e[o]; o++) if (o === e.length - 1) return r
     return -1
 }
-function binaryPadStart(n, e) {
+function binaryPadStart(n, e, t = 0) {
     if (n.length >= e) return n
-    const t = new Uint8Array(e)
-    return t.set(n, e - n.length), t
+    const r = new Uint8Array(e)
+    return r.fill(t), r.set(n, e - n.length), r
 }
-function binaryPadStartToMultiple(n, e) {
-    const t = n.length % e
-    return t === 0 ? n : binaryPadStart(n, n.length + e - t)
+function binaryPadStartToMultiple(n, e, t = 0) {
+    const r = n.length % e
+    return r === 0 ? n : binaryPadStart(n, n.length + e - r, t)
 }
-function binaryPadEnd(n, e) {
+function binaryPadEnd(n, e, t = 0) {
     if (n.length >= e) return n
-    const t = new Uint8Array(e)
-    return t.set(n, 0), t
+    const r = new Uint8Array(e)
+    return r.fill(t), r.set(n, 0), r
 }
-function binaryPadEndToMultiple(n, e) {
-    const t = n.length % e
-    return t === 0 ? n : binaryPadEnd(n, n.length + e - t)
+function binaryPadEndToMultiple(n, e, t = 0) {
+    const r = n.length % e
+    return r === 0 ? n : binaryPadEnd(n, n.length + e - r, t)
 }
 function xorCypher(n, e) {
     const t = new Uint8Array(n.length)
