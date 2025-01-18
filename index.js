@@ -2445,15 +2445,15 @@ function commonPrefix(n, e) {
     for (let r = 0; r < t; r++) if (n[r] !== e[r]) return n.subarray(0, r)
     return n.subarray(0, t)
 }
-function setBit(n, e, t) {
+function setBit(n, e, t, r) {
+    const o = Math.floor(e / 8),
+        i = e % 8
+    t === 1 ? (n[o] |= 1 << (r === 'BE' ? 7 - i : i)) : (n[o] &= ~(1 << (r === 'BE' ? 7 - i : i)))
+}
+function getBit(n, e, t) {
     const r = Math.floor(e / 8),
         o = e % 8
-    t === 1 ? (n[r] |= 1 << (7 - o)) : (n[r] &= ~(1 << (7 - o)))
-}
-function getBit(n, e) {
-    const t = Math.floor(e / 8),
-        r = e % 8
-    return (n[t] >> (7 - r)) & 1
+    return (n[r] >> (t === 'BE' ? 7 - o : o)) & 1
 }
 function binaryIndexOf(n, e, t = 0) {
     for (let r = t; r < n.length; r++)
