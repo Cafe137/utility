@@ -2123,21 +2123,21 @@ function numberToUint16(n, e) {
     return new DataView(t).setUint16(0, n, e === 'LE'), new Uint8Array(t)
 }
 function uint16ToNumber(n, e) {
-    return new DataView(n.buffer).getUint16(0, e === 'LE')
+    return new DataView(n.buffer).getUint16(n.byteOffset, e === 'LE')
 }
 function numberToUint32(n, e) {
     const t = new ArrayBuffer(4)
     return new DataView(t).setUint32(0, n, e === 'LE'), new Uint8Array(t)
 }
 function uint32ToNumber(n, e) {
-    return new DataView(n.buffer).getUint32(0, e === 'LE')
+    return new DataView(n.buffer).getUint32(n.byteOffset, e === 'LE')
 }
 function numberToUint64(n, e) {
     const t = new ArrayBuffer(8)
     return new DataView(t).setBigUint64(0, BigInt(n), e === 'LE'), new Uint8Array(t)
 }
 function uint64ToNumber(n, e) {
-    return new DataView(n.buffer).getBigUint64(0, e === 'LE')
+    return new DataView(n.buffer).getBigUint64(n.byteOffset, e === 'LE')
 }
 function numberToUint256(n, e) {
     const r = new Uint8Array(32)
