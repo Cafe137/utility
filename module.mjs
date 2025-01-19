@@ -18,6 +18,7 @@ export const Optional = utility.Optional
 export const Vector = utility.Vector
 export const PubSubChannel = utility.PubSubChannel
 export const Chunk = utility.Chunk
+export const MerkleTree = utility.MerkleTree
 export const Lazy = utility.Lazy
 export const AsyncLazy = utility.AsyncLazy
 export const AsyncQueue = utility.AsyncQueue

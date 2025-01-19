@@ -546,9 +546,18 @@ export declare class Chunk {
     build(): Uint8Array;
     hash(): Uint8Array;
 }
-declare function merkleStart(capacity: number): Chunk[];
-declare function merkleAppend(levels: Chunk[], data: Uint8Array, onChunk: (chunk: Chunk) => Promise<void>, level?: number, spanIncrement?: bigint): Promise<Chunk[]>;
-declare function merkleFinalize(levels: Chunk[], onChunk: (chunk: Chunk) => Promise<void>, level?: number): Promise<Chunk>;
+export declare class MerkleTree {
+    static readonly NOOP: (_: Chunk) => Promise<void>;
+    count: number;
+    private capacity;
+    private chunks;
+    private onChunk;
+    constructor(onChunk: (chunk: Chunk) => Promise<void>, capacity?: number);
+    static root(data: Uint8Array, capacity?: number): Promise<Chunk>;
+    append(data: Uint8Array, level?: number, spanIncrement?: bigint): Promise<void>;
+    private elevate;
+    finalize(level?: number): Promise<Chunk>;
+}
 type Playbook<T> = {
     ttl: number;
     ttlMax?: number;
@@ -614,9 +623,6 @@ export declare const Binary: {
     log2Reduce: typeof log2Reduce;
     partition: typeof partition;
     concatBytes: typeof concatBytes;
-    merkleStart: typeof merkleStart;
-    merkleAppend: typeof merkleAppend;
-    merkleFinalize: typeof merkleFinalize;
     numberToUint8: typeof numberToUint8;
     uint8ToNumber: typeof uint8ToNumber;
     numberToUint16: typeof numberToUint16;
