@@ -548,9 +548,9 @@ export declare class Chunk {
 }
 export declare class MerkleTree {
     static readonly NOOP: (_: Chunk) => Promise<void>;
-    count: number;
     private capacity;
     private chunks;
+    private counters;
     private onChunk;
     constructor(onChunk: (chunk: Chunk) => Promise<void>, capacity?: number);
     static root(data: Uint8Array, capacity?: number): Promise<Chunk>;

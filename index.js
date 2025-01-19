@@ -2639,7 +2639,7 @@ class Chunk {
 exports.Chunk = Chunk
 class MerkleTree {
     constructor(e, t = 4096) {
-        ;(this.count = 0), (this.capacity = t), (this.chunks = [new Chunk(t)]), (this.onChunk = e)
+        ;(this.counters = [1]), (this.capacity = t), (this.chunks = [new Chunk(t)]), (this.onChunk = e)
     }
     static async root(e, t = 4096) {
         const r = new _a(_a.NOOP, t)
@@ -2654,16 +2654,18 @@ class MerkleTree {
         }
     }
     async elevate(e) {
-        this.count++,
-            await this.onChunk(this.chunks[e]),
-            this.chunks[e + 1] || this.chunks.push(new Chunk(this.capacity)),
+        ;(this.counters[e] = ++this.counters[e] % (this.capacity / 32)),
+            this.chunks[e + 1] || (this.chunks.push(new Chunk(this.capacity)), this.counters.push(1)),
             await this.append(this.chunks[e].hash(), e + 1, this.chunks[e].span),
+            await this.onChunk(this.chunks[e]),
             (this.chunks[e] = new Chunk(this.capacity))
     }
     async finalize(e = 0) {
         return this.chunks[e + 1]
-            ? (await this.elevate(e), this.finalize(e + 1))
-            : (this.count++, await this.onChunk(this.chunks[e]), this.chunks[e])
+            ? this.counters[e] === 1
+                ? (await this.elevate(e + 1), (this.chunks[e + 1] = this.chunks[e]), this.finalize(e + 1))
+                : (await this.elevate(e), this.finalize(e + 1))
+            : (await this.onChunk(this.chunks[e]), this.chunks[e])
     }
 }
 ;(exports.MerkleTree = MerkleTree), (_a = MerkleTree), (MerkleTree.NOOP = async n => {})
