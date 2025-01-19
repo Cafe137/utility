@@ -547,7 +547,7 @@ export declare class Chunk {
     hash(): Uint8Array;
 }
 declare function merkleStart(capacity: number): Chunk[];
-declare function merkleAppend(levels: Chunk[], data: Uint8Array, onChunk: (chunk: Chunk) => Promise<void>, level?: number): Promise<Chunk[]>;
+declare function merkleAppend(levels: Chunk[], data: Uint8Array, onChunk: (chunk: Chunk) => Promise<void>, level?: number, spanIncrement?: bigint): Promise<Chunk[]>;
 declare function merkleFinalize(levels: Chunk[], onChunk: (chunk: Chunk) => Promise<void>, level?: number): Promise<Chunk>;
 type Playbook<T> = {
     ttl: number;

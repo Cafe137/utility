@@ -2265,8 +2265,8 @@ function keccakPermutate(n) {
             S = (n[4] << 30) | (n[5] >>> 2),
             R = (n[6] << 28) | (n[7] >>> 4),
             D = (n[7] << 28) | (n[6] >>> 4),
-            I = (n[8] << 27) | (n[9] >>> 5),
-            C = (n[9] << 27) | (n[8] >>> 5),
+            C = (n[8] << 27) | (n[9] >>> 5),
+            I = (n[9] << 27) | (n[8] >>> 5),
             P = (n[11] << 4) | (n[10] >>> 28),
             B = (n[10] << 4) | (n[11] >>> 28),
             L = (n[13] << 12) | (n[12] >>> 20),
@@ -2337,16 +2337,16 @@ function keccakPermutate(n) {
             (n[27] = sn ^ (~an & T)),
             (n[28] = ln ^ (~O & N)),
             (n[29] = an ^ (~T & j)),
-            (n[30] = I ^ (~P & V)),
-            (n[31] = C ^ (~B & _)),
+            (n[30] = C ^ (~P & V)),
+            (n[31] = I ^ (~B & _)),
             (n[32] = P ^ (~V & rn)),
             (n[33] = B ^ (~_ & on)),
             (n[34] = V ^ (~rn & gn)),
             (n[35] = _ ^ (~on & wn)),
-            (n[36] = rn ^ (~gn & I)),
-            (n[37] = on ^ (~wn & C)),
-            (n[38] = gn ^ (~I & P)),
-            (n[39] = wn ^ (~C & B)),
+            (n[36] = rn ^ (~gn & C)),
+            (n[37] = on ^ (~wn & I)),
+            (n[38] = gn ^ (~C & P)),
+            (n[39] = wn ^ (~I & B)),
             (n[40] = k ^ (~F & G)),
             (n[41] = S ^ (~z & Y)),
             (n[42] = F ^ (~G & X)),
@@ -2638,24 +2638,23 @@ exports.Chunk = Chunk
 function merkleStart(n) {
     return [new Chunk(n)]
 }
-async function merkleElevate(n, e, t) {
+async function merkleNext(n, e, t) {
     await e(n[t]),
-        n[t + 1] || n.push(new Chunk(n[t].writer.buffer.length, n[t].span)),
-        merkleAppend(n, n[t].hash(), e, t + 1),
+        n[t + 1] || n.push(new Chunk(n[t].writer.buffer.length)),
+        await merkleAppend(n, n[t].hash(), e, t + 1, n[t].span),
         (n[t] = new Chunk(n[t].writer.buffer.length))
 }
-async function merkleAppend(n, e, t, r = 0) {
-    n[r].writer.max() === 0 && (await merkleElevate(n, t, r))
-    const o = new Uint8ArrayReader(e)
-    for (; o.max() !== 0; ) {
-        const i = n[r].writer.write(o)
-        if (r === 0) for (let u = 0; u < n.length; u++) n[u].span += BigInt(i)
-        n[r].writer.max() === 0 && o.max() > 0 && (await merkleElevate(n, t, r))
+async function merkleAppend(n, e, t, r = 0, o) {
+    const i = new Uint8ArrayReader(e)
+    for (; i.max() > 0; ) {
+        n[r].writer.max() === 0 && (await merkleNext(n, t, r))
+        const u = n[r].writer.write(i)
+        o ? (n[r].span += o) : (n[0].span += BigInt(u))
     }
     return n
 }
 async function merkleFinalize(n, e, t = 0) {
-    return n[t + 1] ? (await merkleElevate(n, e, t), merkleFinalize(n, e, t + 1)) : (await e(n[t]), n[t])
+    return n[t + 1] ? (await merkleNext(n, e, t), merkleFinalize(n, e, t + 1)) : (await e(n[t]), n[t])
 }
 function tickPlaybook(n) {
     if (n.length === 0) return null
