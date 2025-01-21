@@ -17,6 +17,7 @@ Object.defineProperty(exports, '__esModule', { value: !0 }),
         exports.Binary =
         exports.AsyncQueue =
         exports.PubSubChannel =
+        exports.FixedPointNumber =
         exports.MerkleTree =
         exports.Chunk =
         exports.Uint8ArrayWriter =
@@ -2269,23 +2270,23 @@ function keccakPermutate(n) {
             D = (n[7] << 28) | (n[6] >>> 4),
             C = (n[8] << 27) | (n[9] >>> 5),
             I = (n[9] << 27) | (n[8] >>> 5),
-            P = (n[11] << 4) | (n[10] >>> 28),
-            B = (n[10] << 4) | (n[11] >>> 28),
+            B = (n[11] << 4) | (n[10] >>> 28),
+            P = (n[10] << 4) | (n[11] >>> 28),
             L = (n[13] << 12) | (n[12] >>> 20),
-            N = (n[12] << 12) | (n[13] >>> 20),
-            U = (n[14] << 6) | (n[15] >>> 26),
-            j = (n[15] << 6) | (n[14] >>> 26),
-            v = (n[17] << 23) | (n[16] >>> 9),
+            U = (n[12] << 12) | (n[13] >>> 20),
+            N = (n[14] << 6) | (n[15] >>> 26),
+            v = (n[15] << 6) | (n[14] >>> 26),
+            j = (n[17] << 23) | (n[16] >>> 9),
             z = (n[16] << 23) | (n[17] >>> 9),
             F = (n[18] << 20) | (n[19] >>> 12),
             q = (n[19] << 20) | (n[18] >>> 12),
             W = (n[20] << 3) | (n[21] >>> 29),
             H = (n[21] << 3) | (n[20] >>> 29),
             V = (n[22] << 10) | (n[23] >>> 22),
-            _ = (n[23] << 10) | (n[22] >>> 22),
-            J = (n[25] << 11) | (n[24] >>> 21),
-            K = (n[24] << 11) | (n[25] >>> 21),
-            Z = (n[26] << 25) | (n[27] >>> 7),
+            J = (n[23] << 10) | (n[22] >>> 22),
+            K = (n[25] << 11) | (n[24] >>> 21),
+            Z = (n[24] << 11) | (n[25] >>> 21),
+            _ = (n[26] << 25) | (n[27] >>> 7),
             Q = (n[27] << 25) | (n[26] >>> 7),
             G = (n[29] << 7) | (n[28] >>> 25),
             Y = (n[28] << 7) | (n[29] >>> 25),
@@ -2309,16 +2310,16 @@ function keccakPermutate(n) {
             wn = (n[46] << 24) | (n[47] >>> 8),
             yn = (n[48] << 14) | (n[49] >>> 18),
             xn = (n[49] << 14) | (n[48] >>> 18)
-        ;(n[0] = E ^ (~L & J)),
-            (n[1] = M ^ (~N & K)),
-            (n[2] = L ^ (~J & un)),
-            (n[3] = N ^ (~K & cn)),
-            (n[4] = J ^ (~un & yn)),
-            (n[5] = K ^ (~cn & xn)),
+        ;(n[0] = E ^ (~L & K)),
+            (n[1] = M ^ (~U & Z)),
+            (n[2] = L ^ (~K & un)),
+            (n[3] = U ^ (~Z & cn)),
+            (n[4] = K ^ (~un & yn)),
+            (n[5] = Z ^ (~cn & xn)),
             (n[6] = un ^ (~yn & E)),
             (n[7] = cn ^ (~xn & M)),
             (n[8] = yn ^ (~E & L)),
-            (n[9] = xn ^ (~M & N)),
+            (n[9] = xn ^ (~M & U)),
             (n[10] = R ^ (~F & W)),
             (n[11] = D ^ (~q & H)),
             (n[12] = F ^ (~W & en)),
@@ -2329,35 +2330,35 @@ function keccakPermutate(n) {
             (n[17] = tn ^ (~mn & D)),
             (n[18] = dn ^ (~R & F)),
             (n[19] = mn ^ (~D & q)),
-            (n[20] = O ^ (~U & Z)),
-            (n[21] = T ^ (~j & Q)),
-            (n[22] = U ^ (~Z & sn)),
-            (n[23] = j ^ (~Q & fn)),
-            (n[24] = Z ^ (~sn & ln)),
+            (n[20] = O ^ (~N & _)),
+            (n[21] = T ^ (~v & Q)),
+            (n[22] = N ^ (~_ & sn)),
+            (n[23] = v ^ (~Q & fn)),
+            (n[24] = _ ^ (~sn & ln)),
             (n[25] = Q ^ (~fn & an)),
             (n[26] = sn ^ (~ln & O)),
             (n[27] = fn ^ (~an & T)),
-            (n[28] = ln ^ (~O & U)),
-            (n[29] = an ^ (~T & j)),
-            (n[30] = C ^ (~P & V)),
-            (n[31] = I ^ (~B & _)),
-            (n[32] = P ^ (~V & rn)),
-            (n[33] = B ^ (~_ & on)),
+            (n[28] = ln ^ (~O & N)),
+            (n[29] = an ^ (~T & v)),
+            (n[30] = C ^ (~B & V)),
+            (n[31] = I ^ (~P & J)),
+            (n[32] = B ^ (~V & rn)),
+            (n[33] = P ^ (~J & on)),
             (n[34] = V ^ (~rn & gn)),
-            (n[35] = _ ^ (~on & wn)),
+            (n[35] = J ^ (~on & wn)),
             (n[36] = rn ^ (~gn & C)),
             (n[37] = on ^ (~wn & I)),
-            (n[38] = gn ^ (~C & P)),
-            (n[39] = wn ^ (~I & B)),
-            (n[40] = k ^ (~v & G)),
+            (n[38] = gn ^ (~C & B)),
+            (n[39] = wn ^ (~I & P)),
+            (n[40] = k ^ (~j & G)),
             (n[41] = S ^ (~z & Y)),
-            (n[42] = v ^ (~G & X)),
+            (n[42] = j ^ (~G & X)),
             (n[43] = z ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
             (n[45] = Y ^ (~nn & pn)),
             (n[46] = X ^ (~hn & k)),
             (n[47] = nn ^ (~pn & S)),
-            (n[48] = hn ^ (~k & v)),
+            (n[48] = hn ^ (~k & j)),
             (n[49] = pn ^ (~S & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
@@ -2669,6 +2670,48 @@ class MerkleTree {
     }
 }
 ;(exports.MerkleTree = MerkleTree), (_a = MerkleTree), (MerkleTree.NOOP = async n => {})
+class FixedPointNumber {
+    constructor(e, t) {
+        if (t < 0) throw Error('Scale must be non-negative')
+        ;(this.value = BigInt(e)), (this.scale = t)
+    }
+    static fromDecimalString(e, t) {
+        return new FixedPointNumber(BigInt(e.replace('.', '')), t)
+    }
+    add(e) {
+        return this.assertCompatibility(e), new FixedPointNumber(this.value + e.value, this.scale)
+    }
+    subtract(e) {
+        return this.assertCompatibility(e), new FixedPointNumber(this.value - e.value, this.scale)
+    }
+    multiply(e) {
+        return new FixedPointNumber(this.value * e, this.scale)
+    }
+    divide(e) {
+        if (e === 0n) throw new Error('Division by zero is not allowed')
+        const t = e * 10n ** BigInt(this.scale),
+            r = (this.value / t) * 10n ** BigInt(this.scale),
+            o = this.value % t
+        return [new FixedPointNumber(r, this.scale), new FixedPointNumber(o, this.scale)]
+    }
+    toDecimalString() {
+        if (this.scale === 0) return this.value.toString()
+        const e = this.value.toString(),
+            t = e.slice(0, -this.scale) || '0',
+            r = e.slice(-this.scale).padStart(this.scale, '0')
+        return `${t}.${r}`
+    }
+    toString() {
+        return this.value.toString()
+    }
+    toJSON() {
+        return this.toString()
+    }
+    assertCompatibility(e) {
+        if (this.scale !== e.scale) throw new Error(`Scale mismatch: expected ${this.scale}, but got ${e.scale}`)
+    }
+}
+exports.FixedPointNumber = FixedPointNumber
 function tickPlaybook(n) {
     if (n.length === 0) return null
     const e = n[0]

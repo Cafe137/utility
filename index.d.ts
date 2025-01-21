@@ -558,6 +558,20 @@ export declare class MerkleTree {
     private elevate;
     finalize(level?: number): Promise<Chunk>;
 }
+export declare class FixedPointNumber {
+    value: bigint;
+    scale: number;
+    constructor(value: bigint | string | number, scale: number);
+    static fromDecimalString(value: string, scale: number): FixedPointNumber;
+    add(other: FixedPointNumber): FixedPointNumber;
+    subtract(other: FixedPointNumber): FixedPointNumber;
+    multiply(factor: bigint): FixedPointNumber;
+    divide(divisor: bigint): [FixedPointNumber, FixedPointNumber];
+    toDecimalString(): string;
+    toString(): string;
+    toJSON(): string;
+    assertCompatibility(other: FixedPointNumber): void;
+}
 type Playbook<T> = {
     ttl: number;
     ttlMax?: number;
