@@ -520,6 +520,7 @@ declare function binaryPadEndToMultiple(bytes: Uint8Array, multiple: number, pad
 declare function xorCypher(bytes: Uint8Array, key: Uint8Array): Uint8Array;
 declare function binaryEquals(a: Uint8Array, b: Uint8Array): boolean;
 declare function privateKeyToPublicKey(privateKey: bigint): [bigint, bigint];
+declare function compressPublicKey(publicKey: [bigint, bigint]): Uint8Array;
 declare function publicKeyFromCompressed(compressed: Uint8Array): [bigint, bigint];
 declare function publicKeyToAddress(publicKey: [bigint, bigint]): Uint8Array;
 declare function signMessage(message: Uint8Array, privateKey: bigint, nonce?: bigint): [bigint, bigint, 27n | 28n];
@@ -665,6 +666,7 @@ export declare const Binary: {
 };
 export declare const Elliptic: {
     privateKeyToPublicKey: typeof privateKeyToPublicKey;
+    compressPublicKey: typeof compressPublicKey;
     publicKeyFromCompressed: typeof publicKeyFromCompressed;
     publicKeyToAddress: typeof publicKeyToAddress;
     signMessage: typeof signMessage;

@@ -2538,6 +2538,10 @@ function privateKeyToPublicKey(n) {
     if (n <= 0n || n >= SECP256K1_N) throw new Error('Invalid private key')
     return doubleAndAdd(SECP256K1_X, SECP256K1_Y, n, SECP256K1_P)
 }
+function compressPublicKey(n) {
+    const t = n[1] % 2n === 0n ? 2 : 3
+    return new Uint8Array([t, ...numberToUint256(n[0], 'BE')])
+}
 function publicKeyFromCompressed(n) {
     if (n.length !== 33 || (n[0] !== 2 && n[0] !== 3)) throw new Error('Invalid compressed public key')
     const e = uint256ToNumber(n.slice(1), 'BE'),
@@ -3028,6 +3032,7 @@ class AsyncQueue {
     }),
     (exports.Elliptic = {
         privateKeyToPublicKey,
+        compressPublicKey,
         publicKeyFromCompressed,
         publicKeyToAddress,
         signMessage,
