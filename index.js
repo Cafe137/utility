@@ -2559,7 +2559,6 @@ function publicKeyToAddress(n) {
 function checksumEncode(n) {
     const e = exports.Binary.uint8ArrayToHex(n),
         t = exports.Binary.uint8ArrayToHex(exports.Binary.keccak256(new Uint8Array([...e].map(o => o.charCodeAt(0)))))
-    console.log({ address: e, hash: t })
     let r = '0x'
     for (let o = 0; o < e.length; o++) parseInt(t[o], 16) > 7 ? (r += e[o].toUpperCase()) : (r += e[o])
     return r
