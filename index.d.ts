@@ -523,6 +523,7 @@ declare function privateKeyToPublicKey(privateKey: bigint): [bigint, bigint];
 declare function compressPublicKey(publicKey: [bigint, bigint]): Uint8Array;
 declare function publicKeyFromCompressed(compressed: Uint8Array): [bigint, bigint];
 declare function publicKeyToAddress(publicKey: [bigint, bigint]): Uint8Array;
+declare function checksumEncode(addressBytes: Uint8Array): string;
 declare function signMessage(message: Uint8Array, privateKey: bigint, nonce?: bigint): [bigint, bigint, 27n | 28n];
 declare function signHash(hash: bigint, privateKey: bigint, nonce?: bigint): [bigint, bigint, 27n | 28n];
 declare function recoverPublicKey(message: Uint8Array, r: bigint, s: bigint, v: 27n | 28n): [bigint, bigint];
@@ -673,6 +674,7 @@ export declare const Elliptic: {
     signHash: typeof signHash;
     verifySignature: typeof verifySignature;
     recoverPublicKey: typeof recoverPublicKey;
+    checksumEncode: typeof checksumEncode;
 };
 export declare const Random: {
     intBetween: typeof intBetween;
