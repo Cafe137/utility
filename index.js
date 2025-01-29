@@ -415,6 +415,17 @@ function randomHexString(n, e = Math.random) {
     for (let r = 0; r < n; r++) t += hexAlphabet[Math.floor(e() * hexAlphabet.length)]
     return t
 }
+function asIntegerString(n, e) {
+    if (!isIntegerString(n)) throw new TypeError(`Expected integer string${e?.name ? ` for ${e.name}` : ''}, got: ` + n)
+    const t = BigInt(n)
+    if (e && ((e.min && t < e.min) || (e.max && t > e.max)))
+        throw RangeError(
+            `Expected integer string${e?.name ? ` for ${e.name}` : ''} in range: ${e.min ?? '-inf'}..${
+                e.max ?? 'inf'
+            }; got: ` + t
+        )
+    return n
+}
 function asString(n, e) {
     if (isBlank(n)) throw new TypeError(`Expected string${e?.name ? ` for ${e.name}` : ''}, got: ` + n)
     if (e && ((e.min !== void 0 && n.length < e.min) || (e.max !== void 0 && n.length > e.max)))
@@ -2273,8 +2284,8 @@ function keccakPermutate(n) {
             B = (n[11] << 4) | (n[10] >>> 28),
             P = (n[10] << 4) | (n[11] >>> 28),
             U = (n[13] << 12) | (n[12] >>> 20),
-            v = (n[12] << 12) | (n[13] >>> 20),
-            L = (n[14] << 6) | (n[15] >>> 26),
+            L = (n[12] << 12) | (n[13] >>> 20),
+            v = (n[14] << 6) | (n[15] >>> 26),
             N = (n[15] << 6) | (n[14] >>> 26),
             j = (n[17] << 23) | (n[16] >>> 9),
             z = (n[16] << 23) | (n[17] >>> 9),
@@ -2311,15 +2322,15 @@ function keccakPermutate(n) {
             yn = (n[48] << 14) | (n[49] >>> 18),
             xn = (n[49] << 14) | (n[48] >>> 18)
         ;(n[0] = E ^ (~U & K)),
-            (n[1] = M ^ (~v & Z)),
+            (n[1] = M ^ (~L & Z)),
             (n[2] = U ^ (~K & un)),
-            (n[3] = v ^ (~Z & cn)),
+            (n[3] = L ^ (~Z & cn)),
             (n[4] = K ^ (~un & yn)),
             (n[5] = Z ^ (~cn & xn)),
             (n[6] = un ^ (~yn & E)),
             (n[7] = cn ^ (~xn & M)),
             (n[8] = yn ^ (~E & U)),
-            (n[9] = xn ^ (~M & v)),
+            (n[9] = xn ^ (~M & L)),
             (n[10] = R ^ (~F & H)),
             (n[11] = C ^ (~q & W)),
             (n[12] = F ^ (~H & en)),
@@ -2330,15 +2341,15 @@ function keccakPermutate(n) {
             (n[17] = tn ^ (~mn & C)),
             (n[18] = dn ^ (~R & F)),
             (n[19] = mn ^ (~C & q)),
-            (n[20] = O ^ (~L & _)),
+            (n[20] = O ^ (~v & _)),
             (n[21] = k ^ (~N & Q)),
-            (n[22] = L ^ (~_ & sn)),
+            (n[22] = v ^ (~_ & sn)),
             (n[23] = N ^ (~Q & fn)),
             (n[24] = _ ^ (~sn & ln)),
             (n[25] = Q ^ (~fn & an)),
             (n[26] = sn ^ (~ln & O)),
             (n[27] = fn ^ (~an & k)),
-            (n[28] = ln ^ (~O & L)),
+            (n[28] = ln ^ (~O & v)),
             (n[29] = an ^ (~k & N)),
             (n[30] = D ^ (~B & V)),
             (n[31] = I ^ (~P & J)),
@@ -3247,6 +3258,7 @@ class AsyncQueue {
         asString,
         asHexString,
         asSafeString,
+        asIntegerString,
         asNumber,
         asInteger,
         asBoolean,

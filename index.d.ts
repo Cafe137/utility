@@ -79,6 +79,11 @@ declare function randomUnicodeString(length: number, generator?: () => number): 
 declare function searchHex(string: string, length: number): string | null;
 declare function searchSubstring(string: string, predicate: (string: string) => boolean, separators?: string[]): string | null;
 declare function randomHexString(length: number, generator?: () => number): string;
+declare function asIntegerString(value: any, options?: {
+    name?: string;
+    min?: bigint;
+    max?: bigint;
+}): string;
 declare function asString(string: any, options?: {
     name?: string;
     min?: number;
@@ -886,6 +891,7 @@ export declare const Types: {
     asString: typeof asString;
     asHexString: typeof asHexString;
     asSafeString: typeof asSafeString;
+    asIntegerString: typeof asIntegerString;
     asNumber: typeof asNumber;
     asInteger: typeof asInteger;
     asBoolean: typeof asBoolean;
