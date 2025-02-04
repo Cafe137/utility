@@ -98,6 +98,9 @@ declare function asSafeString(string: any, options?: {
     min?: number;
     max?: number;
 }): string;
+declare function asFunction(value: any, options?: {
+    name: string;
+}): Function;
 declare function asNumber(number: any, options?: {
     name?: string;
     min?: number;
@@ -893,6 +896,7 @@ export declare const Types: {
     asSafeString: typeof asSafeString;
     asIntegerString: typeof asIntegerString;
     asNumber: typeof asNumber;
+    asFunction: typeof asFunction;
     asInteger: typeof asInteger;
     asBoolean: typeof asBoolean;
     asDate: typeof asDate;
