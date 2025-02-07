@@ -136,6 +136,9 @@ declare function asObject(value: any, options?: {
 declare function asNullableObject(value: any, options?: {
     name: string;
 }): Record<string, unknown> | null;
+declare function asStringMap(value: any, options?: {
+    name: string;
+}): Record<string, string>;
 declare function asNumericDictionary(value: any, options?: {
     name: string;
 }): Record<string, number>;
@@ -907,6 +910,7 @@ export declare const Types: {
     asArray: typeof asArray;
     asObject: typeof asObject;
     asNullableObject: typeof asNullableObject;
+    asStringMap: typeof asStringMap;
     asNumericDictionary: typeof asNumericDictionary;
     asUrl: typeof asUrl;
     asNullable: typeof asNullable;

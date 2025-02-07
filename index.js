@@ -520,6 +520,12 @@ function asObject(n, e) {
 function asNullableObject(n, e) {
     return n === null ? null : asObject(n, e)
 }
+function asStringMap(n, e) {
+    const t = asObject(n, e)
+    for (const r of Object.keys(t))
+        if (!isString(t[r])) throw new TypeError(`Expected string map${e?.name ? ` for ${e.name}` : ''}, got: ` + n)
+    return t
+}
 function asNumericDictionary(n, e) {
     const t = asObject(n),
         r = Object.keys(t),
@@ -2218,12 +2224,12 @@ function keccakPermutate(n) {
             w = o ^ En,
             y = i ^ Mn,
             On = (l << 1) | (a >>> 31),
-            Tn = (a << 1) | (l >>> 31),
+            kn = (a << 1) | (l >>> 31),
             x = u ^ On,
-            b = s ^ Tn,
-            kn = (t << 1) | (r >>> 31),
+            b = s ^ kn,
+            Tn = (t << 1) | (r >>> 31),
             Sn = (r << 1) | (t >>> 31),
-            $ = c ^ kn,
+            $ = c ^ Tn,
             A = f ^ Sn
         ;(n[0] ^= p),
             (n[1] ^= d),
@@ -2278,8 +2284,8 @@ function keccakPermutate(n) {
         const E = n[0],
             M = n[1],
             O = (n[2] << 1) | (n[3] >>> 31),
-            T = (n[3] << 1) | (n[2] >>> 31),
-            k = (n[5] << 30) | (n[4] >>> 2),
+            k = (n[3] << 1) | (n[2] >>> 31),
+            T = (n[5] << 30) | (n[4] >>> 2),
             S = (n[4] << 30) | (n[5] >>> 2),
             R = (n[6] << 28) | (n[7] >>> 4),
             C = (n[7] << 28) | (n[6] >>> 4),
@@ -2346,15 +2352,15 @@ function keccakPermutate(n) {
             (n[18] = dn ^ (~R & F)),
             (n[19] = mn ^ (~C & q)),
             (n[20] = O ^ (~N & _)),
-            (n[21] = T ^ (~v & Q)),
+            (n[21] = k ^ (~v & Q)),
             (n[22] = N ^ (~_ & sn)),
             (n[23] = v ^ (~Q & fn)),
             (n[24] = _ ^ (~sn & ln)),
             (n[25] = Q ^ (~fn & an)),
             (n[26] = sn ^ (~ln & O)),
-            (n[27] = fn ^ (~an & T)),
+            (n[27] = fn ^ (~an & k)),
             (n[28] = ln ^ (~O & N)),
-            (n[29] = an ^ (~T & v)),
+            (n[29] = an ^ (~k & v)),
             (n[30] = D ^ (~B & V)),
             (n[31] = I ^ (~P & J)),
             (n[32] = B ^ (~V & rn)),
@@ -2365,15 +2371,15 @@ function keccakPermutate(n) {
             (n[37] = on ^ (~wn & I)),
             (n[38] = gn ^ (~D & B)),
             (n[39] = wn ^ (~I & P)),
-            (n[40] = k ^ (~j & G)),
+            (n[40] = T ^ (~j & G)),
             (n[41] = S ^ (~z & Y)),
             (n[42] = j ^ (~G & X)),
             (n[43] = z ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
             (n[45] = Y ^ (~nn & pn)),
-            (n[46] = X ^ (~hn & k)),
+            (n[46] = X ^ (~hn & T)),
             (n[47] = nn ^ (~pn & S)),
-            (n[48] = hn ^ (~k & j)),
+            (n[48] = hn ^ (~T & j)),
             (n[49] = pn ^ (~S & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
@@ -3276,6 +3282,7 @@ class AsyncQueue {
         asArray,
         asObject,
         asNullableObject,
+        asStringMap,
         asNumericDictionary,
         asUrl,
         asNullable,
