@@ -472,6 +472,7 @@ export declare class Optional<T> {
     map<K>(fn: (value: T) => K): Optional<K>;
     ifPresent(fn: (value: T) => void): this;
     orElse(fn: () => void): void;
+    getOrThrow(): T;
 }
 export declare class Lazy<T> {
     private readonly supplier;
