@@ -148,6 +148,7 @@ declare function asUrl(value: any, options?: {
 }): string;
 declare function isNullable(typeFn: (value: any) => boolean, value: any): boolean;
 declare function asNullable<T>(typeFn: (value: any) => T, value: any): T | null;
+declare function asOptional<T>(typeFn: (value: any) => T, value: any): T | undefined;
 declare function enforceObjectShape(value: Record<string, any>, shape: Record<string, (value: any) => boolean>): boolean;
 declare function enforceArrayShape(value: any[], shape: Record<string, (value: any) => boolean>): boolean;
 declare function represent(value: any, strategy?: 'json' | 'key-value', depth?: number): string;
@@ -914,6 +915,7 @@ export declare const Types: {
     asNumericDictionary: typeof asNumericDictionary;
     asUrl: typeof asUrl;
     asNullable: typeof asNullable;
+    asOptional: typeof asOptional;
     enforceObjectShape: typeof enforceObjectShape;
     enforceArrayShape: typeof enforceArrayShape;
     isPng: typeof isPng;

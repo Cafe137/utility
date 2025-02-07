@@ -547,6 +547,9 @@ function isNullable(n, e) {
 function asNullable(n, e) {
     return e === null || isUndefined(e) ? null : n(e)
 }
+function asOptional(n, e) {
+    if (e != null) return n(e)
+}
 function enforceObjectShape(n, e) {
     for (const [t, r] of Object.entries(e)) if (!r(n[t])) throw TypeError(`${t} in value does not exist or match shape`)
     for (const t of Object.keys(n)) if (!e[t]) throw TypeError(`${t} exists in value but not in shape`)
@@ -2296,8 +2299,8 @@ function keccakPermutate(n) {
             U = (n[13] << 12) | (n[12] >>> 20),
             L = (n[12] << 12) | (n[13] >>> 20),
             N = (n[14] << 6) | (n[15] >>> 26),
-            v = (n[15] << 6) | (n[14] >>> 26),
-            j = (n[17] << 23) | (n[16] >>> 9),
+            j = (n[15] << 6) | (n[14] >>> 26),
+            v = (n[17] << 23) | (n[16] >>> 9),
             z = (n[16] << 23) | (n[17] >>> 9),
             F = (n[18] << 20) | (n[19] >>> 12),
             q = (n[19] << 20) | (n[18] >>> 12),
@@ -2352,15 +2355,15 @@ function keccakPermutate(n) {
             (n[18] = dn ^ (~R & F)),
             (n[19] = mn ^ (~C & q)),
             (n[20] = O ^ (~N & _)),
-            (n[21] = k ^ (~v & Q)),
+            (n[21] = k ^ (~j & Q)),
             (n[22] = N ^ (~_ & sn)),
-            (n[23] = v ^ (~Q & fn)),
+            (n[23] = j ^ (~Q & fn)),
             (n[24] = _ ^ (~sn & ln)),
             (n[25] = Q ^ (~fn & an)),
             (n[26] = sn ^ (~ln & O)),
             (n[27] = fn ^ (~an & k)),
             (n[28] = ln ^ (~O & N)),
-            (n[29] = an ^ (~k & v)),
+            (n[29] = an ^ (~k & j)),
             (n[30] = D ^ (~B & V)),
             (n[31] = I ^ (~P & J)),
             (n[32] = B ^ (~V & rn)),
@@ -2371,15 +2374,15 @@ function keccakPermutate(n) {
             (n[37] = on ^ (~wn & I)),
             (n[38] = gn ^ (~D & B)),
             (n[39] = wn ^ (~I & P)),
-            (n[40] = T ^ (~j & G)),
+            (n[40] = T ^ (~v & G)),
             (n[41] = S ^ (~z & Y)),
-            (n[42] = j ^ (~G & X)),
+            (n[42] = v ^ (~G & X)),
             (n[43] = z ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
             (n[45] = Y ^ (~nn & pn)),
             (n[46] = X ^ (~hn & T)),
             (n[47] = nn ^ (~pn & S)),
-            (n[48] = hn ^ (~T & j)),
+            (n[48] = hn ^ (~T & v)),
             (n[49] = pn ^ (~S & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
@@ -3286,6 +3289,7 @@ class AsyncQueue {
         asNumericDictionary,
         asUrl,
         asNullable,
+        asOptional,
         enforceObjectShape,
         enforceArrayShape,
         isPng,
