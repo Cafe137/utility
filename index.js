@@ -328,7 +328,10 @@ function isUndefined(n) {
     return typeof n > 'u'
 }
 function isFunction(n) {
-    return Object.prototype.toString.call(n) === '[object Function]'
+    return (
+        Object.prototype.toString.call(n) === '[object Function]' ||
+        Object.prototype.toString.call(n) === '[object AsyncFunction]'
+    )
 }
 function isString(n) {
     return Object.prototype.toString.call(n) === '[object String]'
