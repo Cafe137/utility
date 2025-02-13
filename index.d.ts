@@ -583,6 +583,7 @@ export declare class FixedPointNumber {
     subtract(other: FixedPointNumber): FixedPointNumber;
     multiply(factor: bigint): FixedPointNumber;
     divide(divisor: bigint): [FixedPointNumber, FixedPointNumber];
+    compare(other: FixedPointNumber): 1 | 0 | -1;
     toDecimalString(): string;
     toString(): string;
     toJSON(): string;
