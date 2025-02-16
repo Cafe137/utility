@@ -470,8 +470,13 @@ export declare class Optional<T> {
     static of<U>(value: U | null | undefined): Optional<U>;
     static empty<U>(): Optional<U>;
     map<K>(fn: (value: T) => K): Optional<K>;
+    mapAsync<K>(fn: (value: T) => Promise<K>): Promise<Optional<K>>;
     ifPresent(fn: (value: T) => void): this;
-    orElse(fn: () => void): void;
+    ifPresentAsync(fn: (value: T) => Promise<void>): Promise<this>;
+    ifAbsent(fn: () => void): this;
+    ifAbsentAsync(fn: () => Promise<void>): Promise<this>;
+    getOrFallback(fn: () => T): T;
+    getOrFallbackAsync(fn: () => Promise<T>): Promise<T>;
     getOrThrow(): T;
 }
 export declare class Lazy<T> {

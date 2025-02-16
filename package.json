@@ -1,6 +1,6 @@
 {
     "name": "cafe-utility",
-    "version": "27.10.0",
+    "version": "27.11.0",
     "description": "",
     "main": "index.js",
     "exports": {

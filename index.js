@@ -172,7 +172,7 @@ function makePipe(n, e) {
     return t => pipe(t, n, e)
 }
 function pickWeighted(n, e, t) {
-    if ((isUndefined(t) && (t = Math.random()), n.length !== e.length)) throw new Error('Array length mismatch')
+    if ((t === void 0 && (t = Math.random()), n.length !== e.length)) throw new Error('Array length mismatch')
     let r = e.reduce((i, u) => i + u, 0)
     const o = t * r
     for (let i = 0; i < n.length - 1; i++) if (((r -= e[i]), o >= r)) return n[i]
@@ -325,7 +325,7 @@ function isEmptyObject(n) {
     return isStrictlyObject(n) && Object.keys(n).length === 0
 }
 function isUndefined(n) {
-    return typeof n > 'u'
+    return n === void 0
 }
 function isFunction(n) {
     return (
@@ -545,13 +545,13 @@ function asUrl(n, e) {
     return n
 }
 function isNullable(n, e) {
-    return isUndefined(e) || e === null ? !0 : n(e)
+    return e == null ? !0 : n(e)
 }
 function asNullable(n, e) {
-    return e === null || isUndefined(e) ? null : n(e)
+    return e == null ? null : n(e)
 }
 function asOptional(n, e) {
-    if (e != null) return n(e)
+    return e == null ? void 0 : n(e)
 }
 function enforceObjectShape(n, e) {
     for (const [t, r] of Object.entries(e)) if (!r(n[t])) throw TypeError(`${t} in value does not exist or match shape`)
@@ -1803,7 +1803,7 @@ function removeEmptyArrays(n) {
 }
 function removeEmptyValues(n) {
     for (const e of Object.entries(n))
-        (isUndefined(e[1]) || e[1] === null || (isString(e[1]) && isBlank(e[1]))) && delete n[e[0]]
+        (e[1] === null || e[1] === void 0 || (isString(e[1]) && isBlank(e[1]))) && delete n[e[0]]
     return n
 }
 function filterObjectKeys(n, e) {
@@ -1835,11 +1835,11 @@ async function rethrow(n, e) {
     }
 }
 function setSomeOnObject(n, e, t) {
-    typeof t < 'u' && t !== null && (n[e] = t)
+    t != null && (n[e] = t)
 }
 function setSomeDeep(n, e, t, r) {
     const o = getDeep(t, r)
-    typeof o > 'u' || o === null || setDeep(n, e, o)
+    o != null && setDeep(n, e, o)
 }
 function flip(n) {
     const e = {}
@@ -2027,11 +2027,28 @@ class Optional {
     map(e) {
         return new Optional(this.value !== null && this.value !== void 0 ? e(this.value) : null)
     }
+    mapAsync(e) {
+        return this.value !== null && this.value !== void 0
+            ? e(this.value).then(t => Optional.of(t))
+            : Promise.resolve(Optional.empty())
+    }
     ifPresent(e) {
         return this.value !== null && this.value !== void 0 && e(this.value), this
     }
-    orElse(e) {
-        this.value ?? e()
+    ifPresentAsync(e) {
+        return this.value !== null && this.value !== void 0 ? e(this.value).then(() => this) : Promise.resolve(this)
+    }
+    ifAbsent(e) {
+        return (this.value === null || this.value === void 0) && e(), this
+    }
+    ifAbsentAsync(e) {
+        return this.value === null || this.value === void 0 ? e().then(() => this) : Promise.resolve(this)
+    }
+    getOrFallback(e) {
+        return this.value ?? e()
+    }
+    getOrFallbackAsync(e) {
+        return this.value !== null && this.value !== void 0 ? Promise.resolve(this.value) : e()
     }
     getOrThrow() {
         if (this.value === null || this.value === void 0) throw Error('Optional.value is empty')
@@ -2223,8 +2240,8 @@ function keccakPermutate(n) {
             a = n[9] ^ n[19] ^ n[29] ^ n[39] ^ n[49],
             h = (o << 1) | (i >>> 31),
             bn = (i << 1) | (o >>> 31),
-            p = l ^ h,
-            d = a ^ bn,
+            d = l ^ h,
+            p = a ^ bn,
             $n = (u << 1) | (s >>> 31),
             An = (s << 1) | (u >>> 31),
             m = t ^ $n,
@@ -2234,15 +2251,15 @@ function keccakPermutate(n) {
             w = o ^ En,
             y = i ^ Mn,
             On = (l << 1) | (a >>> 31),
-            Tn = (a << 1) | (l >>> 31),
+            kn = (a << 1) | (l >>> 31),
             x = u ^ On,
-            b = s ^ Tn,
-            kn = (t << 1) | (r >>> 31),
+            b = s ^ kn,
+            Tn = (t << 1) | (r >>> 31),
             Sn = (r << 1) | (t >>> 31),
-            $ = c ^ kn,
+            $ = c ^ Tn,
             A = f ^ Sn
-        ;(n[0] ^= p),
-            (n[1] ^= d),
+        ;(n[0] ^= d),
+            (n[1] ^= p),
             (n[2] ^= m),
             (n[3] ^= g),
             (n[4] ^= w),
@@ -2251,8 +2268,8 @@ function keccakPermutate(n) {
             (n[7] ^= b),
             (n[8] ^= $),
             (n[9] ^= A),
-            (n[10] ^= p),
-            (n[11] ^= d),
+            (n[10] ^= d),
+            (n[11] ^= p),
             (n[12] ^= m),
             (n[13] ^= g),
             (n[14] ^= w),
@@ -2261,8 +2278,8 @@ function keccakPermutate(n) {
             (n[17] ^= b),
             (n[18] ^= $),
             (n[19] ^= A),
-            (n[20] ^= p),
-            (n[21] ^= d),
+            (n[20] ^= d),
+            (n[21] ^= p),
             (n[22] ^= m),
             (n[23] ^= g),
             (n[24] ^= w),
@@ -2271,8 +2288,8 @@ function keccakPermutate(n) {
             (n[27] ^= b),
             (n[28] ^= $),
             (n[29] ^= A),
-            (n[30] ^= p),
-            (n[31] ^= d),
+            (n[30] ^= d),
+            (n[31] ^= p),
             (n[32] ^= m),
             (n[33] ^= g),
             (n[34] ^= w),
@@ -2281,8 +2298,8 @@ function keccakPermutate(n) {
             (n[37] ^= b),
             (n[38] ^= $),
             (n[39] ^= A),
-            (n[40] ^= p),
-            (n[41] ^= d),
+            (n[40] ^= d),
+            (n[41] ^= p),
             (n[42] ^= m),
             (n[43] ^= g),
             (n[44] ^= w),
@@ -2294,16 +2311,16 @@ function keccakPermutate(n) {
         const E = n[0],
             M = n[1],
             O = (n[2] << 1) | (n[3] >>> 31),
-            T = (n[3] << 1) | (n[2] >>> 31),
-            k = (n[5] << 30) | (n[4] >>> 2),
+            k = (n[3] << 1) | (n[2] >>> 31),
+            T = (n[5] << 30) | (n[4] >>> 2),
             S = (n[4] << 30) | (n[5] >>> 2),
             R = (n[6] << 28) | (n[7] >>> 4),
             C = (n[7] << 28) | (n[6] >>> 4),
             D = (n[8] << 27) | (n[9] >>> 5),
             I = (n[9] << 27) | (n[8] >>> 5),
             B = (n[11] << 4) | (n[10] >>> 28),
-            P = (n[10] << 4) | (n[11] >>> 28),
-            v = (n[13] << 12) | (n[12] >>> 20),
+            v = (n[10] << 4) | (n[11] >>> 28),
+            P = (n[13] << 12) | (n[12] >>> 20),
             U = (n[12] << 12) | (n[13] >>> 20),
             L = (n[14] << 6) | (n[15] >>> 26),
             N = (n[15] << 6) | (n[14] >>> 26),
@@ -2317,8 +2334,8 @@ function keccakPermutate(n) {
             J = (n[23] << 10) | (n[22] >>> 22),
             K = (n[25] << 11) | (n[24] >>> 21),
             Z = (n[24] << 11) | (n[25] >>> 21),
-            _ = (n[26] << 25) | (n[27] >>> 7),
-            Q = (n[27] << 25) | (n[26] >>> 7),
+            Q = (n[26] << 25) | (n[27] >>> 7),
+            _ = (n[27] << 25) | (n[26] >>> 7),
             G = (n[29] << 7) | (n[28] >>> 25),
             Y = (n[28] << 7) | (n[29] >>> 25),
             X = (n[31] << 9) | (n[30] >>> 23),
@@ -2334,63 +2351,63 @@ function keccakPermutate(n) {
             ln = (n[40] << 18) | (n[41] >>> 14),
             an = (n[41] << 18) | (n[40] >>> 14),
             hn = (n[42] << 2) | (n[43] >>> 30),
-            pn = (n[43] << 2) | (n[42] >>> 30),
-            dn = (n[45] << 29) | (n[44] >>> 3),
+            dn = (n[43] << 2) | (n[42] >>> 30),
+            pn = (n[45] << 29) | (n[44] >>> 3),
             mn = (n[44] << 29) | (n[45] >>> 3),
             gn = (n[47] << 24) | (n[46] >>> 8),
             wn = (n[46] << 24) | (n[47] >>> 8),
             yn = (n[48] << 14) | (n[49] >>> 18),
             xn = (n[49] << 14) | (n[48] >>> 18)
-        ;(n[0] = E ^ (~v & K)),
+        ;(n[0] = E ^ (~P & K)),
             (n[1] = M ^ (~U & Z)),
-            (n[2] = v ^ (~K & un)),
+            (n[2] = P ^ (~K & un)),
             (n[3] = U ^ (~Z & cn)),
             (n[4] = K ^ (~un & yn)),
             (n[5] = Z ^ (~cn & xn)),
             (n[6] = un ^ (~yn & E)),
             (n[7] = cn ^ (~xn & M)),
-            (n[8] = yn ^ (~E & v)),
+            (n[8] = yn ^ (~E & P)),
             (n[9] = xn ^ (~M & U)),
             (n[10] = R ^ (~F & H)),
             (n[11] = C ^ (~q & W)),
             (n[12] = F ^ (~H & en)),
             (n[13] = q ^ (~W & tn)),
-            (n[14] = H ^ (~en & dn)),
+            (n[14] = H ^ (~en & pn)),
             (n[15] = W ^ (~tn & mn)),
-            (n[16] = en ^ (~dn & R)),
+            (n[16] = en ^ (~pn & R)),
             (n[17] = tn ^ (~mn & C)),
-            (n[18] = dn ^ (~R & F)),
+            (n[18] = pn ^ (~R & F)),
             (n[19] = mn ^ (~C & q)),
-            (n[20] = O ^ (~L & _)),
-            (n[21] = T ^ (~N & Q)),
-            (n[22] = L ^ (~_ & sn)),
-            (n[23] = N ^ (~Q & fn)),
-            (n[24] = _ ^ (~sn & ln)),
-            (n[25] = Q ^ (~fn & an)),
+            (n[20] = O ^ (~L & Q)),
+            (n[21] = k ^ (~N & _)),
+            (n[22] = L ^ (~Q & sn)),
+            (n[23] = N ^ (~_ & fn)),
+            (n[24] = Q ^ (~sn & ln)),
+            (n[25] = _ ^ (~fn & an)),
             (n[26] = sn ^ (~ln & O)),
-            (n[27] = fn ^ (~an & T)),
+            (n[27] = fn ^ (~an & k)),
             (n[28] = ln ^ (~O & L)),
-            (n[29] = an ^ (~T & N)),
+            (n[29] = an ^ (~k & N)),
             (n[30] = D ^ (~B & V)),
-            (n[31] = I ^ (~P & J)),
+            (n[31] = I ^ (~v & J)),
             (n[32] = B ^ (~V & rn)),
-            (n[33] = P ^ (~J & on)),
+            (n[33] = v ^ (~J & on)),
             (n[34] = V ^ (~rn & gn)),
             (n[35] = J ^ (~on & wn)),
             (n[36] = rn ^ (~gn & D)),
             (n[37] = on ^ (~wn & I)),
             (n[38] = gn ^ (~D & B)),
-            (n[39] = wn ^ (~I & P)),
-            (n[40] = k ^ (~j & G)),
+            (n[39] = wn ^ (~I & v)),
+            (n[40] = T ^ (~j & G)),
             (n[41] = S ^ (~z & Y)),
             (n[42] = j ^ (~G & X)),
             (n[43] = z ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
-            (n[45] = Y ^ (~nn & pn)),
-            (n[46] = X ^ (~hn & k)),
-            (n[47] = nn ^ (~pn & S)),
-            (n[48] = hn ^ (~k & j)),
-            (n[49] = pn ^ (~S & z)),
+            (n[45] = Y ^ (~nn & dn)),
+            (n[46] = X ^ (~hn & T)),
+            (n[47] = nn ^ (~dn & S)),
+            (n[48] = hn ^ (~T & j)),
+            (n[49] = dn ^ (~S & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
     }
