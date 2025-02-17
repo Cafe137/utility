@@ -2316,8 +2316,8 @@ function keccakPermutate(n) {
             S = (n[4] << 30) | (n[5] >>> 2),
             R = (n[6] << 28) | (n[7] >>> 4),
             D = (n[7] << 28) | (n[6] >>> 4),
-            I = (n[8] << 27) | (n[9] >>> 5),
-            C = (n[9] << 27) | (n[8] >>> 5),
+            C = (n[8] << 27) | (n[9] >>> 5),
+            I = (n[9] << 27) | (n[8] >>> 5),
             v = (n[11] << 4) | (n[10] >>> 28),
             B = (n[10] << 4) | (n[11] >>> 28),
             P = (n[13] << 12) | (n[12] >>> 20),
@@ -2388,16 +2388,16 @@ function keccakPermutate(n) {
             (n[27] = fn ^ (~an & k)),
             (n[28] = ln ^ (~O & L)),
             (n[29] = an ^ (~k & j)),
-            (n[30] = I ^ (~v & V)),
-            (n[31] = C ^ (~B & J)),
+            (n[30] = C ^ (~v & V)),
+            (n[31] = I ^ (~B & J)),
             (n[32] = v ^ (~V & rn)),
             (n[33] = B ^ (~J & on)),
             (n[34] = V ^ (~rn & gn)),
             (n[35] = J ^ (~on & wn)),
-            (n[36] = rn ^ (~gn & I)),
-            (n[37] = on ^ (~wn & C)),
-            (n[38] = gn ^ (~I & v)),
-            (n[39] = wn ^ (~C & B)),
+            (n[36] = rn ^ (~gn & C)),
+            (n[37] = on ^ (~wn & I)),
+            (n[38] = gn ^ (~C & v)),
+            (n[39] = wn ^ (~I & B)),
             (n[40] = T ^ (~N & G)),
             (n[41] = S ^ (~z & Y)),
             (n[42] = N ^ (~G & X)),
@@ -2758,10 +2758,9 @@ class FixedPointNumber {
     }
     divmod(e) {
         if (e === 0n) throw new Error('Division by zero is not allowed')
-        const t = e * 10n ** BigInt(this.scale),
-            r = (this.value / t) * 10n ** BigInt(this.scale),
-            o = this.value % t
-        return [new FixedPointNumber(r, this.scale), new FixedPointNumber(o, this.scale)]
+        const t = this.value / e,
+            r = this.value % e
+        return [new FixedPointNumber(t, this.scale), new FixedPointNumber(r, this.scale)]
     }
     exchange(e, t, r) {
         if (e === '*') {
