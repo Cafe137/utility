@@ -583,16 +583,17 @@ export declare class FixedPointNumber {
     value: bigint;
     scale: number;
     constructor(value: bigint | string | number, scale: number);
-    static fromDecimalString(value: string, scale: number): FixedPointNumber;
+    static fromDecimalString(decimalString: string, scale: number): FixedPointNumber;
     add(other: FixedPointNumber): FixedPointNumber;
     subtract(other: FixedPointNumber): FixedPointNumber;
     multiply(factor: bigint): FixedPointNumber;
-    divide(divisor: bigint): [FixedPointNumber, FixedPointNumber];
+    divmod(divisor: bigint): [FixedPointNumber, FixedPointNumber];
+    exchange(direction: '*' | '/', rate: FixedPointNumber, targetScale: number): FixedPointNumber;
     compare(other: FixedPointNumber): 1 | 0 | -1;
     toDecimalString(): string;
     toString(): string;
     toJSON(): string;
-    assertCompatibility(other: FixedPointNumber): void;
+    assertSameScale(other: FixedPointNumber): void;
 }
 type Playbook<T> = {
     ttl: number;

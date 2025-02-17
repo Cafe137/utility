@@ -2315,16 +2315,16 @@ function keccakPermutate(n) {
             T = (n[5] << 30) | (n[4] >>> 2),
             S = (n[4] << 30) | (n[5] >>> 2),
             R = (n[6] << 28) | (n[7] >>> 4),
-            C = (n[7] << 28) | (n[6] >>> 4),
-            D = (n[8] << 27) | (n[9] >>> 5),
-            I = (n[9] << 27) | (n[8] >>> 5),
-            B = (n[11] << 4) | (n[10] >>> 28),
-            v = (n[10] << 4) | (n[11] >>> 28),
+            D = (n[7] << 28) | (n[6] >>> 4),
+            I = (n[8] << 27) | (n[9] >>> 5),
+            C = (n[9] << 27) | (n[8] >>> 5),
+            v = (n[11] << 4) | (n[10] >>> 28),
+            B = (n[10] << 4) | (n[11] >>> 28),
             P = (n[13] << 12) | (n[12] >>> 20),
             U = (n[12] << 12) | (n[13] >>> 20),
             L = (n[14] << 6) | (n[15] >>> 26),
-            N = (n[15] << 6) | (n[14] >>> 26),
-            j = (n[17] << 23) | (n[16] >>> 9),
+            j = (n[15] << 6) | (n[14] >>> 26),
+            N = (n[17] << 23) | (n[16] >>> 9),
             z = (n[16] << 23) | (n[17] >>> 9),
             F = (n[18] << 20) | (n[19] >>> 12),
             q = (n[19] << 20) | (n[18] >>> 12),
@@ -2369,44 +2369,44 @@ function keccakPermutate(n) {
             (n[8] = yn ^ (~E & P)),
             (n[9] = xn ^ (~M & U)),
             (n[10] = R ^ (~F & H)),
-            (n[11] = C ^ (~q & W)),
+            (n[11] = D ^ (~q & W)),
             (n[12] = F ^ (~H & en)),
             (n[13] = q ^ (~W & tn)),
             (n[14] = H ^ (~en & pn)),
             (n[15] = W ^ (~tn & mn)),
             (n[16] = en ^ (~pn & R)),
-            (n[17] = tn ^ (~mn & C)),
+            (n[17] = tn ^ (~mn & D)),
             (n[18] = pn ^ (~R & F)),
-            (n[19] = mn ^ (~C & q)),
+            (n[19] = mn ^ (~D & q)),
             (n[20] = O ^ (~L & Q)),
-            (n[21] = k ^ (~N & _)),
+            (n[21] = k ^ (~j & _)),
             (n[22] = L ^ (~Q & sn)),
-            (n[23] = N ^ (~_ & fn)),
+            (n[23] = j ^ (~_ & fn)),
             (n[24] = Q ^ (~sn & ln)),
             (n[25] = _ ^ (~fn & an)),
             (n[26] = sn ^ (~ln & O)),
             (n[27] = fn ^ (~an & k)),
             (n[28] = ln ^ (~O & L)),
-            (n[29] = an ^ (~k & N)),
-            (n[30] = D ^ (~B & V)),
-            (n[31] = I ^ (~v & J)),
-            (n[32] = B ^ (~V & rn)),
-            (n[33] = v ^ (~J & on)),
+            (n[29] = an ^ (~k & j)),
+            (n[30] = I ^ (~v & V)),
+            (n[31] = C ^ (~B & J)),
+            (n[32] = v ^ (~V & rn)),
+            (n[33] = B ^ (~J & on)),
             (n[34] = V ^ (~rn & gn)),
             (n[35] = J ^ (~on & wn)),
-            (n[36] = rn ^ (~gn & D)),
-            (n[37] = on ^ (~wn & I)),
-            (n[38] = gn ^ (~D & B)),
-            (n[39] = wn ^ (~I & v)),
-            (n[40] = T ^ (~j & G)),
+            (n[36] = rn ^ (~gn & I)),
+            (n[37] = on ^ (~wn & C)),
+            (n[38] = gn ^ (~I & v)),
+            (n[39] = wn ^ (~C & B)),
+            (n[40] = T ^ (~N & G)),
             (n[41] = S ^ (~z & Y)),
-            (n[42] = j ^ (~G & X)),
+            (n[42] = N ^ (~G & X)),
             (n[43] = z ^ (~Y & nn)),
             (n[44] = G ^ (~X & hn)),
             (n[45] = Y ^ (~nn & dn)),
             (n[46] = X ^ (~hn & T)),
             (n[47] = nn ^ (~dn & S)),
-            (n[48] = hn ^ (~T & j)),
+            (n[48] = hn ^ (~T & N)),
             (n[49] = dn ^ (~S & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
@@ -2748,23 +2748,32 @@ class FixedPointNumber {
         return (o = (o || '').padEnd(t, '0').slice(0, t)), new FixedPointNumber(BigInt(r + o), t)
     }
     add(e) {
-        return this.assertCompatibility(e), new FixedPointNumber(this.value + e.value, this.scale)
+        return this.assertSameScale(e), new FixedPointNumber(this.value + e.value, this.scale)
     }
     subtract(e) {
-        return this.assertCompatibility(e), new FixedPointNumber(this.value - e.value, this.scale)
+        return this.assertSameScale(e), new FixedPointNumber(this.value - e.value, this.scale)
     }
     multiply(e) {
         return new FixedPointNumber(this.value * e, this.scale)
     }
-    divide(e) {
+    divmod(e) {
         if (e === 0n) throw new Error('Division by zero is not allowed')
         const t = e * 10n ** BigInt(this.scale),
             r = (this.value / t) * 10n ** BigInt(this.scale),
             o = this.value % t
         return [new FixedPointNumber(r, this.scale), new FixedPointNumber(o, this.scale)]
     }
+    exchange(e, t, r) {
+        if (e === '*') {
+            const i = (this.value * t.value) / 10n ** BigInt(this.scale)
+            return new FixedPointNumber(i, r)
+        }
+        this.assertSameScale(t)
+        const o = (this.value * 10n ** BigInt(r)) / t.value
+        return new FixedPointNumber(o, r)
+    }
     compare(e) {
-        return this.assertCompatibility(e), this.value > e.value ? 1 : this.value < e.value ? -1 : 0
+        return this.assertSameScale(e), this.value > e.value ? 1 : this.value < e.value ? -1 : 0
     }
     toDecimalString() {
         if (this.scale === 0) return this.value.toString()
@@ -2779,7 +2788,7 @@ class FixedPointNumber {
     toJSON() {
         return this.toString()
     }
-    assertCompatibility(e) {
+    assertSameScale(e) {
         if (this.scale !== e.scale) throw new Error(`Scale mismatch: expected ${this.scale}, but got ${e.scale}`)
     }
 }
