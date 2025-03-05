@@ -49,6 +49,7 @@ declare function replaceDeep(object: CafeObject, path: string, value: unknown): 
 declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAnyKey?: boolean): unknown;
 declare function forever(callable: (() => Promise<void>) | (() => void), millis: number, log?: (message: string, metadata: object) => void): Promise<never>;
 declare function runAndSetInterval(callable: () => void, millis: number): () => void;
+declare function whereAmI(): 'browser' | 'node';
 declare function asMegabytes(number: number): number;
 declare function convertBytes(bytes: number): string;
 declare function hexToRgb(hex: string): [number, number, number];
@@ -767,6 +768,7 @@ export declare const System: {
     waitFor: typeof waitFor;
     expandError: typeof expandError;
     runAndSetInterval: typeof runAndSetInterval;
+    whereAmI: typeof whereAmI;
 };
 export declare const Numbers: {
     make: typeof makeNumber;
@@ -1044,4 +1046,5 @@ export declare const Vector: {
     raycastCircle: typeof raycastCircle;
     getLineIntersectionPoint: typeof getLineIntersectionPoint;
 };
-export {};
+export { };
+

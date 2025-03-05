@@ -253,6 +253,9 @@ function runAndSetInterval(n, e) {
     }, e)
     return () => clearInterval(t)
 }
+function whereAmI() {
+    return Object.prototype.hasOwnProperty.call(globalThis, 'process') ? 'node' : 'browser'
+}
 function asMegabytes(n) {
     return n / 1024 / 1024
 }
@@ -1113,7 +1116,7 @@ function uint8ArrayToBase(n, e) {
     )
 }
 function hexToUint8Array(n) {
-    n.startsWith('0x') && (n = n.slice(2))
+    ;(n.startsWith('0x') || n.startsWith('0X')) && (n = n.slice(2))
     const e = n.length / 2,
         t = new Uint8Array(e)
     for (let r = 0; r < e; r++) {
@@ -2328,8 +2331,8 @@ function keccakPermutate(n) {
             z = (n[16] << 23) | (n[17] >>> 9),
             F = (n[18] << 20) | (n[19] >>> 12),
             q = (n[19] << 20) | (n[18] >>> 12),
-            H = (n[20] << 3) | (n[21] >>> 29),
-            W = (n[21] << 3) | (n[20] >>> 29),
+            W = (n[20] << 3) | (n[21] >>> 29),
+            H = (n[21] << 3) | (n[20] >>> 29),
             V = (n[22] << 10) | (n[23] >>> 22),
             J = (n[23] << 10) | (n[22] >>> 22),
             K = (n[25] << 11) | (n[24] >>> 21),
@@ -2368,12 +2371,12 @@ function keccakPermutate(n) {
             (n[7] = cn ^ (~xn & M)),
             (n[8] = yn ^ (~E & P)),
             (n[9] = xn ^ (~M & U)),
-            (n[10] = R ^ (~F & H)),
-            (n[11] = D ^ (~q & W)),
-            (n[12] = F ^ (~H & en)),
-            (n[13] = q ^ (~W & tn)),
-            (n[14] = H ^ (~en & pn)),
-            (n[15] = W ^ (~tn & mn)),
+            (n[10] = R ^ (~F & W)),
+            (n[11] = D ^ (~q & H)),
+            (n[12] = F ^ (~W & en)),
+            (n[13] = q ^ (~H & tn)),
+            (n[14] = W ^ (~en & pn)),
+            (n[15] = H ^ (~tn & mn)),
             (n[16] = en ^ (~pn & R)),
             (n[17] = tn ^ (~mn & D)),
             (n[18] = pn ^ (~R & F)),
@@ -3172,7 +3175,7 @@ class AsyncQueue {
         multicall,
         maxBy
     }),
-    (exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError, runAndSetInterval }),
+    (exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError, runAndSetInterval, whereAmI }),
     (exports.Numbers = {
         make: makeNumber,
         sum,
