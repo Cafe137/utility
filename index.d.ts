@@ -51,7 +51,7 @@ declare function forever(callable: (() => Promise<void>) | (() => void), millis:
 declare function runAndSetInterval(callable: () => void, millis: number): () => void;
 declare function whereAmI(): 'browser' | 'node';
 declare function asMegabytes(number: number): number;
-declare function convertBytes(bytes: number): string;
+declare function convertBytes(bytes: number, divisor?: number): string;
 declare function hexToRgb(hex: string): [number, number, number];
 declare function rgbToHex(rgb: [number, number, number]): string;
 declare function haversineDistanceToMeters(lat1: number, lon1: number, lat2: number, lon2: number): number;
@@ -1046,5 +1046,4 @@ export declare const Vector: {
     raycastCircle: typeof raycastCircle;
     getLineIntersectionPoint: typeof getLineIntersectionPoint;
 };
-export { };
-
+export {};
