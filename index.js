@@ -254,7 +254,8 @@ function runAndSetInterval(n, e) {
     return () => clearInterval(t)
 }
 function whereAmI() {
-    return Object.prototype.hasOwnProperty.call(globalThis, 'process') ? 'node' : 'browser'
+    const n = globalThis.process
+    return n ? (n.browser === !0 ? 'browser' : 'node') : 'browser'
 }
 function asMegabytes(n) {
     return n / 1024 / 1024
