@@ -229,6 +229,7 @@ declare function indexOfRegex(string: string, regex: RegExp, start?: number): Re
 declare function lineMatches(haystack: string, needles: (string | RegExp)[], orderMatters?: boolean): boolean;
 declare function linesMatchInOrder(lines: string[], expectations: (string | RegExp)[][], orderMatters?: boolean): boolean;
 declare function csvEscape(string: string): string;
+declare function allIndexOf(string: string, searchString: string, start?: number): number[];
 declare function indexOfEarliest(string: string, searchStrings: string[], start?: number): number;
 declare function lastIndexOfBefore(string: string, searchString: string, start?: number): number;
 declare function findWeightedPair(string: string, start?: number, opening?: string, closing?: string): number;
@@ -276,6 +277,7 @@ declare function containsWord(string: string, word: string): boolean;
 declare function containsWords(string: string, words: string[], mode: 'any' | 'all'): boolean;
 declare function parseHtmlAttributes(string: string): Record<string, string>;
 declare function readNextWord(string: string, index: number, allowedCharacters?: string[]): string;
+declare function readWordsAfterAll(string: string, after: string, allowedCharacters?: string[]): string[];
 declare function resolveVariables(string: string, variables: Record<string, string>, prefix?: string, separator?: string): string;
 declare function resolveVariableWithDefaultSyntax(string: string, key: string, value: string, prefix?: string, separator?: string): string;
 declare function resolveRemainingVariablesWithDefaults(string: string, prefix?: string, separator?: string): string;
@@ -988,6 +990,7 @@ export declare const Strings: {
     lastIndexOfBefore: typeof lastIndexOfBefore;
     parseHtmlAttributes: typeof parseHtmlAttributes;
     readNextWord: typeof readNextWord;
+    readWordsAfterAll: typeof readWordsAfterAll;
     resolveVariables: typeof resolveVariables;
     resolveVariableWithDefaultSyntax: typeof resolveVariableWithDefaultSyntax;
     resolveRemainingVariablesWithDefaults: typeof resolveRemainingVariablesWithDefaults;
@@ -997,6 +1000,7 @@ export declare const Strings: {
     isValidObjectPathCharacter: typeof isValidObjectPathCharacter;
     insert: typeof insertString;
     indexOfRegex: typeof indexOfRegex;
+    allIndexOf: typeof allIndexOf;
     lineMatches: typeof lineMatches;
     linesMatchInOrder: typeof linesMatchInOrder;
     represent: typeof represent;
