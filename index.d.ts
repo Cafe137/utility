@@ -653,6 +653,14 @@ export declare class AsyncQueue {
     enqueue(fn: () => Promise<void>): Promise<void>;
     drain(): Promise<void>;
 }
+type RouterFn<Q, S> = (request: Q, response: S, context: Map<string, string>) => Promise<void>;
+export declare class TrieRouter<Q, S> {
+    private forks;
+    private handler?;
+    private variableName?;
+    insert(pathSegments: string[], handler: RouterFn<Q, S>): void;
+    handle(pathSegments: string[], request: Q, response: S, context: Map<string, string>): Promise<boolean>;
+}
 export declare const Binary: {
     hexToUint8Array: typeof hexToUint8Array;
     uint8ArrayToHex: typeof uint8ArrayToHex;

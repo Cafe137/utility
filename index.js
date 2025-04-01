@@ -15,6 +15,7 @@ Object.defineProperty(exports, '__esModule', { value: !0 }),
         exports.Random =
         exports.Elliptic =
         exports.Binary =
+        exports.TrieRouter =
         exports.AsyncQueue =
         exports.PubSubChannel =
         exports.FixedPointNumber =
@@ -2265,12 +2266,12 @@ function keccakPermutate(n) {
             m = t ^ $n,
             g = r ^ An,
             En = (c << 1) | (f >>> 31),
-            On = (f << 1) | (c >>> 31),
+            Mn = (f << 1) | (c >>> 31),
             w = o ^ En,
-            y = i ^ On,
-            Mn = (l << 1) | (a >>> 31),
+            y = i ^ Mn,
+            On = (l << 1) | (a >>> 31),
             kn = (a << 1) | (l >>> 31),
-            x = u ^ Mn,
+            x = u ^ On,
             b = s ^ kn,
             Tn = (t << 1) | (r >>> 31),
             Sn = (r << 1) | (t >>> 31),
@@ -2327,8 +2328,8 @@ function keccakPermutate(n) {
             (n[48] ^= $),
             (n[49] ^= A)
         const E = n[0],
-            O = n[1],
-            M = (n[2] << 1) | (n[3] >>> 31),
+            M = n[1],
+            O = (n[2] << 1) | (n[3] >>> 31),
             k = (n[3] << 1) | (n[2] >>> 31),
             T = (n[5] << 30) | (n[4] >>> 2),
             S = (n[4] << 30) | (n[5] >>> 2),
@@ -2341,20 +2342,20 @@ function keccakPermutate(n) {
             v = (n[13] << 12) | (n[12] >>> 20),
             U = (n[12] << 12) | (n[13] >>> 20),
             L = (n[14] << 6) | (n[15] >>> 26),
-            j = (n[15] << 6) | (n[14] >>> 26),
-            N = (n[17] << 23) | (n[16] >>> 9),
+            N = (n[15] << 6) | (n[14] >>> 26),
+            j = (n[17] << 23) | (n[16] >>> 9),
             z = (n[16] << 23) | (n[17] >>> 9),
             F = (n[18] << 20) | (n[19] >>> 12),
-            q = (n[19] << 20) | (n[18] >>> 12),
-            W = (n[20] << 3) | (n[21] >>> 29),
+            W = (n[19] << 20) | (n[18] >>> 12),
+            q = (n[20] << 3) | (n[21] >>> 29),
             H = (n[21] << 3) | (n[20] >>> 29),
             V = (n[22] << 10) | (n[23] >>> 22),
             J = (n[23] << 10) | (n[22] >>> 22),
             K = (n[25] << 11) | (n[24] >>> 21),
             Z = (n[24] << 11) | (n[25] >>> 21),
             Q = (n[26] << 25) | (n[27] >>> 7),
-            _ = (n[27] << 25) | (n[26] >>> 7),
-            G = (n[29] << 7) | (n[28] >>> 25),
+            G = (n[27] << 25) | (n[26] >>> 7),
+            _ = (n[29] << 7) | (n[28] >>> 25),
             Y = (n[28] << 7) | (n[29] >>> 25),
             X = (n[31] << 9) | (n[30] >>> 23),
             nn = (n[30] << 9) | (n[31] >>> 23),
@@ -2377,35 +2378,35 @@ function keccakPermutate(n) {
             yn = (n[48] << 14) | (n[49] >>> 18),
             xn = (n[49] << 14) | (n[48] >>> 18)
         ;(n[0] = E ^ (~v & K)),
-            (n[1] = O ^ (~U & Z)),
+            (n[1] = M ^ (~U & Z)),
             (n[2] = v ^ (~K & un)),
             (n[3] = U ^ (~Z & cn)),
             (n[4] = K ^ (~un & yn)),
             (n[5] = Z ^ (~cn & xn)),
             (n[6] = un ^ (~yn & E)),
-            (n[7] = cn ^ (~xn & O)),
+            (n[7] = cn ^ (~xn & M)),
             (n[8] = yn ^ (~E & v)),
-            (n[9] = xn ^ (~O & U)),
-            (n[10] = R ^ (~F & W)),
-            (n[11] = D ^ (~q & H)),
-            (n[12] = F ^ (~W & en)),
-            (n[13] = q ^ (~H & tn)),
-            (n[14] = W ^ (~en & pn)),
+            (n[9] = xn ^ (~M & U)),
+            (n[10] = R ^ (~F & q)),
+            (n[11] = D ^ (~W & H)),
+            (n[12] = F ^ (~q & en)),
+            (n[13] = W ^ (~H & tn)),
+            (n[14] = q ^ (~en & pn)),
             (n[15] = H ^ (~tn & mn)),
             (n[16] = en ^ (~pn & R)),
             (n[17] = tn ^ (~mn & D)),
             (n[18] = pn ^ (~R & F)),
-            (n[19] = mn ^ (~D & q)),
-            (n[20] = M ^ (~L & Q)),
-            (n[21] = k ^ (~j & _)),
+            (n[19] = mn ^ (~D & W)),
+            (n[20] = O ^ (~L & Q)),
+            (n[21] = k ^ (~N & G)),
             (n[22] = L ^ (~Q & sn)),
-            (n[23] = j ^ (~_ & fn)),
+            (n[23] = N ^ (~G & fn)),
             (n[24] = Q ^ (~sn & ln)),
-            (n[25] = _ ^ (~fn & an)),
-            (n[26] = sn ^ (~ln & M)),
+            (n[25] = G ^ (~fn & an)),
+            (n[26] = sn ^ (~ln & O)),
             (n[27] = fn ^ (~an & k)),
-            (n[28] = ln ^ (~M & L)),
-            (n[29] = an ^ (~k & j)),
+            (n[28] = ln ^ (~O & L)),
+            (n[29] = an ^ (~k & N)),
             (n[30] = I ^ (~B & V)),
             (n[31] = C ^ (~P & J)),
             (n[32] = B ^ (~V & rn)),
@@ -2416,15 +2417,15 @@ function keccakPermutate(n) {
             (n[37] = on ^ (~wn & C)),
             (n[38] = gn ^ (~I & B)),
             (n[39] = wn ^ (~C & P)),
-            (n[40] = T ^ (~N & G)),
+            (n[40] = T ^ (~j & _)),
             (n[41] = S ^ (~z & Y)),
-            (n[42] = N ^ (~G & X)),
+            (n[42] = j ^ (~_ & X)),
             (n[43] = z ^ (~Y & nn)),
-            (n[44] = G ^ (~X & hn)),
+            (n[44] = _ ^ (~X & hn)),
             (n[45] = Y ^ (~nn & dn)),
             (n[46] = X ^ (~hn & T)),
             (n[47] = nn ^ (~dn & S)),
-            (n[48] = hn ^ (~T & N)),
+            (n[48] = hn ^ (~T & j)),
             (n[49] = dn ^ (~S & z)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
@@ -3079,7 +3080,37 @@ class AsyncQueue {
         })
     }
 }
-;(exports.AsyncQueue = AsyncQueue),
+exports.AsyncQueue = AsyncQueue
+class TrieRouter {
+    constructor() {
+        this.forks = new Map()
+    }
+    insert(e, t) {
+        if (e.length === 0) {
+            this.handler = t
+            return
+        }
+        const r = e[0]
+        let o = r,
+            i
+        if ((r.startsWith(':') && ((o = ':'), (i = r.slice(1))), !this.forks.has(o))) {
+            const u = new TrieRouter()
+            i && (u.variableName = i), this.forks.set(o, u)
+        }
+        this.forks.get(o).insert(e.slice(1), t)
+    }
+    async handle(e, t, r, o) {
+        if (e.length === 0) return this.handler ? (await this.handler(t, r, o), !0) : !1
+        const i = e[0],
+            u = this.forks.get(i)
+        if (u) return u.handle(e.slice(1), t, r, o)
+        const s = this.forks.get(':')
+        if (s) return s.variableName && o.set(s.variableName, i), s.handle(e.slice(1), t, r, o)
+        const c = this.forks.get('*')
+        return c ? (o.set('wildcard', e.join('/')), c.handler ? (await c.handler(t, r, o), !0) : !1) : !1
+    }
+}
+;(exports.TrieRouter = TrieRouter),
     (exports.Binary = {
         hexToUint8Array,
         uint8ArrayToHex,

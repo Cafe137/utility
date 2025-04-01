@@ -25,3 +25,4 @@ export const AsyncLazy = utility.AsyncLazy
 export const AsyncQueue = utility.AsyncQueue
 export const Uint8ArrayReader = utility.Uint8ArrayReader
 export const Uint8ArrayWriter = utility.Uint8ArrayWriter
+export const TrieRouter = utility.TrieRouter
