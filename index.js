@@ -3105,7 +3105,7 @@ class TrieRouter {
             u = this.forks.get(i)
         if (u) return u.handle(e.slice(1), t, r, o)
         const s = this.forks.get(':')
-        if (s) return s.variableName && o.set(s.variableName, i), s.handle(e.slice(1), t, r, o)
+        if (s) return s.variableName && o.set(s.variableName, decodeURIComponent(i)), s.handle(e.slice(1), t, r, o)
         const c = this.forks.get('*')
         return c ? (o.set('wildcard', e.join('/')), c.handler ? (await c.handler(t, r, o), !0) : !1) : !1
     }
