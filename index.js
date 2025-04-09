@@ -219,7 +219,7 @@ function deleteDeep(n, e) {
         r = afterLast(e, '.')
     if (!t || !r) return
     const o = getDeep(n, t)
-    delete o[r]
+    o && delete o[r]
 }
 function replaceDeep(n, e, t) {
     const r = getDeep(n, e)
