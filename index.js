@@ -2344,8 +2344,8 @@ function keccakPermutate(n) {
             L = (n[14] << 6) | (n[15] >>> 26),
             N = (n[15] << 6) | (n[14] >>> 26),
             j = (n[17] << 23) | (n[16] >>> 9),
-            z = (n[16] << 23) | (n[17] >>> 9),
-            F = (n[18] << 20) | (n[19] >>> 12),
+            F = (n[16] << 23) | (n[17] >>> 9),
+            z = (n[18] << 20) | (n[19] >>> 12),
             W = (n[19] << 20) | (n[18] >>> 12),
             q = (n[20] << 3) | (n[21] >>> 29),
             H = (n[21] << 3) | (n[20] >>> 29),
@@ -2355,8 +2355,8 @@ function keccakPermutate(n) {
             Z = (n[24] << 11) | (n[25] >>> 21),
             Q = (n[26] << 25) | (n[27] >>> 7),
             G = (n[27] << 25) | (n[26] >>> 7),
-            _ = (n[29] << 7) | (n[28] >>> 25),
-            Y = (n[28] << 7) | (n[29] >>> 25),
+            Y = (n[29] << 7) | (n[28] >>> 25),
+            _ = (n[28] << 7) | (n[29] >>> 25),
             X = (n[31] << 9) | (n[30] >>> 23),
             nn = (n[30] << 9) | (n[31] >>> 23),
             en = (n[33] << 13) | (n[32] >>> 19),
@@ -2387,15 +2387,15 @@ function keccakPermutate(n) {
             (n[7] = cn ^ (~xn & M)),
             (n[8] = yn ^ (~E & v)),
             (n[9] = xn ^ (~M & U)),
-            (n[10] = R ^ (~F & q)),
+            (n[10] = R ^ (~z & q)),
             (n[11] = D ^ (~W & H)),
-            (n[12] = F ^ (~q & en)),
+            (n[12] = z ^ (~q & en)),
             (n[13] = W ^ (~H & tn)),
             (n[14] = q ^ (~en & pn)),
             (n[15] = H ^ (~tn & mn)),
             (n[16] = en ^ (~pn & R)),
             (n[17] = tn ^ (~mn & D)),
-            (n[18] = pn ^ (~R & F)),
+            (n[18] = pn ^ (~R & z)),
             (n[19] = mn ^ (~D & W)),
             (n[20] = O ^ (~L & Q)),
             (n[21] = k ^ (~N & G)),
@@ -2417,16 +2417,16 @@ function keccakPermutate(n) {
             (n[37] = on ^ (~wn & C)),
             (n[38] = gn ^ (~I & B)),
             (n[39] = wn ^ (~C & P)),
-            (n[40] = T ^ (~j & _)),
-            (n[41] = S ^ (~z & Y)),
-            (n[42] = j ^ (~_ & X)),
-            (n[43] = z ^ (~Y & nn)),
-            (n[44] = _ ^ (~X & hn)),
-            (n[45] = Y ^ (~nn & dn)),
+            (n[40] = T ^ (~j & Y)),
+            (n[41] = S ^ (~F & _)),
+            (n[42] = j ^ (~Y & X)),
+            (n[43] = F ^ (~_ & nn)),
+            (n[44] = Y ^ (~X & hn)),
+            (n[45] = _ ^ (~nn & dn)),
             (n[46] = X ^ (~hn & T)),
             (n[47] = nn ^ (~dn & S)),
             (n[48] = hn ^ (~T & j)),
-            (n[49] = dn ^ (~S & z)),
+            (n[49] = dn ^ (~S & F)),
             (n[0] ^= IOTA_CONSTANTS[e * 2]),
             (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
     }
@@ -2720,11 +2720,11 @@ class Chunk {
         return concatBytes(numberToUint64(this.span, 'LE'), this.writer.buffer)
     }
     hash() {
-        const e = log2Reduce(partition(this.writer.buffer, 32), (t, r) => keccak256(concatBytes(t, r)))
-        return keccak256(concatBytes(numberToUint64(this.span, 'LE'), e))
+        const e = log2Reduce(partition(this.writer.buffer, 32), (t, r) => Chunk.hashFunction(concatBytes(t, r)))
+        return Chunk.hashFunction(concatBytes(numberToUint64(this.span, 'LE'), e))
     }
 }
-exports.Chunk = Chunk
+;(exports.Chunk = Chunk), (Chunk.hashFunction = keccak256)
 class MerkleTree {
     constructor(e, t = 4096) {
         ;(this.counters = [1]), (this.capacity = t), (this.chunks = [new Chunk(t)]), (this.onChunk = e)

@@ -564,6 +564,7 @@ export declare class Uint8ArrayWriter {
     max(): number;
 }
 export declare class Chunk {
+    static hashFunction: (bytes: Uint8Array) => Uint8Array;
     span: bigint;
     writer: Uint8ArrayWriter;
     constructor(capacity: number, span?: bigint);
