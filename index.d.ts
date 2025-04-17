@@ -273,6 +273,8 @@ declare function breakLine(string: string): {
 declare function measureTextWidth(string: string, characterWidths?: Record<string, number>): number;
 declare function toLines(string: string, maxWidth: number, characterWidths?: Record<string, number>): string[];
 declare function levenshteinDistance(a: string, b: string): number;
+declare function findCommonPrefix(strings: string[]): string;
+declare function findCommonDirectory(paths: string[]): string;
 declare function containsWord(string: string, word: string): boolean;
 declare function containsWords(string: string, words: string[], mode: 'any' | 'all'): boolean;
 declare function parseHtmlAttributes(string: string): Record<string, string>;
@@ -1033,6 +1035,8 @@ export declare const Strings: {
     measureTextWidth: typeof measureTextWidth;
     toLines: typeof toLines;
     levenshteinDistance: typeof levenshteinDistance;
+    findCommonPrefix: typeof findCommonPrefix;
+    findCommonDirectory: typeof findCommonDirectory;
 };
 export declare const Assertions: {
     asEqual: typeof asEqual;

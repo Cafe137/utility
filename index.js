@@ -1232,6 +1232,21 @@ function levenshteinDistance(n, e) {
         }
     return t[n.length][e.length]
 }
+function findCommonPrefix(n) {
+    const e = n.reduce((r, o) => (r.length < o.length ? r : o))
+    let t = ''
+    for (let r = 0; r < e.length; r++) {
+        const o = e[r]
+        if (n.every(i => i[r] === o)) t += o
+        else break
+    }
+    return t
+}
+function findCommonDirectory(n) {
+    const e = findCommonPrefix(n),
+        t = e.lastIndexOf('/')
+    return t === -1 ? '' : e.slice(0, t + 1)
+}
 function containsWord(n, e) {
     return new RegExp(`\\b${e}\\b`).test(n)
 }
@@ -2266,12 +2281,12 @@ function keccakPermutate(n) {
             m = t ^ $n,
             g = r ^ An,
             En = (c << 1) | (f >>> 31),
-            Mn = (f << 1) | (c >>> 31),
+            On = (f << 1) | (c >>> 31),
             w = o ^ En,
-            y = i ^ Mn,
-            On = (l << 1) | (a >>> 31),
+            y = i ^ On,
+            Mn = (l << 1) | (a >>> 31),
             kn = (a << 1) | (l >>> 31),
-            x = u ^ On,
+            x = u ^ Mn,
             b = s ^ kn,
             Tn = (t << 1) | (r >>> 31),
             Sn = (r << 1) | (t >>> 31),
@@ -2328,14 +2343,14 @@ function keccakPermutate(n) {
             (n[48] ^= $),
             (n[49] ^= A)
         const E = n[0],
-            M = n[1],
-            O = (n[2] << 1) | (n[3] >>> 31),
+            O = n[1],
+            M = (n[2] << 1) | (n[3] >>> 31),
             k = (n[3] << 1) | (n[2] >>> 31),
             T = (n[5] << 30) | (n[4] >>> 2),
             S = (n[4] << 30) | (n[5] >>> 2),
             R = (n[6] << 28) | (n[7] >>> 4),
-            D = (n[7] << 28) | (n[6] >>> 4),
-            I = (n[8] << 27) | (n[9] >>> 5),
+            I = (n[7] << 28) | (n[6] >>> 4),
+            D = (n[8] << 27) | (n[9] >>> 5),
             C = (n[9] << 27) | (n[8] >>> 5),
             B = (n[11] << 4) | (n[10] >>> 28),
             P = (n[10] << 4) | (n[11] >>> 28),
@@ -2378,44 +2393,44 @@ function keccakPermutate(n) {
             yn = (n[48] << 14) | (n[49] >>> 18),
             xn = (n[49] << 14) | (n[48] >>> 18)
         ;(n[0] = E ^ (~v & K)),
-            (n[1] = M ^ (~U & Z)),
+            (n[1] = O ^ (~U & Z)),
             (n[2] = v ^ (~K & un)),
             (n[3] = U ^ (~Z & cn)),
             (n[4] = K ^ (~un & yn)),
             (n[5] = Z ^ (~cn & xn)),
             (n[6] = un ^ (~yn & E)),
-            (n[7] = cn ^ (~xn & M)),
+            (n[7] = cn ^ (~xn & O)),
             (n[8] = yn ^ (~E & v)),
-            (n[9] = xn ^ (~M & U)),
+            (n[9] = xn ^ (~O & U)),
             (n[10] = R ^ (~z & q)),
-            (n[11] = D ^ (~W & H)),
+            (n[11] = I ^ (~W & H)),
             (n[12] = z ^ (~q & en)),
             (n[13] = W ^ (~H & tn)),
             (n[14] = q ^ (~en & pn)),
             (n[15] = H ^ (~tn & mn)),
             (n[16] = en ^ (~pn & R)),
-            (n[17] = tn ^ (~mn & D)),
+            (n[17] = tn ^ (~mn & I)),
             (n[18] = pn ^ (~R & z)),
-            (n[19] = mn ^ (~D & W)),
-            (n[20] = O ^ (~L & Q)),
+            (n[19] = mn ^ (~I & W)),
+            (n[20] = M ^ (~L & Q)),
             (n[21] = k ^ (~N & G)),
             (n[22] = L ^ (~Q & sn)),
             (n[23] = N ^ (~G & fn)),
             (n[24] = Q ^ (~sn & ln)),
             (n[25] = G ^ (~fn & an)),
-            (n[26] = sn ^ (~ln & O)),
+            (n[26] = sn ^ (~ln & M)),
             (n[27] = fn ^ (~an & k)),
-            (n[28] = ln ^ (~O & L)),
+            (n[28] = ln ^ (~M & L)),
             (n[29] = an ^ (~k & N)),
-            (n[30] = I ^ (~B & V)),
+            (n[30] = D ^ (~B & V)),
             (n[31] = C ^ (~P & J)),
             (n[32] = B ^ (~V & rn)),
             (n[33] = P ^ (~J & on)),
             (n[34] = V ^ (~rn & gn)),
             (n[35] = J ^ (~on & wn)),
-            (n[36] = rn ^ (~gn & I)),
+            (n[36] = rn ^ (~gn & D)),
             (n[37] = on ^ (~wn & C)),
-            (n[38] = gn ^ (~I & B)),
+            (n[38] = gn ^ (~D & B)),
             (n[39] = wn ^ (~C & P)),
             (n[40] = T ^ (~j & Y)),
             (n[41] = S ^ (~F & _)),
@@ -3469,7 +3484,9 @@ class TrieRouter {
         breakLine,
         measureTextWidth,
         toLines,
-        levenshteinDistance
+        levenshteinDistance,
+        findCommonPrefix,
+        findCommonDirectory
     }),
     (exports.Assertions = { asEqual, asTrue, asTruthy, asFalse, asFalsy, asEither }),
     (exports.Cache = { get: getCached, invalidate: invalidateCache }),
