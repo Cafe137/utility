@@ -1388,11 +1388,11 @@ function humanizeProgress(n) {
 async function waitFor(n, e, t) {
     for (let r = 0; r < t; r++) {
         try {
-            if (await n()) return !0
+            if (await n()) return
         } catch {}
         r < t - 1 && (await sleepMillis(e))
     }
-    return !1
+    throw Error('Timed out waiting for predicate')
 }
 function filterAndRemove(n, e) {
     const t = []
