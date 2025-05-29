@@ -569,6 +569,10 @@ function enforceArrayShape(n, e) {
     return n.every(t => enforceObjectShape(t, e))
 }
 function represent(n, e = 'json', t = 0) {
+    if (n && isFunction(n.represent)) {
+        const r = n.represent()
+        if (isString(r)) return e === 'json' && t === 0 ? JSON.stringify(r) : r
+    }
     if (isObject(n, !1)) {
         if (t > 1) return '[object Object]'
         if (e === 'json') {
