@@ -533,7 +533,7 @@ declare function sliceBytes(bytes: Uint8Array, lengths: number[]): Uint8Array[];
 declare function partition(bytes: Uint8Array, size: number): Uint8Array[];
 declare function keccak256(bytes: Uint8Array): Uint8Array;
 declare function sha3_256(bytes: Uint8Array): Uint8Array;
-declare function proximity(one: Uint8Array, other: Uint8Array, max: number): number;
+declare function proximity(one: Uint8Array, other: Uint8Array): number;
 declare function commonPrefix(one: Uint8Array, other: Uint8Array): Uint8Array;
 declare function setBit(bytes: Uint8Array, index: number, value: 0 | 1, endian: 'LE' | 'BE'): void;
 declare function getBit(bytes: Uint8Array, index: number, endian: 'LE' | 'BE'): 0 | 1;

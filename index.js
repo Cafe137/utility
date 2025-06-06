@@ -2299,12 +2299,12 @@ function keccakPermutate(n) {
             m = t ^ $n,
             g = r ^ An,
             En = (c << 1) | (f >>> 31),
-            On = (f << 1) | (c >>> 31),
+            Mn = (f << 1) | (c >>> 31),
             w = o ^ En,
-            y = i ^ On,
-            Mn = (l << 1) | (a >>> 31),
+            y = i ^ Mn,
+            On = (l << 1) | (a >>> 31),
             kn = (a << 1) | (l >>> 31),
-            x = u ^ Mn,
+            x = u ^ On,
             b = s ^ kn,
             Tn = (t << 1) | (r >>> 31),
             Sn = (r << 1) | (t >>> 31),
@@ -2361,8 +2361,8 @@ function keccakPermutate(n) {
             (n[48] ^= $),
             (n[49] ^= A)
         const E = n[0],
-            O = n[1],
-            M = (n[2] << 1) | (n[3] >>> 31),
+            M = n[1],
+            O = (n[2] << 1) | (n[3] >>> 31),
             k = (n[3] << 1) | (n[2] >>> 31),
             T = (n[5] << 30) | (n[4] >>> 2),
             S = (n[4] << 30) | (n[5] >>> 2),
@@ -2411,15 +2411,15 @@ function keccakPermutate(n) {
             yn = (n[48] << 14) | (n[49] >>> 18),
             xn = (n[49] << 14) | (n[48] >>> 18)
         ;(n[0] = E ^ (~v & K)),
-            (n[1] = O ^ (~U & Z)),
+            (n[1] = M ^ (~U & Z)),
             (n[2] = v ^ (~K & un)),
             (n[3] = U ^ (~Z & cn)),
             (n[4] = K ^ (~un & yn)),
             (n[5] = Z ^ (~cn & xn)),
             (n[6] = un ^ (~yn & E)),
-            (n[7] = cn ^ (~xn & O)),
+            (n[7] = cn ^ (~xn & M)),
             (n[8] = yn ^ (~E & v)),
-            (n[9] = xn ^ (~O & U)),
+            (n[9] = xn ^ (~M & U)),
             (n[10] = R ^ (~z & q)),
             (n[11] = I ^ (~W & H)),
             (n[12] = z ^ (~q & en)),
@@ -2430,15 +2430,15 @@ function keccakPermutate(n) {
             (n[17] = tn ^ (~mn & I)),
             (n[18] = pn ^ (~R & z)),
             (n[19] = mn ^ (~I & W)),
-            (n[20] = M ^ (~L & Q)),
+            (n[20] = O ^ (~L & Q)),
             (n[21] = k ^ (~N & G)),
             (n[22] = L ^ (~Q & sn)),
             (n[23] = N ^ (~G & fn)),
             (n[24] = Q ^ (~sn & ln)),
             (n[25] = G ^ (~fn & an)),
-            (n[26] = sn ^ (~ln & M)),
+            (n[26] = sn ^ (~ln & O)),
             (n[27] = fn ^ (~an & k)),
-            (n[28] = ln ^ (~M & L)),
+            (n[28] = ln ^ (~O & L)),
             (n[29] = an ^ (~k & N)),
             (n[30] = D ^ (~B & V)),
             (n[31] = C ^ (~P & J)),
@@ -2535,13 +2535,13 @@ function keccak256(n) {
 function sha3_256(n) {
     return squeeze(absorb(new Array(50).fill(0), divideToBlocks(n, 6)))
 }
-function proximity(n, e, t) {
-    const r = Math.min(n.length, e.length, t / 8 + 1)
-    for (let o = 0; o < r; o++) {
-        const i = n[o] ^ e[o]
-        for (let u = 0; u < 8; u++) if ((i >> (7 - u)) & 1) return o * 8 + u
+function proximity(n, e) {
+    const t = Math.min(n.length, e.length)
+    for (let r = 0; r < t; r++) {
+        const o = n[r] ^ e[r]
+        for (let i = 0; i < 8; i++) if ((o >> (7 - i)) & 1) return r * 8 + i
     }
-    return t
+    return Math.min(n.length, e.length) * 8
 }
 function commonPrefix(n, e) {
     const t = Math.min(n.length, e.length)
