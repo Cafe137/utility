@@ -256,6 +256,8 @@ declare function base32ToUint8Array(base32String: string): Uint8Array;
 declare function uint8ArrayToBase32(array: Uint8Array): string;
 declare function hexToUint8Array(hex: string): Uint8Array;
 declare function uint8ArrayToHex(array: Uint8Array): string;
+declare function uint8ArrayToBinary(array: Uint8Array): string;
+declare function binaryToUint8Array(binary: string): Uint8Array;
 declare function route(pattern: string, actual: string): Record<string, unknown> | null;
 type VariantGroup = {
     variants: string[];
@@ -667,6 +669,8 @@ export declare class TrieRouter<Q, S> {
 export declare const Binary: {
     hexToUint8Array: typeof hexToUint8Array;
     uint8ArrayToHex: typeof uint8ArrayToHex;
+    binaryToUint8Array: typeof binaryToUint8Array;
+    uint8ArrayToBinary: typeof uint8ArrayToBinary;
     base64ToUint8Array: typeof base64ToUint8Array;
     uint8ArrayToBase64: typeof uint8ArrayToBase64;
     base32ToUint8Array: typeof base32ToUint8Array;

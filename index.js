@@ -1144,6 +1144,20 @@ function uint8ArrayToHex(n) {
         .map(e => e.toString(16).padStart(2, '0'))
         .join('')
 }
+function uint8ArrayToBinary(n) {
+    return Array.from(n)
+        .map(e => e.toString(2).padStart(8, '0'))
+        .join('')
+}
+function binaryToUint8Array(n) {
+    const e = Math.ceil(n.length / 8),
+        t = new Uint8Array(e)
+    for (let r = 0; r < e; r++) {
+        const o = parseInt(n.slice(r * 8, r * 8 + 8), 2)
+        t[r] = o
+    }
+    return t
+}
 function route(n, e) {
     const t = n.split('/').filter(i => i),
         r = e.split('/').filter(i => i)
@@ -3133,6 +3147,8 @@ class TrieRouter {
     (exports.Binary = {
         hexToUint8Array,
         uint8ArrayToHex,
+        binaryToUint8Array,
+        uint8ArrayToBinary,
         base64ToUint8Array,
         uint8ArrayToBase64,
         base32ToUint8Array,
