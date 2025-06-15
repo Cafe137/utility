@@ -2301,10 +2301,10 @@ function keccakPermutate(n) {
             En = (c << 1) | (f >>> 31),
             Mn = (f << 1) | (c >>> 31),
             w = o ^ En,
-            y = i ^ Mn,
+            x = i ^ Mn,
             On = (l << 1) | (a >>> 31),
             kn = (a << 1) | (l >>> 31),
-            x = u ^ On,
+            y = u ^ On,
             b = s ^ kn,
             Tn = (t << 1) | (r >>> 31),
             Sn = (r << 1) | (t >>> 31),
@@ -2315,8 +2315,8 @@ function keccakPermutate(n) {
             (n[2] ^= m),
             (n[3] ^= g),
             (n[4] ^= w),
-            (n[5] ^= y),
-            (n[6] ^= x),
+            (n[5] ^= x),
+            (n[6] ^= y),
             (n[7] ^= b),
             (n[8] ^= $),
             (n[9] ^= A),
@@ -2325,8 +2325,8 @@ function keccakPermutate(n) {
             (n[12] ^= m),
             (n[13] ^= g),
             (n[14] ^= w),
-            (n[15] ^= y),
-            (n[16] ^= x),
+            (n[15] ^= x),
+            (n[16] ^= y),
             (n[17] ^= b),
             (n[18] ^= $),
             (n[19] ^= A),
@@ -2335,8 +2335,8 @@ function keccakPermutate(n) {
             (n[22] ^= m),
             (n[23] ^= g),
             (n[24] ^= w),
-            (n[25] ^= y),
-            (n[26] ^= x),
+            (n[25] ^= x),
+            (n[26] ^= y),
             (n[27] ^= b),
             (n[28] ^= $),
             (n[29] ^= A),
@@ -2345,8 +2345,8 @@ function keccakPermutate(n) {
             (n[32] ^= m),
             (n[33] ^= g),
             (n[34] ^= w),
-            (n[35] ^= y),
-            (n[36] ^= x),
+            (n[35] ^= x),
+            (n[36] ^= y),
             (n[37] ^= b),
             (n[38] ^= $),
             (n[39] ^= A),
@@ -2355,8 +2355,8 @@ function keccakPermutate(n) {
             (n[42] ^= m),
             (n[43] ^= g),
             (n[44] ^= w),
-            (n[45] ^= y),
-            (n[46] ^= x),
+            (n[45] ^= x),
+            (n[46] ^= y),
             (n[47] ^= b),
             (n[48] ^= $),
             (n[49] ^= A)
@@ -2408,18 +2408,18 @@ function keccakPermutate(n) {
             mn = (n[44] << 29) | (n[45] >>> 3),
             gn = (n[47] << 24) | (n[46] >>> 8),
             wn = (n[46] << 24) | (n[47] >>> 8),
-            yn = (n[48] << 14) | (n[49] >>> 18),
-            xn = (n[49] << 14) | (n[48] >>> 18)
+            xn = (n[48] << 14) | (n[49] >>> 18),
+            yn = (n[49] << 14) | (n[48] >>> 18)
         ;(n[0] = E ^ (~v & K)),
             (n[1] = M ^ (~U & Z)),
             (n[2] = v ^ (~K & un)),
             (n[3] = U ^ (~Z & cn)),
-            (n[4] = K ^ (~un & yn)),
-            (n[5] = Z ^ (~cn & xn)),
-            (n[6] = un ^ (~yn & E)),
-            (n[7] = cn ^ (~xn & M)),
-            (n[8] = yn ^ (~E & v)),
-            (n[9] = xn ^ (~M & U)),
+            (n[4] = K ^ (~un & xn)),
+            (n[5] = Z ^ (~cn & yn)),
+            (n[6] = un ^ (~xn & E)),
+            (n[7] = cn ^ (~yn & M)),
+            (n[8] = xn ^ (~E & v)),
+            (n[9] = yn ^ (~M & U)),
             (n[10] = R ^ (~z & q)),
             (n[11] = I ^ (~W & H)),
             (n[12] = z ^ (~q & en)),
@@ -2585,6 +2585,29 @@ function xorCypher(n, e) {
     const t = new Uint8Array(n.length)
     for (let r = 0; r < n.length; r++) t[r] = n[r] ^ e[r % e.length]
     return t
+}
+function isUtf8(n) {
+    for (let e = 0; e < n.length; e++) {
+        const t = n[e]
+        if (!(t < 128))
+            if ((t & 224) === 192) {
+                if (e + 1 >= n.length || (n[e + 1] & 192) !== 128) return !1
+                e += 1
+            } else if ((t & 240) === 224) {
+                if (e + 2 >= n.length || (n[e + 1] & 192) !== 128 || (n[e + 2] & 192) !== 128) return !1
+                e += 2
+            } else if ((t & 248) === 240) {
+                if (
+                    e + 3 >= n.length ||
+                    (n[e + 1] & 192) !== 128 ||
+                    (n[e + 2] & 192) !== 128 ||
+                    (n[e + 3] & 192) !== 128
+                )
+                    return !1
+                e += 3
+            } else return !1
+    }
+    return !0
 }
 function binaryEquals(n, e) {
     if (n.length !== e.length) return !1
@@ -3179,7 +3202,8 @@ class TrieRouter {
         padStartToMultiple: binaryPadStartToMultiple,
         padEnd: binaryPadEnd,
         padEndToMultiple: binaryPadEndToMultiple,
-        xorCypher
+        xorCypher,
+        isUtf8
     }),
     (exports.Elliptic = {
         privateKeyToPublicKey,

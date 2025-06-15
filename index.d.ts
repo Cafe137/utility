@@ -543,6 +543,7 @@ declare function binaryPadStartToMultiple(bytes: Uint8Array, multiple: number, p
 declare function binaryPadEnd(bytes: Uint8Array, size: number, paddingByte?: number): Uint8Array;
 declare function binaryPadEndToMultiple(bytes: Uint8Array, multiple: number, paddingByte?: number): Uint8Array;
 declare function xorCypher(bytes: Uint8Array, key: Uint8Array): Uint8Array;
+declare function isUtf8(bytes: Uint8Array): boolean;
 declare function binaryEquals(a: Uint8Array, b: Uint8Array): boolean;
 declare function privateKeyToPublicKey(privateKey: bigint): [bigint, bigint];
 declare function compressPublicKey(publicKey: [bigint, bigint]): Uint8Array;
@@ -702,6 +703,7 @@ export declare const Binary: {
     padEnd: typeof binaryPadEnd;
     padEndToMultiple: typeof binaryPadEndToMultiple;
     xorCypher: typeof xorCypher;
+    isUtf8: typeof isUtf8;
 };
 export declare const Elliptic: {
     privateKeyToPublicKey: typeof privateKeyToPublicKey;
