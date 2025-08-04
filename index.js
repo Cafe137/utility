@@ -1272,12 +1272,18 @@ function parseCsv(n, e = ',', t = '"') {
 function humanizeProgress(n) {
 	return `[${Math.floor(n.progress * 100)}%] ${humanizeTime(n.deltaMs)} out of ${humanizeTime(n.totalTimeMs)} (${humanizeTime(n.remainingTimeMs)} left) [${Math.round(n.baseTimeMs)} ms each]`
 }
-async function waitFor(n, e, t) {
-	for (let r = 0; r < t; r++) {
+async function waitFor(n, e) {
+	let t = e.requiredConsecutivePasses || 1,
+		r = 0
+	for (let o = 0; o < e.attempts; o++) {
 		try {
-			if (await n()) return
-		} catch {}
-		r < t - 1 && (await sleepMillis(e))
+			if (await n()) {
+				if ((r++, r >= t)) return
+			} else r = 0
+		} catch {
+			r = 0
+		}
+		o < e.attempts - 1 && (await sleepMillis(e.waitMillis))
 	}
 	throw Error('Timed out waiting for predicate')
 }
@@ -2058,8 +2064,8 @@ function keccakPermutate(n) {
 			S = (n[4] << 30) | (n[5] >>> 2),
 			R = (n[6] << 28) | (n[7] >>> 4),
 			I = (n[7] << 28) | (n[6] >>> 4),
-			D = (n[8] << 27) | (n[9] >>> 5),
-			C = (n[9] << 27) | (n[8] >>> 5),
+			C = (n[8] << 27) | (n[9] >>> 5),
+			D = (n[9] << 27) | (n[8] >>> 5),
 			B = (n[11] << 4) | (n[10] >>> 28),
 			P = (n[10] << 4) | (n[11] >>> 28),
 			v = (n[13] << 12) | (n[12] >>> 20),
@@ -2100,7 +2106,7 @@ function keccakPermutate(n) {
 			wn = (n[46] << 24) | (n[47] >>> 8),
 			xn = (n[48] << 14) | (n[49] >>> 18),
 			yn = (n[49] << 14) | (n[48] >>> 18)
-		;(n[0] = E ^ (~v & K)), (n[1] = M ^ (~U & Z)), (n[2] = v ^ (~K & un)), (n[3] = U ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & E)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~E & v)), (n[9] = yn ^ (~M & U)), (n[10] = R ^ (~z & q)), (n[11] = I ^ (~W & H)), (n[12] = z ^ (~q & en)), (n[13] = W ^ (~H & tn)), (n[14] = q ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & R)), (n[17] = tn ^ (~mn & I)), (n[18] = pn ^ (~R & z)), (n[19] = mn ^ (~I & W)), (n[20] = O ^ (~L & Q)), (n[21] = k ^ (~N & G)), (n[22] = L ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & O)), (n[27] = fn ^ (~an & k)), (n[28] = ln ^ (~O & L)), (n[29] = an ^ (~k & N)), (n[30] = D ^ (~B & V)), (n[31] = C ^ (~P & J)), (n[32] = B ^ (~V & rn)), (n[33] = P ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & D)), (n[37] = on ^ (~wn & C)), (n[38] = gn ^ (~D & B)), (n[39] = wn ^ (~C & P)), (n[40] = T ^ (~j & Y)), (n[41] = S ^ (~F & _)), (n[42] = j ^ (~Y & X)), (n[43] = F ^ (~_ & nn)), (n[44] = Y ^ (~X & hn)), (n[45] = _ ^ (~nn & dn)), (n[46] = X ^ (~hn & T)), (n[47] = nn ^ (~dn & S)), (n[48] = hn ^ (~T & j)), (n[49] = dn ^ (~S & F)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
+		;(n[0] = E ^ (~v & K)), (n[1] = M ^ (~U & Z)), (n[2] = v ^ (~K & un)), (n[3] = U ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & E)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~E & v)), (n[9] = yn ^ (~M & U)), (n[10] = R ^ (~z & q)), (n[11] = I ^ (~W & H)), (n[12] = z ^ (~q & en)), (n[13] = W ^ (~H & tn)), (n[14] = q ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & R)), (n[17] = tn ^ (~mn & I)), (n[18] = pn ^ (~R & z)), (n[19] = mn ^ (~I & W)), (n[20] = O ^ (~L & Q)), (n[21] = k ^ (~N & G)), (n[22] = L ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & O)), (n[27] = fn ^ (~an & k)), (n[28] = ln ^ (~O & L)), (n[29] = an ^ (~k & N)), (n[30] = C ^ (~B & V)), (n[31] = D ^ (~P & J)), (n[32] = B ^ (~V & rn)), (n[33] = P ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & C)), (n[37] = on ^ (~wn & D)), (n[38] = gn ^ (~C & B)), (n[39] = wn ^ (~D & P)), (n[40] = T ^ (~j & Y)), (n[41] = S ^ (~F & _)), (n[42] = j ^ (~Y & X)), (n[43] = F ^ (~_ & nn)), (n[44] = Y ^ (~X & hn)), (n[45] = _ ^ (~nn & dn)), (n[46] = X ^ (~hn & T)), (n[47] = nn ^ (~dn & S)), (n[48] = hn ^ (~T & j)), (n[49] = dn ^ (~S & F)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
 	}
 }
 function bytesToNumbers(n) {

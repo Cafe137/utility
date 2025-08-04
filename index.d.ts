@@ -357,7 +357,12 @@ declare function parseKeyValues(lines: string[], separator?: string): Record<str
 declare function buildUrl(baseUrl?: string | null, path?: string | null, query?: Record<string, any> | null): string
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[]
 declare function humanizeProgress(state: Progress): string
-declare function waitFor(predicate: () => Promise<boolean>, waitLength: number, maxWaits: number): Promise<void>
+interface WaitOptions {
+	waitMillis: number
+	attempts: number
+	requiredConsecutivePasses?: number
+}
+declare function waitFor(predicate: () => Promise<boolean>, options: WaitOptions): Promise<void>
 declare function filterAndRemove<T>(array: T[], predicate: (item: T) => boolean): T[]
 declare function cloneWithJson<T>(a: T): T
 declare function unixTimestamp(optionalTimestamp?: number): number
