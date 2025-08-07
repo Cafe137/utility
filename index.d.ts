@@ -210,6 +210,7 @@ declare function asUrl(
 ): string
 declare function isNullable(typeFn: (value: any) => boolean, value: any): boolean
 declare function asNullable<T>(typeFn: (value: any) => T, value: any): T | null
+declare function asEmptiable<T>(typeFn: (value: any) => T, value: any): T | ''
 declare function asOptional<T>(typeFn: (value: any) => T, value: any): T | undefined
 declare function enforceObjectShape(value: Record<string, any>, shape: Record<string, (value: any) => boolean>): boolean
 declare function enforceArrayShape(value: any[], shape: Record<string, (value: any) => boolean>): boolean
@@ -1016,6 +1017,7 @@ export declare const Types: {
 	asStringMap: typeof asStringMap
 	asNumericDictionary: typeof asNumericDictionary
 	asUrl: typeof asUrl
+	asEmptiable: typeof asEmptiable
 	asNullable: typeof asNullable
 	asOptional: typeof asOptional
 	enforceObjectShape: typeof enforceObjectShape
