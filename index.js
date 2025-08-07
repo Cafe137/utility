@@ -465,7 +465,7 @@ function asNullable(n, e) {
 	return e == null ? null : n(e)
 }
 function asEmptiable(n, e) {
-	return e === '' ? '' : n(e)
+	return e === '' ? void 0 : n(e)
 }
 function asOptional(n, e) {
 	return e == null ? void 0 : n(e)
