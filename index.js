@@ -1428,17 +1428,24 @@ function makeStorage(n) {
 function getPreLine(n) {
 	return n.replace(/ +/g, ' ').replace(/^ /gm, '')
 }
-const tinyCache = {}
+const tinyCache = new Map()
 async function getCached(n, e, t) {
 	const r = Date.now(),
-		o = tinyCache[n]
+		o = tinyCache.get(n)
 	if (o && o.validUntil > r) return o.value
 	const i = await t(),
 		u = r + e
-	return (tinyCache[n] = { value: i, validUntil: u }), i
+	return tinyCache.set(n, { value: i, validUntil: u }), i
 }
-function invalidateCache(n) {
-	delete tinyCache[n]
+function deleteFromCache(n) {
+	tinyCache.delete(n)
+}
+function deleteExpiredFromCache() {
+	const n = Date.now()
+	for (const [e, t] of tinyCache.entries()) t.validUntil <= n && tinyCache.delete(e)
+}
+function cacheSize() {
+	return tinyCache.size
 }
 function joinUrl(n, e = !1) {
 	;(n = n.filter(i => i)), e && isString(n[1]) && (n[1] = '../' + n[1])
@@ -2076,8 +2083,8 @@ function keccakPermutate(n) {
 			L = (n[14] << 6) | (n[15] >>> 26),
 			N = (n[15] << 6) | (n[14] >>> 26),
 			j = (n[17] << 23) | (n[16] >>> 9),
-			F = (n[16] << 23) | (n[17] >>> 9),
-			z = (n[18] << 20) | (n[19] >>> 12),
+			z = (n[16] << 23) | (n[17] >>> 9),
+			F = (n[18] << 20) | (n[19] >>> 12),
 			W = (n[19] << 20) | (n[18] >>> 12),
 			q = (n[20] << 3) | (n[21] >>> 29),
 			H = (n[21] << 3) | (n[20] >>> 29),
@@ -2109,7 +2116,7 @@ function keccakPermutate(n) {
 			wn = (n[46] << 24) | (n[47] >>> 8),
 			xn = (n[48] << 14) | (n[49] >>> 18),
 			yn = (n[49] << 14) | (n[48] >>> 18)
-		;(n[0] = E ^ (~v & K)), (n[1] = M ^ (~U & Z)), (n[2] = v ^ (~K & un)), (n[3] = U ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & E)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~E & v)), (n[9] = yn ^ (~M & U)), (n[10] = R ^ (~z & q)), (n[11] = I ^ (~W & H)), (n[12] = z ^ (~q & en)), (n[13] = W ^ (~H & tn)), (n[14] = q ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & R)), (n[17] = tn ^ (~mn & I)), (n[18] = pn ^ (~R & z)), (n[19] = mn ^ (~I & W)), (n[20] = O ^ (~L & Q)), (n[21] = k ^ (~N & G)), (n[22] = L ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & O)), (n[27] = fn ^ (~an & k)), (n[28] = ln ^ (~O & L)), (n[29] = an ^ (~k & N)), (n[30] = C ^ (~B & V)), (n[31] = D ^ (~P & J)), (n[32] = B ^ (~V & rn)), (n[33] = P ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & C)), (n[37] = on ^ (~wn & D)), (n[38] = gn ^ (~C & B)), (n[39] = wn ^ (~D & P)), (n[40] = T ^ (~j & Y)), (n[41] = S ^ (~F & _)), (n[42] = j ^ (~Y & X)), (n[43] = F ^ (~_ & nn)), (n[44] = Y ^ (~X & hn)), (n[45] = _ ^ (~nn & dn)), (n[46] = X ^ (~hn & T)), (n[47] = nn ^ (~dn & S)), (n[48] = hn ^ (~T & j)), (n[49] = dn ^ (~S & F)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
+		;(n[0] = E ^ (~v & K)), (n[1] = M ^ (~U & Z)), (n[2] = v ^ (~K & un)), (n[3] = U ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & E)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~E & v)), (n[9] = yn ^ (~M & U)), (n[10] = R ^ (~F & q)), (n[11] = I ^ (~W & H)), (n[12] = F ^ (~q & en)), (n[13] = W ^ (~H & tn)), (n[14] = q ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & R)), (n[17] = tn ^ (~mn & I)), (n[18] = pn ^ (~R & F)), (n[19] = mn ^ (~I & W)), (n[20] = O ^ (~L & Q)), (n[21] = k ^ (~N & G)), (n[22] = L ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & O)), (n[27] = fn ^ (~an & k)), (n[28] = ln ^ (~O & L)), (n[29] = an ^ (~k & N)), (n[30] = C ^ (~B & V)), (n[31] = D ^ (~P & J)), (n[32] = B ^ (~V & rn)), (n[33] = P ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & C)), (n[37] = on ^ (~wn & D)), (n[38] = gn ^ (~C & B)), (n[39] = wn ^ (~D & P)), (n[40] = T ^ (~j & Y)), (n[41] = S ^ (~z & _)), (n[42] = j ^ (~Y & X)), (n[43] = z ^ (~_ & nn)), (n[44] = Y ^ (~X & hn)), (n[45] = _ ^ (~nn & dn)), (n[46] = X ^ (~hn & T)), (n[47] = nn ^ (~dn & S)), (n[48] = hn ^ (~T & j)), (n[49] = dn ^ (~S & z)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
 	}
 }
 function bytesToNumbers(n) {
@@ -2716,5 +2723,5 @@ class TrieRouter {
 	(exports.Types = { isFunction, isObject, isStrictlyObject, isEmptyArray, isEmptyObject, isUndefined, isString, isNumber, isBoolean, isDate, isBlank, isId, isIntegerString, isHexString, isUrl, isNullable, asString, asHexString, asSafeString, asIntegerString, asNumber, asFunction, asInteger, asBoolean, asDate, asNullableString, asEmptiableString, asId, asTime, asArray, asObject, asNullableObject, asStringMap, asNumericDictionary, asUrl, asEmptiable, asNullable, asOptional, enforceObjectShape, enforceArrayShape, isPng, isJpg, isWebp, isImage }),
 	(exports.Strings = { tokenizeByCount, tokenizeByLength, searchHex, searchSubstring, randomHex: randomHexString, randomLetter: randomLetterString, randomAlphanumeric: randomAlphanumericString, randomRichAscii: randomRichAsciiString, randomUnicode: randomUnicodeString, includesAny, slugify, normalForm, enumify, escapeHtml, decodeHtmlEntities, after, afterLast, before, beforeLast, betweenWide, betweenNarrow, getPreLine, containsWord, containsWords, joinUrl, getFuzzyMatchScore, sortByFuzzyScore, splitOnce, splitAll, randomize, expand, shrinkTrim, capitalize, decapitalize, csvEscape, parseCsv, surroundInOut, getExtension, getBasename, normalizeEmail, normalizeFilename, parseFilename, camelToTitle, slugToTitle, slugToCamel, joinHumanly, findWeightedPair, extractBlock, extractAllBlocks, replaceBlocks, indexOfEarliest, lastIndexOfBefore, parseHtmlAttributes, readNextWord, readWordsAfterAll, resolveVariables, resolveVariableWithDefaultSyntax, resolveRemainingVariablesWithDefaults, isLetter, isDigit, isLetterOrDigit, isValidObjectPathCharacter, insert: insertString, indexOfRegex, allIndexOf, lineMatches, linesMatchInOrder, represent, resolveMarkdownLinks, buildUrl, isChinese, replaceBetweenStrings, describeMarkdown, isBalanced, textToFormat, splitFormatting, splitHashtags, splitUrls, route, explodeReplace, generateVariants, replaceWord, replacePascalCaseWords, stripHtml, breakLine, measureTextWidth, toLines, levenshteinDistance, findCommonPrefix, findCommonDirectory }),
 	(exports.Assertions = { asEqual, asTrue, asTruthy, asFalse, asFalsy, asEither }),
-	(exports.Cache = { get: getCached, invalidate: invalidateCache }),
+	(exports.Cache = { get: getCached, delete: deleteFromCache, deleteExpired: deleteExpiredFromCache, size: cacheSize }),
 	(exports.Vector = { addPoint, subtractPoint, multiplyPoint, normalizePoint, pushPoint, filterCoordinates, findCorners, findLines, raycast, raycastCircle, getLineIntersectionPoint })

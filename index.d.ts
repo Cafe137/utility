@@ -452,7 +452,9 @@ declare function makeDate(numberWithUnit: string): number
 declare function makeStorage(numberWithUnit: string): number
 declare function getPreLine(string: string): string
 declare function getCached<T>(key: string, ttlMillis: number, handler: () => Promise<T>): Promise<T>
-declare function invalidateCache(key: string): void
+declare function deleteFromCache(key: string): void
+declare function deleteExpiredFromCache(): void
+declare function cacheSize(): number
 declare function joinUrl(parts: unknown[], relativeToFile?: boolean): string
 declare function replaceBetweenStrings(string: string, start: string, end: string, replacement: string, keepBoundaries?: boolean): string
 type MarkdownDescription = {
@@ -1129,7 +1131,9 @@ export declare const Assertions: {
 }
 export declare const Cache: {
 	get: typeof getCached
-	invalidate: typeof invalidateCache
+	delete: typeof deleteFromCache
+	deleteExpired: typeof deleteExpiredFromCache
+	size: typeof cacheSize
 }
 export declare const Vector: {
 	addPoint: typeof addPoint
