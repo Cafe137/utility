@@ -66,6 +66,7 @@ declare function roundToNearest(value: number, nearest: number): number
 declare function formatDistance(meters: number): string
 declare function triangularNumber(n: number): number
 declare function searchFloat(string: string): number
+declare function binomialSample(n: number, p: number, generator?: () => number): number
 declare function isObject(value: any, checkForPlainObject?: boolean): value is object
 declare function isStrictlyObject(value: any): value is object
 declare function isEmptyArray(value: any): boolean
@@ -889,6 +890,7 @@ export declare const Numbers: {
 	formatDistance: typeof formatDistance
 	triangularNumber: typeof triangularNumber
 	searchFloat: typeof searchFloat
+	binomialSample: typeof binomialSample
 }
 export declare const Promises: {
 	raceFulfilled: typeof raceFulfilled
