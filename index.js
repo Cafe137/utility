@@ -1416,21 +1416,21 @@ function makeDate(n) {
 			.replace(/^-?[0-9.]+/, '')
 			.trim()
 			.toLowerCase(),
-		r = dateUnits[t]
+		r = t === '' ? 1 : dateUnits[t]
 	if (!r) throw Error(`Unknown unit: "${t}"`)
-	return e * r
+	return Math.ceil(e * r)
 }
-const storageUnits = { b: 1, byte: 1, bytes: 1, kb: 1024, kilobyte: 1024, kilobytes: 1024, mb: 1024 ** 2, megabyte: 1024 ** 2, megabytes: 1024 ** 2, gb: 1024 ** 3, gigabyte: 1024 ** 3, gigabytes: 1024 ** 3, tb: 1024 ** 4, terabyte: 1024 ** 4, terabytes: 1024 ** 4 }
-function makeStorage(n) {
-	const e = parseFloat(n)
-	if (isNaN(e)) throw Error('makeDate got NaN for input')
-	const t = n
+const storageUnitExponents = { b: 0, byte: 0, bytes: 0, kb: 1, kilobyte: 1, kilobytes: 1, mb: 2, megabyte: 2, megabytes: 2, gb: 3, gigabyte: 3, gigabytes: 3, tb: 4, terabyte: 4, terabytes: 4 }
+function makeStorage(n, e = 1024) {
+	const t = parseFloat(n)
+	if (isNaN(t)) throw Error('makeStorage got NaN for input')
+	const r = n
 			.replace(/^-?[0-9.]+/, '')
 			.trim()
 			.toLowerCase(),
-		r = storageUnits[t]
-	if (!r) throw Error(`Unknown unit: "${t}"`)
-	return e * r
+		o = r === '' ? 0 : storageUnitExponents[r]
+	if (o == null) throw Error(`Unknown unit: "${r}"`)
+	return Math.ceil(t * e ** o)
 }
 function getPreLine(n) {
 	return n.replace(/ +/g, ' ').replace(/^ /gm, '')

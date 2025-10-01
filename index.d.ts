@@ -450,7 +450,7 @@ declare function minutes(value: number): number
 declare function hours(value: number): number
 declare function days(value: number): number
 declare function makeDate(numberWithUnit: string): number
-declare function makeStorage(numberWithUnit: string): number
+declare function makeStorage(numberWithUnit: string, conversionMultiplier?: number): number
 declare function getPreLine(string: string): string
 declare function getCached<T>(key: string, ttlMillis: number, handler: () => Promise<T>): Promise<T>
 declare function deleteFromCache(key: string): void
