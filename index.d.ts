@@ -109,8 +109,10 @@ declare function asHexString(
 	options?: {
 		name?: string
 		byteLength?: number
+		uneven?: boolean
+		strictPrefix?: boolean
 	}
-): string
+): `0x${string}`
 declare function asSafeString(
 	string: any,
 	options?: {

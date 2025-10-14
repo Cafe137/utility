@@ -373,10 +373,11 @@ function asString(n, e) {
 }
 function asHexString(n, e) {
 	if (!isHexString(n)) throw new TypeError(`Expected hex string${e?.name ? ` for ${e.name}` : ''}, got: ` + n)
+	if (e?.strictPrefix && !n.startsWith('0x')) throw new TypeError(`Expected hex string with 0x prefix${e?.name ? ` for ${e.name}` : ''}, got: ` + n)
 	const t = n.replace(/^0x/, '')
-	if (t.length % 2 !== 0) throw RangeError(`Expected even number of hex digits${e?.name ? ` for ${e.name}` : ''}; got: ` + n)
+	if (t.length % 2 !== 0 && !e?.uneven) throw RangeError(`Expected even number of hex digits${e?.name ? ` for ${e.name}` : ''}; got: ` + n)
 	if (e && e.byteLength && t.length !== e.byteLength * 2) throw RangeError(`Expected hex string${e?.name ? ` for ${e.name}` : ''} of byte length ${e.byteLength}; got: ` + t)
-	return t
+	return `0x${t}`
 }
 function asSafeString(n, e) {
 	if (
