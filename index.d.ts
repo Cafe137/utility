@@ -57,6 +57,7 @@ declare function getFirstDeep(object: CafeObject, paths: string[], fallbackToAny
 declare function forever(callable: (() => Promise<void>) | (() => void), millis: number, log?: (message: string, metadata: object) => void): Promise<never>
 declare function runAndSetInterval(callable: () => void, millis: number): () => void
 declare function whereAmI(): 'browser' | 'node'
+declare function withRetries<T>(callable: () => Promise<T>, allowedFailures: number, delayMillisFirst: number, delayMillisLast: number, log?: (message: string, metadata: object) => void, onFailure?: () => void): Promise<T>
 declare function asMegabytes(number: number): number
 declare function convertBytes(bytes: number, divisor?: number): string
 declare function hexToRgb(hex: string): [number, number, number]
@@ -746,6 +747,13 @@ export declare class TrieRouter<Q, S> {
 	insert(pathSegments: string[], handler: RouterFn<Q, S>): void
 	handle(pathSegments: string[], request: Q, response: S, context: Map<string, string>): Promise<boolean>
 }
+export declare class RollingValueProvider<T> {
+	private values
+	private index
+	constructor(values: T[])
+	current(): T
+	next(): T
+}
 export declare const Binary: {
 	hexToUint8Array: typeof hexToUint8Array
 	uint8ArrayToHex: typeof uint8ArrayToHex
@@ -867,6 +875,7 @@ export declare const System: {
 	expandError: typeof expandError
 	runAndSetInterval: typeof runAndSetInterval
 	whereAmI: typeof whereAmI
+	withRetries: typeof withRetries
 }
 export declare const Numbers: {
 	make: typeof makeNumber

@@ -1,6 +1,6 @@
 'use strict'
 var _a
-Object.defineProperty(exports, '__esModule', { value: !0 }), (exports.Vector = exports.Cache = exports.Assertions = exports.Strings = exports.Types = exports.Objects = exports.Dates = exports.Promises = exports.Numbers = exports.System = exports.Arrays = exports.Random = exports.Elliptic = exports.Binary = exports.TrieRouter = exports.AsyncQueue = exports.PubSubChannel = exports.FixedPointNumber = exports.MerkleTree = exports.Chunk = exports.Uint8ArrayWriter = exports.Uint8ArrayReader = exports.AsyncLazy = exports.Lazy = exports.Optional = void 0)
+Object.defineProperty(exports, '__esModule', { value: !0 }), (exports.Vector = exports.Cache = exports.Assertions = exports.Strings = exports.Types = exports.Objects = exports.Dates = exports.Promises = exports.Numbers = exports.System = exports.Arrays = exports.Random = exports.Elliptic = exports.Binary = exports.RollingValueProvider = exports.TrieRouter = exports.AsyncQueue = exports.PubSubChannel = exports.FixedPointNumber = exports.MerkleTree = exports.Chunk = exports.Uint8ArrayWriter = exports.Uint8ArrayReader = exports.AsyncLazy = exports.Lazy = exports.Optional = void 0)
 async function invertPromise(n) {
 	return new Promise((e, t) => n.then(t, e))
 }
@@ -230,6 +230,18 @@ function runAndSetInterval(n, e) {
 function whereAmI() {
 	const n = globalThis.process
 	return n ? (n.browser === !0 ? 'browser' : 'node') : 'browser'
+}
+async function withRetries(n, e, t, r, o, i) {
+	let u = null
+	for (let s = 0; s <= e; s++)
+		try {
+			return await n()
+		} catch (c) {
+			if (((u = c), s === e)) break
+			const f = t + (r - t) * (s / (e - 1))
+			o && o('Error in withRetries, retrying', { attempt: s + 1, allowedFailures: e, delayMillis: f, error: c }), i && i(), await sleepMillis(f)
+		}
+	throw u
 }
 function asMegabytes(n) {
 	return n / 1024 / 1024
@@ -2084,8 +2096,8 @@ function keccakPermutate(n) {
 			I = (n[7] << 28) | (n[6] >>> 4),
 			C = (n[8] << 27) | (n[9] >>> 5),
 			D = (n[9] << 27) | (n[8] >>> 5),
-			B = (n[11] << 4) | (n[10] >>> 28),
-			P = (n[10] << 4) | (n[11] >>> 28),
+			P = (n[11] << 4) | (n[10] >>> 28),
+			B = (n[10] << 4) | (n[11] >>> 28),
 			v = (n[13] << 12) | (n[12] >>> 20),
 			U = (n[12] << 12) | (n[13] >>> 20),
 			L = (n[14] << 6) | (n[15] >>> 26),
@@ -2124,7 +2136,7 @@ function keccakPermutate(n) {
 			wn = (n[46] << 24) | (n[47] >>> 8),
 			xn = (n[48] << 14) | (n[49] >>> 18),
 			yn = (n[49] << 14) | (n[48] >>> 18)
-		;(n[0] = E ^ (~v & K)), (n[1] = M ^ (~U & Z)), (n[2] = v ^ (~K & un)), (n[3] = U ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & E)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~E & v)), (n[9] = yn ^ (~M & U)), (n[10] = R ^ (~F & q)), (n[11] = I ^ (~W & H)), (n[12] = F ^ (~q & en)), (n[13] = W ^ (~H & tn)), (n[14] = q ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & R)), (n[17] = tn ^ (~mn & I)), (n[18] = pn ^ (~R & F)), (n[19] = mn ^ (~I & W)), (n[20] = O ^ (~L & Q)), (n[21] = k ^ (~N & G)), (n[22] = L ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & O)), (n[27] = fn ^ (~an & k)), (n[28] = ln ^ (~O & L)), (n[29] = an ^ (~k & N)), (n[30] = C ^ (~B & V)), (n[31] = D ^ (~P & J)), (n[32] = B ^ (~V & rn)), (n[33] = P ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & C)), (n[37] = on ^ (~wn & D)), (n[38] = gn ^ (~C & B)), (n[39] = wn ^ (~D & P)), (n[40] = T ^ (~j & Y)), (n[41] = S ^ (~z & _)), (n[42] = j ^ (~Y & X)), (n[43] = z ^ (~_ & nn)), (n[44] = Y ^ (~X & hn)), (n[45] = _ ^ (~nn & dn)), (n[46] = X ^ (~hn & T)), (n[47] = nn ^ (~dn & S)), (n[48] = hn ^ (~T & j)), (n[49] = dn ^ (~S & z)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
+		;(n[0] = E ^ (~v & K)), (n[1] = M ^ (~U & Z)), (n[2] = v ^ (~K & un)), (n[3] = U ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & E)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~E & v)), (n[9] = yn ^ (~M & U)), (n[10] = R ^ (~F & q)), (n[11] = I ^ (~W & H)), (n[12] = F ^ (~q & en)), (n[13] = W ^ (~H & tn)), (n[14] = q ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & R)), (n[17] = tn ^ (~mn & I)), (n[18] = pn ^ (~R & F)), (n[19] = mn ^ (~I & W)), (n[20] = O ^ (~L & Q)), (n[21] = k ^ (~N & G)), (n[22] = L ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & O)), (n[27] = fn ^ (~an & k)), (n[28] = ln ^ (~O & L)), (n[29] = an ^ (~k & N)), (n[30] = C ^ (~P & V)), (n[31] = D ^ (~B & J)), (n[32] = P ^ (~V & rn)), (n[33] = B ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & C)), (n[37] = on ^ (~wn & D)), (n[38] = gn ^ (~C & P)), (n[39] = wn ^ (~D & B)), (n[40] = T ^ (~j & Y)), (n[41] = S ^ (~z & _)), (n[42] = j ^ (~Y & X)), (n[43] = z ^ (~_ & nn)), (n[44] = Y ^ (~X & hn)), (n[45] = _ ^ (~nn & dn)), (n[46] = X ^ (~hn & T)), (n[47] = nn ^ (~dn & S)), (n[48] = hn ^ (~T & j)), (n[49] = dn ^ (~S & z)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
 	}
 }
 function bytesToNumbers(n) {
@@ -2718,12 +2730,24 @@ class TrieRouter {
 		return c ? (o.set('wildcard', e.join('/')), c.handler ? (await c.handler(t, r, o), !0) : !1) : !1
 	}
 }
-;(exports.TrieRouter = TrieRouter),
+exports.TrieRouter = TrieRouter
+class RollingValueProvider {
+	constructor(e) {
+		;(this.index = 0), (this.values = e)
+	}
+	current() {
+		return this.values[this.index]
+	}
+	next() {
+		return (this.index = (this.index + 1) % this.values.length), this.values[this.index]
+	}
+}
+;(exports.RollingValueProvider = RollingValueProvider),
 	(exports.Binary = { hexToUint8Array, uint8ArrayToHex, binaryToUint8Array, uint8ArrayToBinary, base64ToUint8Array, uint8ArrayToBase64, base32ToUint8Array, uint8ArrayToBase32, log2Reduce, partition, concatBytes, numberToUint8, uint8ToNumber, numberToUint16, uint16ToNumber, numberToUint32, uint32ToNumber, numberToUint64, uint64ToNumber, numberToUint256, uint256ToNumber, sliceBytes, keccak256, sha3_256, proximity, commonPrefix, setBit, getBit, indexOf: binaryIndexOf, equals: binaryEquals, padStart: binaryPadStart, padStartToMultiple: binaryPadStartToMultiple, padEnd: binaryPadEnd, padEndToMultiple: binaryPadEndToMultiple, xorCypher, isUtf8 }),
 	(exports.Elliptic = { privateKeyToPublicKey, compressPublicKey, publicKeyFromCompressed, publicKeyToAddress, signMessage, signHash, verifySignature, recoverPublicKey, checksumEncode }),
 	(exports.Random = { intBetween, floatBetween, chance, signed: signedRandom, makeSeededRng, point: randomPoint, procs }),
 	(exports.Arrays = { countUnique, makeUnique, splitBySize, splitByCount, index: indexArray, indexCollection: indexArrayToCollection, onlyOrThrow, onlyOrNull, firstOrThrow, firstOrNull, shuffle, initialize: initializeArray, initialize2D: initialize2DArray, rotate2D: rotate2DArray, containsShape, glue, pluck, pick, pickMany, pickManyUnique, pickWeighted, pickRandomIndices, pickGuaranteed, last, pipe, makePipe, sortWeighted, pushAll, unshiftAll, filterAndRemove, merge: mergeArrays, empty, pushToBucket, unshiftAndLimit, atRolling, group, createOscillator, organiseWithLimits, tickPlaybook, getArgument, getBooleanArgument, getNumberArgument, requireStringArgument, requireNumberArgument, bringToFront, bringToFrontInPlace, findInstance, filterInstances, interleave, toggle, createHierarchy, multicall, maxBy }),
-	(exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError, runAndSetInterval, whereAmI }),
+	(exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError, runAndSetInterval, whereAmI, withRetries }),
 	(exports.Numbers = { make: makeNumber, sum, average, median, getDistanceFromMidpoint, clamp, range, interpolate, createSequence, increment, decrement, format: formatNumber, fromDecimals, makeStorage, asMegabytes, convertBytes, hexToRgb, rgbToHex, haversineDistanceToMeters, roundToNearest, formatDistance, triangularNumber, searchFloat, binomialSample }),
 	(exports.Promises = { raceFulfilled, invert: invertPromise, runInParallelBatches }),
 	(exports.Dates = { getTimestamp, getTimeDelta, secondsToHumanTime, countCycles, isoDate, throttle, timeSince, dateTimeSlug, unixTimestamp, fromUtcString, fromMillis, getProgress, humanizeTime, humanizeProgress, createTimeDigits, mapDayNumber, getDayInfoFromDate, getDayInfoFromDateTimeString, seconds, minutes, hours, days, make: makeDate, normalizeTime, absoluteDays }),
