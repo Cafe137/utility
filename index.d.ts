@@ -359,6 +359,7 @@ declare function selectMax<T>(object: Record<string, T>, mapper: (item: T) => nu
 declare function reposition(array: Record<string, unknown>[], key: string, current: number, delta: number): void
 declare function unwrapSingleKey(object: Record<string, unknown>): unknown
 declare function parseKeyValues(lines: string[], separator?: string): Record<string, string>
+declare function errorMatches(error: unknown, expected: string): boolean
 declare function buildUrl(baseUrl?: string | null, path?: string | null, query?: Record<string, any> | null): string
 declare function parseCsv(string: string, delimiter?: string, quote?: string): string[]
 declare function humanizeProgress(state: Progress): string
@@ -995,6 +996,7 @@ export declare const Objects: {
 	reposition: typeof reposition
 	unwrapSingleKey: typeof unwrapSingleKey
 	parseKeyValues: typeof parseKeyValues
+	errorMatches: typeof errorMatches
 }
 export declare const Types: {
 	isFunction: typeof isFunction
