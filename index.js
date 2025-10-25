@@ -288,6 +288,7 @@ function binomialSample(n, e, t = Math.random) {
 }
 function toSignificantDigits(n, e) {
 	if (!n.includes('.')) return n
+	if (parseFloat(n) === 0) return '0'
 	const [t, r] = n.split('.'),
 		o = t.replace('-', ''),
 		i = o.length
