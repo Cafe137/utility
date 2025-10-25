@@ -286,6 +286,21 @@ function binomialSample(n, e, t = Math.random) {
 		s = Math.round(r + o * u)
 	return Math.max(0, Math.min(n, s))
 }
+function toSignificantDigits(n, e) {
+	if (!n.includes('.')) return n
+	const [t, r] = n.split('.'),
+		o = t.replace('-', ''),
+		i = o.length
+	if (i >= e) return t
+	if (!(o === '0')) {
+		const f = e - i,
+			l = r.slice(0, f)
+		return /[1-9]/.test(l) ? `${t}.${l.replace(/0+$/, '')}` : t
+	}
+	const s = r.match(/^0*/)?.[0].length ?? 0,
+		c = e + s
+	return `${t}.${r.slice(0, c)}`
+}
 function isObject(n, e = !0) {
 	return !n || (e && !isUndefined(n._readableState)) || (e && n.constructor && (n.constructor.isBuffer || n.constructor.name == 'Uint8Array' || n.constructor.name === 'ArrayBuffer' || n.constructor.name === 'ReadableStream')) ? !1 : typeof n == 'object'
 }
@@ -2100,8 +2115,8 @@ function keccakPermutate(n) {
 			R = (n[6] << 28) | (n[7] >>> 4),
 			I = (n[7] << 28) | (n[6] >>> 4),
 			C = (n[8] << 27) | (n[9] >>> 5),
-			D = (n[9] << 27) | (n[8] >>> 5),
-			P = (n[11] << 4) | (n[10] >>> 28),
+			P = (n[9] << 27) | (n[8] >>> 5),
+			D = (n[11] << 4) | (n[10] >>> 28),
 			B = (n[10] << 4) | (n[11] >>> 28),
 			v = (n[13] << 12) | (n[12] >>> 20),
 			U = (n[12] << 12) | (n[13] >>> 20),
@@ -2141,7 +2156,7 @@ function keccakPermutate(n) {
 			wn = (n[46] << 24) | (n[47] >>> 8),
 			xn = (n[48] << 14) | (n[49] >>> 18),
 			yn = (n[49] << 14) | (n[48] >>> 18)
-		;(n[0] = E ^ (~v & K)), (n[1] = M ^ (~U & Z)), (n[2] = v ^ (~K & un)), (n[3] = U ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & E)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~E & v)), (n[9] = yn ^ (~M & U)), (n[10] = R ^ (~F & q)), (n[11] = I ^ (~W & H)), (n[12] = F ^ (~q & en)), (n[13] = W ^ (~H & tn)), (n[14] = q ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & R)), (n[17] = tn ^ (~mn & I)), (n[18] = pn ^ (~R & F)), (n[19] = mn ^ (~I & W)), (n[20] = O ^ (~L & Q)), (n[21] = k ^ (~N & G)), (n[22] = L ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & O)), (n[27] = fn ^ (~an & k)), (n[28] = ln ^ (~O & L)), (n[29] = an ^ (~k & N)), (n[30] = C ^ (~P & V)), (n[31] = D ^ (~B & J)), (n[32] = P ^ (~V & rn)), (n[33] = B ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & C)), (n[37] = on ^ (~wn & D)), (n[38] = gn ^ (~C & P)), (n[39] = wn ^ (~D & B)), (n[40] = T ^ (~j & Y)), (n[41] = S ^ (~z & _)), (n[42] = j ^ (~Y & X)), (n[43] = z ^ (~_ & nn)), (n[44] = Y ^ (~X & hn)), (n[45] = _ ^ (~nn & dn)), (n[46] = X ^ (~hn & T)), (n[47] = nn ^ (~dn & S)), (n[48] = hn ^ (~T & j)), (n[49] = dn ^ (~S & z)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
+		;(n[0] = E ^ (~v & K)), (n[1] = M ^ (~U & Z)), (n[2] = v ^ (~K & un)), (n[3] = U ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & E)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~E & v)), (n[9] = yn ^ (~M & U)), (n[10] = R ^ (~F & q)), (n[11] = I ^ (~W & H)), (n[12] = F ^ (~q & en)), (n[13] = W ^ (~H & tn)), (n[14] = q ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & R)), (n[17] = tn ^ (~mn & I)), (n[18] = pn ^ (~R & F)), (n[19] = mn ^ (~I & W)), (n[20] = O ^ (~L & Q)), (n[21] = k ^ (~N & G)), (n[22] = L ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & O)), (n[27] = fn ^ (~an & k)), (n[28] = ln ^ (~O & L)), (n[29] = an ^ (~k & N)), (n[30] = C ^ (~D & V)), (n[31] = P ^ (~B & J)), (n[32] = D ^ (~V & rn)), (n[33] = B ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & C)), (n[37] = on ^ (~wn & P)), (n[38] = gn ^ (~C & D)), (n[39] = wn ^ (~P & B)), (n[40] = T ^ (~j & Y)), (n[41] = S ^ (~z & _)), (n[42] = j ^ (~Y & X)), (n[43] = z ^ (~_ & nn)), (n[44] = Y ^ (~X & hn)), (n[45] = _ ^ (~nn & dn)), (n[46] = X ^ (~hn & T)), (n[47] = nn ^ (~dn & S)), (n[48] = hn ^ (~T & j)), (n[49] = dn ^ (~S & z)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
 	}
 }
 function bytesToNumbers(n) {
@@ -2753,7 +2768,7 @@ class RollingValueProvider {
 	(exports.Random = { intBetween, floatBetween, chance, signed: signedRandom, makeSeededRng, point: randomPoint, procs }),
 	(exports.Arrays = { countUnique, makeUnique, splitBySize, splitByCount, index: indexArray, indexCollection: indexArrayToCollection, onlyOrThrow, onlyOrNull, firstOrThrow, firstOrNull, shuffle, initialize: initializeArray, initialize2D: initialize2DArray, rotate2D: rotate2DArray, containsShape, glue, pluck, pick, pickMany, pickManyUnique, pickWeighted, pickRandomIndices, pickGuaranteed, last, pipe, makePipe, sortWeighted, pushAll, unshiftAll, filterAndRemove, merge: mergeArrays, empty, pushToBucket, unshiftAndLimit, atRolling, group, createOscillator, organiseWithLimits, tickPlaybook, getArgument, getBooleanArgument, getNumberArgument, requireStringArgument, requireNumberArgument, bringToFront, bringToFrontInPlace, findInstance, filterInstances, interleave, toggle, createHierarchy, multicall, maxBy }),
 	(exports.System = { sleepMillis, forever, scheduleMany, waitFor, expandError, runAndSetInterval, whereAmI, withRetries }),
-	(exports.Numbers = { make: makeNumber, sum, average, median, getDistanceFromMidpoint, clamp, range, interpolate, createSequence, increment, decrement, format: formatNumber, fromDecimals, makeStorage, asMegabytes, convertBytes, hexToRgb, rgbToHex, haversineDistanceToMeters, roundToNearest, formatDistance, triangularNumber, searchFloat, binomialSample }),
+	(exports.Numbers = { make: makeNumber, sum, average, median, getDistanceFromMidpoint, clamp, range, interpolate, createSequence, increment, decrement, format: formatNumber, fromDecimals, makeStorage, asMegabytes, convertBytes, hexToRgb, rgbToHex, haversineDistanceToMeters, roundToNearest, formatDistance, triangularNumber, searchFloat, binomialSample, toSignificantDigits }),
 	(exports.Promises = { raceFulfilled, invert: invertPromise, runInParallelBatches }),
 	(exports.Dates = { getTimestamp, getTimeDelta, secondsToHumanTime, countCycles, isoDate, throttle, timeSince, dateTimeSlug, unixTimestamp, fromUtcString, fromMillis, getProgress, humanizeTime, humanizeProgress, createTimeDigits, mapDayNumber, getDayInfoFromDate, getDayInfoFromDateTimeString, seconds, minutes, hours, days, make: makeDate, normalizeTime, absoluteDays }),
 	(exports.Objects = { safeParse, deleteDeep, getDeep, setDeep, incrementDeep, ensureDeep, replaceDeep, getFirstDeep, deepMergeInPlace, deepMerge2, deepMerge3, mapAllAsync, cloneWithJson, sortObject, sortArray, sortAny, deepEquals, deepEqualsEvery, runOn, ifPresent, zip, zipSum, removeEmptyArrays, removeEmptyValues, flatten, unflatten, match, sort: sortObjectValues, map: mapObject, mapIterable, filterKeys: filterObjectKeys, filterValues: filterObjectValues, rethrow, setSomeOnObject, setSomeDeep, flip, getAllPermutations, countTruthyValues, transformToArray, setMulti, incrementMulti, createBidirectionalMap, createTemporalBidirectionalMap, pushToBidirectionalMap, unshiftToBidirectionalMap, addToTemporalBidirectionalMap, getFromTemporalBidirectionalMap, createStatefulToggle, diffKeys, pickRandomKey, mapRandomKey, fromObjectString, toQueryString, parseQueryString, hasKey, selectMax, reposition, unwrapSingleKey, parseKeyValues, errorMatches }),
