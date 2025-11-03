@@ -430,7 +430,7 @@ function asNumber(n, e) {
 	return e && checkLimits(t, e), t
 }
 function asInteger(n, e) {
-	return asNumber(n, e) | 0
+	return Math.trunc(asNumber(n, e))
 }
 function asBoolean(n, e) {
 	if (n === 'true') return !0
