@@ -401,8 +401,8 @@ function asString(n, e) {
 }
 function asHexString(n, e) {
 	if (!isHexString(n)) throw new TypeError(`Expected hex string${e?.name ? ` for ${e.name}` : ''}, got: ` + n)
-	if (e?.strictPrefix && !n.startsWith('0x')) throw new TypeError(`Expected hex string with 0x prefix${e?.name ? ` for ${e.name}` : ''}, got: ` + n)
-	const t = n.replace(/^0x/, '')
+	if (e?.strictPrefix && !n.startsWith('0x') && !n.startsWith('0X')) throw new TypeError(`Expected hex string with 0x prefix${e?.name ? ` for ${e.name}` : ''}, got: ` + n)
+	const t = n.replace(/^0x/i, '')
 	if (t.length % 2 !== 0 && !e?.uneven) throw RangeError(`Expected even number of hex digits${e?.name ? ` for ${e.name}` : ''}; got: ` + n)
 	if (e && e.byteLength && t.length !== e.byteLength * 2) throw RangeError(`Expected hex string${e?.name ? ` for ${e.name}` : ''} of byte length ${e.byteLength}; got: ` + t)
 	return `0x${t}`
@@ -2050,13 +2050,13 @@ function numberToUint256(n, e) {
 		for (let i = 0; i < 32; i++) (r[i] = Number(o & 0xffn)), (o >>= 8n)
 		return r
 	}
-	for (let i = 32 - 1; i >= 0; i--) (r[i] = Number(o & 0xffn)), (o >>= 8n)
+	for (let i = 31; i >= 0; i--) (r[i] = Number(o & 0xffn)), (o >>= 8n)
 	return r
 }
 function uint256ToNumber(n, e) {
 	let r = 0n
 	if (e === 'LE') {
-		for (let o = 32 - 1; o >= 0; o--) r = (r << 8n) | BigInt(n[o])
+		for (let o = 31; o >= 0; o--) r = (r << 8n) | BigInt(n[o])
 		return r
 	}
 	for (let o = 0; o < 32; o++) r = (r << 8n) | BigInt(n[o])
