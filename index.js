@@ -2453,6 +2453,7 @@ class FixedPointNumber {
 		;(this.value = BigInt(e)), (this.scale = t)
 	}
 	static fromDecimalString(e, t) {
+		;/e\-\d+$/i.test(e) && (e = parseFloat(e).toFixed(t))
 		let [r, o] = e.split('.')
 		return (o = (o || '').padEnd(t, '0').slice(0, t)), new FixedPointNumber(BigInt(r + o), t)
 	}

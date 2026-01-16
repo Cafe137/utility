@@ -611,7 +611,7 @@ declare function numberToUint64(number: bigint, endian: 'LE' | 'BE'): Uint8Array
 declare function uint64ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): bigint
 declare function numberToUint256(number: bigint, endian: 'LE' | 'BE'): Uint8Array
 declare function uint256ToNumber(bytes: Uint8Array, endian: 'LE' | 'BE'): bigint
-declare function sliceBytes(bytes: Uint8Array, lengths: number[]): Uint8Array<ArrayBufferLike>[]
+declare function sliceBytes(bytes: Uint8Array, lengths: number[]): Uint8Array[]
 declare function partition(bytes: Uint8Array, size: number): Uint8Array[]
 declare function keccak256(bytes: Uint8Array): Uint8Array
 declare function sha3_256(bytes: Uint8Array): Uint8Array
