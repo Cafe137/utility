@@ -756,6 +756,28 @@ export declare class RollingValueProvider<T> {
 	current(): T
 	next(): T
 }
+type SolverStatus = 'pending' | 'in-progress' | 'completed' | 'failed'
+type SolverStepState = 'pending' | 'in-progress' | 'completed' | 'failed' | 'skipped'
+interface SolverStep {
+	name: string
+	precondition: (context: Map<string, unknown>) => Promise<boolean>
+	action: (stepName: string, context: Map<string, unknown>) => Promise<void>
+	transientSkipStepName?: string
+}
+export declare class Solver {
+	private status
+	private steps
+	private onStatusChange
+	private onStepChange
+	private onFinish
+	private onError
+	context: Map<string, unknown>
+	getStatus(): SolverStatus
+	createInitialState(): Record<string, SolverStepState>
+	setHooks(hooks: { onStatusChange?: (status: SolverStatus) => Promise<void>; onStepChange?: (state: Record<string, SolverStepState>) => Promise<void>; onFinish?: () => Promise<void>; onError?: (error: unknown) => Promise<void> }): void
+	addStep(step: SolverStep): void
+	execute(): Promise<Map<string, unknown>>
+}
 export declare const Binary: {
 	hexToUint8Array: typeof hexToUint8Array
 	uint8ArrayToHex: typeof uint8ArrayToHex
