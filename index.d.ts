@@ -213,6 +213,15 @@ declare function asUrl(
 		name: string
 	}
 ): string
+declare function isBigint(value: any): boolean
+declare function asBigint(
+	value: any,
+	options?: {
+		name?: string
+		min?: bigint
+		max?: bigint
+	}
+): bigint
 declare function isNullable(typeFn: (value: any) => boolean, value: any): boolean
 declare function asNullable<T>(typeFn: (value: any) => T, value: any): T | null
 declare function asEmptiable<T>(typeFn: (value: any) => T, value: any): T | undefined
@@ -674,6 +683,7 @@ export declare class FixedPointNumber {
 	value: bigint
 	scale: number
 	constructor(value: bigint | string | number, scale: number)
+	static cast(other: unknown): FixedPointNumber
 	static fromDecimalString(decimalString: string, scale: number): FixedPointNumber
 	add(other: FixedPointNumber): FixedPointNumber
 	subtract(other: FixedPointNumber): FixedPointNumber
@@ -760,8 +770,8 @@ type SolverStatus = 'pending' | 'in-progress' | 'completed' | 'failed'
 type SolverStepState = 'pending' | 'in-progress' | 'completed' | 'failed' | 'skipped'
 interface SolverStep {
 	name: string
-	precondition: (context: Map<string, unknown>) => Promise<boolean>
-	action: (stepName: string, context: Map<string, unknown>) => Promise<void>
+	precondition?: (context: Map<string, unknown>) => Promise<boolean>
+	action: (context: Map<string, unknown>) => Promise<void>
 	transientSkipStepName?: string
 }
 export declare class Solver {
@@ -1038,6 +1048,7 @@ export declare const Types: {
 	isIntegerString: typeof isIntegerString
 	isHexString: typeof isHexString
 	isUrl: typeof isUrl
+	isBigint: typeof isBigint
 	isNullable: typeof isNullable
 	asString: typeof asString
 	asHexString: typeof asHexString
@@ -1058,6 +1069,7 @@ export declare const Types: {
 	asStringMap: typeof asStringMap
 	asNumericDictionary: typeof asNumericDictionary
 	asUrl: typeof asUrl
+	asBigint: typeof asBigint
 	asEmptiable: typeof asEmptiable
 	asNullable: typeof asNullable
 	asOptional: typeof asOptional
