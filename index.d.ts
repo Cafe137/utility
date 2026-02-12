@@ -788,6 +788,21 @@ export declare class Solver {
 	addStep(step: SolverStep): void
 	execute(): Promise<Map<string, unknown>>
 }
+interface LockOptions {
+	queryFunction: () => Promise<string>
+	lockFunction: (storable: string) => Promise<void>
+	unlockFunction: () => Promise<void>
+	timeoutMillis: number
+}
+export declare class Lock {
+	private queryFunction
+	private lockFunction
+	private unlockFunction
+	private timeoutMillis
+	constructor(options: LockOptions)
+	couldLock(): Promise<true | Date>
+	unlock(): Promise<void>
+}
 export declare const Binary: {
 	hexToUint8Array: typeof hexToUint8Array
 	uint8ArrayToHex: typeof uint8ArrayToHex

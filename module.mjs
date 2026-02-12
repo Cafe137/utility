@@ -28,3 +28,4 @@ export const Uint8ArrayWriter = utility.Uint8ArrayWriter
 export const TrieRouter = utility.TrieRouter
 export const RollingValueProvider = utility.RollingValueProvider
 export const Solver = utility.Solver
+export const Lock = utility.Lock
