@@ -685,6 +685,7 @@ export declare class FixedPointNumber {
 	constructor(value: bigint | string | number, scale: number)
 	static cast(other: unknown): FixedPointNumber
 	static fromDecimalString(decimalString: string, scale: number): FixedPointNumber
+	static fromFloat(value: number, scale: number): FixedPointNumber
 	add(other: FixedPointNumber): FixedPointNumber
 	subtract(other: FixedPointNumber): FixedPointNumber
 	multiply(factor: bigint): FixedPointNumber
@@ -694,6 +695,7 @@ export declare class FixedPointNumber {
 	toDecimalString(): string
 	toString(): string
 	toJSON(): string
+	toFloat(): number
 	assertSameScale(other: FixedPointNumber): void
 }
 type Playbook<T> = {
