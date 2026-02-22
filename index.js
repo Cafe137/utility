@@ -2130,8 +2130,8 @@ function keccakPermutate(n) {
 			v = (n[13] << 12) | (n[12] >>> 20),
 			L = (n[12] << 12) | (n[13] >>> 20),
 			U = (n[14] << 6) | (n[15] >>> 26),
-			j = (n[15] << 6) | (n[14] >>> 26),
-			N = (n[17] << 23) | (n[16] >>> 9),
+			N = (n[15] << 6) | (n[14] >>> 26),
+			j = (n[17] << 23) | (n[16] >>> 9),
 			F = (n[16] << 23) | (n[17] >>> 9),
 			z = (n[18] << 20) | (n[19] >>> 12),
 			q = (n[19] << 20) | (n[18] >>> 12),
@@ -2165,7 +2165,7 @@ function keccakPermutate(n) {
 			wn = (n[46] << 24) | (n[47] >>> 8),
 			xn = (n[48] << 14) | (n[49] >>> 18),
 			yn = (n[49] << 14) | (n[48] >>> 18)
-		;(n[0] = A ^ (~v & K)), (n[1] = M ^ (~L & Z)), (n[2] = v ^ (~K & un)), (n[3] = L ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & A)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~A & v)), (n[9] = yn ^ (~M & L)), (n[10] = C ^ (~z & W)), (n[11] = R ^ (~q & H)), (n[12] = z ^ (~W & en)), (n[13] = q ^ (~H & tn)), (n[14] = W ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & C)), (n[17] = tn ^ (~mn & R)), (n[18] = pn ^ (~C & z)), (n[19] = mn ^ (~R & q)), (n[20] = k ^ (~U & Q)), (n[21] = S ^ (~j & G)), (n[22] = U ^ (~Q & sn)), (n[23] = j ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & k)), (n[27] = fn ^ (~an & S)), (n[28] = ln ^ (~k & U)), (n[29] = an ^ (~S & j)), (n[30] = I ^ (~P & V)), (n[31] = D ^ (~B & J)), (n[32] = P ^ (~V & rn)), (n[33] = B ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & I)), (n[37] = on ^ (~wn & D)), (n[38] = gn ^ (~I & P)), (n[39] = wn ^ (~D & B)), (n[40] = O ^ (~N & Y)), (n[41] = T ^ (~F & X)), (n[42] = N ^ (~Y & _)), (n[43] = F ^ (~X & nn)), (n[44] = Y ^ (~_ & hn)), (n[45] = X ^ (~nn & dn)), (n[46] = _ ^ (~hn & O)), (n[47] = nn ^ (~dn & T)), (n[48] = hn ^ (~O & N)), (n[49] = dn ^ (~T & F)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
+		;(n[0] = A ^ (~v & K)), (n[1] = M ^ (~L & Z)), (n[2] = v ^ (~K & un)), (n[3] = L ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & A)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~A & v)), (n[9] = yn ^ (~M & L)), (n[10] = C ^ (~z & W)), (n[11] = R ^ (~q & H)), (n[12] = z ^ (~W & en)), (n[13] = q ^ (~H & tn)), (n[14] = W ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & C)), (n[17] = tn ^ (~mn & R)), (n[18] = pn ^ (~C & z)), (n[19] = mn ^ (~R & q)), (n[20] = k ^ (~U & Q)), (n[21] = S ^ (~N & G)), (n[22] = U ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & k)), (n[27] = fn ^ (~an & S)), (n[28] = ln ^ (~k & U)), (n[29] = an ^ (~S & N)), (n[30] = I ^ (~P & V)), (n[31] = D ^ (~B & J)), (n[32] = P ^ (~V & rn)), (n[33] = B ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & I)), (n[37] = on ^ (~wn & D)), (n[38] = gn ^ (~I & P)), (n[39] = wn ^ (~D & B)), (n[40] = O ^ (~j & Y)), (n[41] = T ^ (~F & X)), (n[42] = j ^ (~Y & _)), (n[43] = F ^ (~X & nn)), (n[44] = Y ^ (~_ & hn)), (n[45] = X ^ (~nn & dn)), (n[46] = _ ^ (~hn & O)), (n[47] = nn ^ (~dn & T)), (n[48] = hn ^ (~O & j)), (n[49] = dn ^ (~T & F)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
 	}
 }
 function bytesToNumbers(n) {
@@ -2820,7 +2820,9 @@ class Solver {
 					;(e = { ...e, [t.name]: 'skipped' }), await this.onStepChange(e)
 					continue
 				}
-				;(e = { ...e, [t.name]: 'in-progress' }), await this.onStepChange(e), await t.action(this.context), (e = { ...e, [t.name]: 'completed' }), await this.onStepChange(e)
+				;(e = { ...e, [t.name]: 'in-progress' }), await this.onStepChange(e)
+				for (let o = 0; (await t.action(this.context, o)) === 'retry'; o++);
+				;(e = { ...e, [t.name]: 'completed' }), await this.onStepChange(e)
 			} catch (r) {
 				throw ((e = { ...e, [t.name]: 'failed' }), (this.status = 'failed'), await this.onStatusChange(this.status), await this.onStepChange(e), await this.onError(r), r)
 			}

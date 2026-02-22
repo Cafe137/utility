@@ -773,7 +773,7 @@ type SolverStepState = 'pending' | 'in-progress' | 'completed' | 'failed' | 'ski
 interface SolverStep {
 	name: string
 	precondition?: (context: Map<string, unknown>) => Promise<boolean>
-	action: (context: Map<string, unknown>) => Promise<void>
+	action: (context: Map<string, unknown>, zeroIndexedAttemptNumber: number) => Promise<void | 'retry'>
 	transientSkipStepName?: string
 }
 export declare class Solver {
