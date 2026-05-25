@@ -466,7 +466,24 @@ declare function days(value: number): number
 declare function makeDate(numberWithUnit: string): number
 declare function makeStorage(numberWithUnit: string, conversionMultiplier?: number): number
 declare function getPreLine(string: string): string
-declare function getCached<T>(key: string, ttlMillis: number, handler: () => Promise<T>): Promise<T>
+declare function getCached<T>(
+	key: string,
+	ttlMillis: number,
+	handler: () => Promise<T>,
+	callbacks?: {
+		onMiss?: () => void
+		onFailure?: (err: unknown) => void
+	}
+): Promise<T>
+declare function getCachedDeferred<T>(
+	key: string,
+	ttlMillis: number,
+	handler: () => Promise<T>,
+	callbacks?: {
+		onMiss?: () => void
+		onFailure?: (err: unknown) => void
+	}
+): Promise<T>
 declare function deleteFromCache(key: string): void
 declare function clearCache(): void
 declare function deleteExpiredFromCache(): void
@@ -1204,6 +1221,7 @@ export declare const Assertions: {
 }
 export declare const Cache: {
 	get: typeof getCached
+	getDeferred: typeof getCachedDeferred
 	delete: typeof deleteFromCache
 	deleteExpired: typeof deleteExpiredFromCache
 	size: typeof cacheSize

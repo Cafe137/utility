@@ -1478,13 +1478,31 @@ function getPreLine(n) {
 	return n.replace(/ +/g, ' ').replace(/^ /gm, '')
 }
 const tinyCache = new Map()
-async function getCached(n, e, t) {
-	const r = Date.now(),
-		i = tinyCache.get(n)
-	if (i && i.validUntil > r) return i.value
-	const o = await t(),
-		u = r + e
-	return tinyCache.set(n, { value: o, validUntil: u }), o
+async function getCached(n, e, t, r) {
+	const i = Date.now(),
+		o = tinyCache.get(n)
+	if (o && o.validUntil > i) return o.value
+	r?.onMiss?.()
+	try {
+		const u = await t()
+		return tinyCache.set(n, { value: u, validUntil: i + e }), u
+	} catch (u) {
+		throw (r?.onFailure?.(u), u)
+	}
+}
+function getCachedDeferred(n, e, t, r) {
+	const i = Date.now(),
+		o = tinyCache.get(n)
+	if (o && o.validUntil > i) return o.value
+	r?.onMiss?.()
+	const u = t()
+	return (
+		tinyCache.set(n, { value: u, validUntil: i + e }),
+		u.catch(s => {
+			tinyCache.delete(n), r?.onFailure?.(s)
+		}),
+		u
+	)
 }
 function deleteFromCache(n) {
 	tinyCache.delete(n)
@@ -2143,8 +2161,8 @@ function keccakPermutate(n) {
 			B = (n[11] << 4) | (n[10] >>> 28),
 			P = (n[10] << 4) | (n[11] >>> 28),
 			v = (n[13] << 12) | (n[12] >>> 20),
-			L = (n[12] << 12) | (n[13] >>> 20),
-			U = (n[14] << 6) | (n[15] >>> 26),
+			U = (n[12] << 12) | (n[13] >>> 20),
+			L = (n[14] << 6) | (n[15] >>> 26),
 			N = (n[15] << 6) | (n[14] >>> 26),
 			j = (n[17] << 23) | (n[16] >>> 9),
 			F = (n[16] << 23) | (n[17] >>> 9),
@@ -2180,7 +2198,7 @@ function keccakPermutate(n) {
 			wn = (n[46] << 24) | (n[47] >>> 8),
 			xn = (n[48] << 14) | (n[49] >>> 18),
 			yn = (n[49] << 14) | (n[48] >>> 18)
-		;(n[0] = A ^ (~v & K)), (n[1] = M ^ (~L & Z)), (n[2] = v ^ (~K & un)), (n[3] = L ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & A)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~A & v)), (n[9] = yn ^ (~M & L)), (n[10] = C ^ (~z & W)), (n[11] = R ^ (~q & H)), (n[12] = z ^ (~W & en)), (n[13] = q ^ (~H & tn)), (n[14] = W ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & C)), (n[17] = tn ^ (~mn & R)), (n[18] = pn ^ (~C & z)), (n[19] = mn ^ (~R & q)), (n[20] = k ^ (~U & Q)), (n[21] = S ^ (~N & G)), (n[22] = U ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & k)), (n[27] = fn ^ (~an & S)), (n[28] = ln ^ (~k & U)), (n[29] = an ^ (~S & N)), (n[30] = I ^ (~B & V)), (n[31] = D ^ (~P & J)), (n[32] = B ^ (~V & rn)), (n[33] = P ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & I)), (n[37] = on ^ (~wn & D)), (n[38] = gn ^ (~I & B)), (n[39] = wn ^ (~D & P)), (n[40] = O ^ (~j & Y)), (n[41] = T ^ (~F & X)), (n[42] = j ^ (~Y & _)), (n[43] = F ^ (~X & nn)), (n[44] = Y ^ (~_ & hn)), (n[45] = X ^ (~nn & dn)), (n[46] = _ ^ (~hn & O)), (n[47] = nn ^ (~dn & T)), (n[48] = hn ^ (~O & j)), (n[49] = dn ^ (~T & F)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
+		;(n[0] = A ^ (~v & K)), (n[1] = M ^ (~U & Z)), (n[2] = v ^ (~K & un)), (n[3] = U ^ (~Z & cn)), (n[4] = K ^ (~un & xn)), (n[5] = Z ^ (~cn & yn)), (n[6] = un ^ (~xn & A)), (n[7] = cn ^ (~yn & M)), (n[8] = xn ^ (~A & v)), (n[9] = yn ^ (~M & U)), (n[10] = C ^ (~z & W)), (n[11] = R ^ (~q & H)), (n[12] = z ^ (~W & en)), (n[13] = q ^ (~H & tn)), (n[14] = W ^ (~en & pn)), (n[15] = H ^ (~tn & mn)), (n[16] = en ^ (~pn & C)), (n[17] = tn ^ (~mn & R)), (n[18] = pn ^ (~C & z)), (n[19] = mn ^ (~R & q)), (n[20] = k ^ (~L & Q)), (n[21] = S ^ (~N & G)), (n[22] = L ^ (~Q & sn)), (n[23] = N ^ (~G & fn)), (n[24] = Q ^ (~sn & ln)), (n[25] = G ^ (~fn & an)), (n[26] = sn ^ (~ln & k)), (n[27] = fn ^ (~an & S)), (n[28] = ln ^ (~k & L)), (n[29] = an ^ (~S & N)), (n[30] = I ^ (~B & V)), (n[31] = D ^ (~P & J)), (n[32] = B ^ (~V & rn)), (n[33] = P ^ (~J & on)), (n[34] = V ^ (~rn & gn)), (n[35] = J ^ (~on & wn)), (n[36] = rn ^ (~gn & I)), (n[37] = on ^ (~wn & D)), (n[38] = gn ^ (~I & B)), (n[39] = wn ^ (~D & P)), (n[40] = O ^ (~j & Y)), (n[41] = T ^ (~F & X)), (n[42] = j ^ (~Y & _)), (n[43] = F ^ (~X & nn)), (n[44] = Y ^ (~_ & hn)), (n[45] = X ^ (~nn & dn)), (n[46] = _ ^ (~hn & O)), (n[47] = nn ^ (~dn & T)), (n[48] = hn ^ (~O & j)), (n[49] = dn ^ (~T & F)), (n[0] ^= IOTA_CONSTANTS[e * 2]), (n[1] ^= IOTA_CONSTANTS[e * 2 + 1])
 	}
 }
 function bytesToNumbers(n) {
@@ -2874,5 +2892,5 @@ class Lock {
 	(exports.Types = { isFunction, isObject, isStrictlyObject, isEmptyArray, isEmptyObject, isUndefined, isString, isNumber, isBoolean, isDate, isBlank, isId, isIntegerString, isHexString, isUrl, isBigint, isNullable, asString, asHexString, asSafeString, asIntegerString, asNumber, asFunction, asInteger, asBoolean, asDate, asNullableString, asEmptiableString, asId, asTime, asArray, asObject, asNullableObject, asStringMap, asNumericDictionary, asUrl, asBigint, asEmptiable, asNullable, asOptional, enforceObjectShape, enforceArrayShape, isPng, isJpg, isWebp, isImage }),
 	(exports.Strings = { tokenizeByCount, tokenizeByLength, searchHex, searchSubstring, randomHex: randomHexString, randomLetter: randomLetterString, randomAlphanumeric: randomAlphanumericString, randomRichAscii: randomRichAsciiString, randomUnicode: randomUnicodeString, includesAny, slugify, normalForm, enumify, escapeHtml, decodeHtmlEntities, after, afterLast, before, beforeLast, betweenWide, betweenNarrow, getPreLine, containsWord, containsWords, joinUrl, getFuzzyMatchScore, sortByFuzzyScore, splitOnce, splitAll, randomize, expand, shrinkTrim, capitalize, decapitalize, csvEscape, parseCsv, surroundInOut, getExtension, getBasename, normalizeEmail, normalizeFilename, parseFilename, camelToTitle, slugToTitle, slugToCamel, joinHumanly, findWeightedPair, extractBlock, extractAllBlocks, replaceBlocks, indexOfEarliest, lastIndexOfBefore, parseHtmlAttributes, readNextWord, readWordsAfterAll, resolveVariables, resolveVariableWithDefaultSyntax, resolveRemainingVariablesWithDefaults, isLetter, isDigit, isLetterOrDigit, isValidObjectPathCharacter, insert: insertString, indexOfRegex, allIndexOf, lineMatches, linesMatchInOrder, represent, resolveMarkdownLinks, buildUrl, isChinese, replaceBetweenStrings, describeMarkdown, isBalanced, textToFormat, splitFormatting, splitHashtags, splitUrls, route, explodeReplace, generateVariants, replaceWord, replacePascalCaseWords, stripHtml, breakLine, measureTextWidth, toLines, levenshteinDistance, findCommonPrefix, findCommonDirectory }),
 	(exports.Assertions = { asEqual, asTrue, asTruthy, asFalse, asFalsy, asEither }),
-	(exports.Cache = { get: getCached, delete: deleteFromCache, deleteExpired: deleteExpiredFromCache, size: cacheSize, clear: clearCache }),
+	(exports.Cache = { get: getCached, getDeferred: getCachedDeferred, delete: deleteFromCache, deleteExpired: deleteExpiredFromCache, size: cacheSize, clear: clearCache }),
 	(exports.Vector = { addPoint, subtractPoint, multiplyPoint, normalizePoint, pushPoint, filterCoordinates, findCorners, findLines, raycast, raycastCircle, getLineIntersectionPoint })
