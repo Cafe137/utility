@@ -1489,6 +1489,9 @@ async function getCached(n, e, t) {
 function deleteFromCache(n) {
 	tinyCache.delete(n)
 }
+function clearCache() {
+	tinyCache.clear()
+}
 function deleteExpiredFromCache() {
 	const n = Date.now()
 	for (const [e, t] of tinyCache.entries()) t.validUntil <= n && tinyCache.delete(e)
@@ -2871,5 +2874,5 @@ class Lock {
 	(exports.Types = { isFunction, isObject, isStrictlyObject, isEmptyArray, isEmptyObject, isUndefined, isString, isNumber, isBoolean, isDate, isBlank, isId, isIntegerString, isHexString, isUrl, isBigint, isNullable, asString, asHexString, asSafeString, asIntegerString, asNumber, asFunction, asInteger, asBoolean, asDate, asNullableString, asEmptiableString, asId, asTime, asArray, asObject, asNullableObject, asStringMap, asNumericDictionary, asUrl, asBigint, asEmptiable, asNullable, asOptional, enforceObjectShape, enforceArrayShape, isPng, isJpg, isWebp, isImage }),
 	(exports.Strings = { tokenizeByCount, tokenizeByLength, searchHex, searchSubstring, randomHex: randomHexString, randomLetter: randomLetterString, randomAlphanumeric: randomAlphanumericString, randomRichAscii: randomRichAsciiString, randomUnicode: randomUnicodeString, includesAny, slugify, normalForm, enumify, escapeHtml, decodeHtmlEntities, after, afterLast, before, beforeLast, betweenWide, betweenNarrow, getPreLine, containsWord, containsWords, joinUrl, getFuzzyMatchScore, sortByFuzzyScore, splitOnce, splitAll, randomize, expand, shrinkTrim, capitalize, decapitalize, csvEscape, parseCsv, surroundInOut, getExtension, getBasename, normalizeEmail, normalizeFilename, parseFilename, camelToTitle, slugToTitle, slugToCamel, joinHumanly, findWeightedPair, extractBlock, extractAllBlocks, replaceBlocks, indexOfEarliest, lastIndexOfBefore, parseHtmlAttributes, readNextWord, readWordsAfterAll, resolveVariables, resolveVariableWithDefaultSyntax, resolveRemainingVariablesWithDefaults, isLetter, isDigit, isLetterOrDigit, isValidObjectPathCharacter, insert: insertString, indexOfRegex, allIndexOf, lineMatches, linesMatchInOrder, represent, resolveMarkdownLinks, buildUrl, isChinese, replaceBetweenStrings, describeMarkdown, isBalanced, textToFormat, splitFormatting, splitHashtags, splitUrls, route, explodeReplace, generateVariants, replaceWord, replacePascalCaseWords, stripHtml, breakLine, measureTextWidth, toLines, levenshteinDistance, findCommonPrefix, findCommonDirectory }),
 	(exports.Assertions = { asEqual, asTrue, asTruthy, asFalse, asFalsy, asEither }),
-	(exports.Cache = { get: getCached, delete: deleteFromCache, deleteExpired: deleteExpiredFromCache, size: cacheSize }),
+	(exports.Cache = { get: getCached, delete: deleteFromCache, deleteExpired: deleteExpiredFromCache, size: cacheSize, clear: clearCache }),
 	(exports.Vector = { addPoint, subtractPoint, multiplyPoint, normalizePoint, pushPoint, filterCoordinates, findCorners, findLines, raycast, raycastCircle, getLineIntersectionPoint })

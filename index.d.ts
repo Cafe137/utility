@@ -468,6 +468,7 @@ declare function makeStorage(numberWithUnit: string, conversionMultiplier?: numb
 declare function getPreLine(string: string): string
 declare function getCached<T>(key: string, ttlMillis: number, handler: () => Promise<T>): Promise<T>
 declare function deleteFromCache(key: string): void
+declare function clearCache(): void
 declare function deleteExpiredFromCache(): void
 declare function cacheSize(): number
 declare function joinUrl(parts: unknown[], relativeToFile?: boolean): string
@@ -1206,6 +1207,7 @@ export declare const Cache: {
 	delete: typeof deleteFromCache
 	deleteExpired: typeof deleteExpiredFromCache
 	size: typeof cacheSize
+	clear: typeof clearCache
 }
 export declare const Vector: {
 	addPoint: typeof addPoint
