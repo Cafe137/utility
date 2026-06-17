@@ -1,11 +1,12 @@
 {
 	"name": "cafe-utility",
-	"version": "33.11.0",
+	"version": "34.0.0",
 	"description": "",
 	"main": "index.js",
 	"exports": {
 		".": {
 			"require": "./index.js",
+			"react-native": "./index.js",
 			"types": "./index.d.ts",
 			"default": "./module.mjs"
 		},
