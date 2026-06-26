@@ -683,21 +683,49 @@ export declare class Chunk {
 	static hashFunction: (bytes: Uint8Array) => Uint8Array
 	span: bigint
 	writer: Uint8ArrayWriter
-	constructor(capacity: number, span?: bigint)
+	constructor(span?: bigint)
 	build(): Uint8Array
 	hash(): Uint8Array
+	encryptedHash(key?: Uint8Array): {
+		address: Uint8Array
+		key: Uint8Array
+	}
+	static encryptSpan(key: Uint8Array, spanBytes: Uint8Array): Uint8Array
+	static encryptData(key: Uint8Array, data: Uint8Array): Uint8Array
+	static decrypt(
+		encBytes: Uint8Array,
+		key: Uint8Array
+	): {
+		span: bigint
+		data: Uint8Array
+	}
 }
-export declare class MerkleTree {
-	static readonly NOOP: (_: Chunk) => Promise<void>
-	private capacity
+export declare class ChunkSplitter {
+	static readonly NOOP: (_: Chunk, _key?: Uint8Array) => Promise<void>
+	private refSize
+	private encrypted
 	private chunks
 	private counters
 	private onChunk
-	constructor(onChunk: (chunk: Chunk) => Promise<void>, capacity?: number)
-	static root(data: Uint8Array, capacity?: number): Promise<Chunk>
+	constructor(onChunk: (chunk: Chunk, key?: Uint8Array) => Promise<void>, encrypted?: boolean)
+	static root(data: Uint8Array): Promise<Chunk>
+	static encryptedRoot(data: Uint8Array): Promise<{
+		address: Uint8Array
+		key: Uint8Array
+	}>
 	append(data: Uint8Array, level?: number, spanIncrement?: bigint): Promise<void>
 	private elevate
 	finalize(level?: number): Promise<Chunk>
+}
+export declare class ChunkJoiner {
+	private refSize
+	private encrypted
+	private fetch
+	private onData
+	constructor(fetch: (address: Uint8Array) => Promise<Uint8Array>, onData: (data: Uint8Array) => Promise<void>, encrypted?: boolean)
+	static collect(address: Uint8Array, fetch: (address: Uint8Array) => Promise<Uint8Array>): Promise<Uint8Array>
+	static collectEncrypted(address: Uint8Array, key: Uint8Array, fetch: (address: Uint8Array) => Promise<Uint8Array>): Promise<Uint8Array>
+	join(address: Uint8Array, key?: Uint8Array): Promise<void>
 }
 export declare class FixedPointNumber {
 	value: bigint
