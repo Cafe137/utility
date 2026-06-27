@@ -2551,7 +2551,14 @@ class ChunkSplitter {
 		this.chunks[e] = new Chunk()
 	}
 	async finalize(e = 0) {
-		return this.chunks[e + 1] ? (this.counters[e] === 1 ? (await this.elevate(e + 1), (this.chunks[e + 1] = this.chunks[e]), this.finalize(e + 1)) : (await this.elevate(e), this.finalize(e + 1))) : (await this.onChunk(this.chunks[e]), this.chunks[e])
+		if (!this.chunks[e + 1]) {
+			if (this.encrypted) {
+				const { key: t } = this.chunks[e].encryptedHash()
+				await this.onChunk(this.chunks[e], t)
+			} else await this.onChunk(this.chunks[e])
+			return this.chunks[e]
+		}
+		return this.counters[e] === 1 ? (await this.elevate(e + 1), (this.chunks[e + 1] = this.chunks[e]), this.finalize(e + 1)) : (await this.elevate(e), this.finalize(e + 1))
 	}
 }
 ;(exports.ChunkSplitter = ChunkSplitter), (_a = ChunkSplitter), (ChunkSplitter.NOOP = async (n, e) => {})
