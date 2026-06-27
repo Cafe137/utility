@@ -661,7 +661,19 @@ declare function compressPublicKey(publicKey: [bigint, bigint]): Uint8Array
 declare function publicKeyFromCompressed(compressed: Uint8Array): [bigint, bigint]
 declare function publicKeyToAddress(publicKey: [bigint, bigint]): Uint8Array
 declare function checksumEncode(addressBytes: Uint8Array): string
+/**
+ * @deprecated Use a constant-time signing implementation instead.
+ * The underlying scalar multiplication is variable-time and leaks private key
+ * bits through timing. Safe only in environments where the caller has no
+ * exposure to timing side channels.
+ */
 declare function signMessage(message: Uint8Array, privateKey: bigint, nonce?: bigint): [bigint, bigint, 27n | 28n]
+/**
+ * @deprecated Use a constant-time signing implementation instead.
+ * The underlying scalar multiplication is variable-time and leaks private key
+ * bits through timing. Safe only in environments where the caller has no
+ * exposure to timing side channels.
+ */
 declare function signHash(hash: bigint, privateKey: bigint, nonce?: bigint): [bigint, bigint, 27n | 28n]
 declare function recoverPublicKey(message: Uint8Array, r: bigint, s: bigint, v: 27n | 28n): [bigint, bigint]
 declare function verifySignature(message: Uint8Array, publicKey: [bigint, bigint], r: bigint, s: bigint): boolean
