@@ -2674,11 +2674,11 @@ class ChunkSplitter {
 		for (const { ref: i, span: o } of e) await this.append(i, t + 1, o)
 		r.length > 0 && (this.hasParity[t + 1] = !0)
 		for (const { chunk: i, key: o } of r)
-			if (this.encrypted) {
+			if ((this.chunks[t + 1].writer.max() === 0 && (await this.elevate(t + 1)), this.encrypted)) {
 				const { address: s, key: c } = i.encryptedHash(o),
 					u = new Uint8Array(64)
-				u.set(s), u.set(c, 32), await this.append(u, t + 1, i.span)
-			} else await this.append(i.hash(), t + 1, i.span)
+				u.set(s), u.set(c, 32), this.chunks[t + 1].writer.write(new Uint8ArrayReader(u))
+			} else this.chunks[t + 1].writer.write(new Uint8ArrayReader(i.hash()))
 	}
 	async finalize(t = 0) {
 		return this.pending[t]?.length && (await this.flushBatch(t)), this.chunks[t + 1] ? (this.counters[t] === 1 ? (await this.elevate(t + 1), await this.flushBatch(t + 1), (this.chunks[t + 1] = this.chunks[t]), this.finalize(t + 1)) : (await this.elevate(t), await this.flushBatch(t), this.finalize(t + 1))) : (t >= 1 && this.onIntermediateChunk && this.onIntermediateChunk(this.chunks[t], this.hasParity[t] ?? !1), this.chunks[t])
