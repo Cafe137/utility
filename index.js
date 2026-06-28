@@ -11,7 +11,7 @@ async function runInParallelBatches(n, t = 1) {
 	const e = splitByCount(n, t),
 		r = [],
 		i = e.map(async o => {
-			for (const c of o) r.push(await c())
+			for (const s of o) r.push(await s())
 		})
 	return await Promise.all(i), r
 }
@@ -122,18 +122,18 @@ function pickManyUnique(n, t, e, r = Math.random) {
 	const i = []
 	for (; i.length < t; ) {
 		const o = pick(n, r)
-		i.some(c => e(c, o)) || i.push(o)
+		i.some(s => e(s, o)) || i.push(o)
 	}
 	return i
 }
 function pickGuaranteed(n, t, e, r, i, o = Math.random) {
-	const c = n.filter(u => u !== t && u !== e),
-		s = []
-	for (t !== null && s.push(t); c.length && s.length < r; ) {
-		const u = exports.Random.intBetween(0, c.length - 1, o)
-		i(c[u], s) && s.push(c[u]), c.splice(u, 1)
+	const s = n.filter(u => u !== t && u !== e),
+		c = []
+	for (t !== null && c.push(t); s.length && c.length < r; ) {
+		const u = exports.Random.intBetween(0, s.length - 1, o)
+		i(s[u], c) && c.push(s[u]), s.splice(u, 1)
 	}
-	return shuffle(s, o), { values: s, indexOfGuaranteed: t !== null ? s.indexOf(t) : -1 }
+	return shuffle(c, o), { values: c, indexOfGuaranteed: t !== null ? c.indexOf(t) : -1 }
 }
 function last(n) {
 	if (!n.length) throw Error('Received empty array')
@@ -147,7 +147,7 @@ function makePipe(n, t) {
 }
 function pickWeighted(n, t, e) {
 	if ((e === void 0 && (e = Math.random()), n.length !== t.length)) throw new Error('Array length mismatch')
-	let r = t.reduce((o, c) => o + c, 0)
+	let r = t.reduce((o, s) => o + s, 0)
 	const i = e * r
 	for (let o = 0; o < n.length - 1; o++) if (((r -= t[o]), i >= r)) return n[o]
 	return last(n)
@@ -156,7 +156,7 @@ function sortWeighted(n, t, e = Math.random) {
 	const r = t.map(o => e() * o),
 		i = []
 	for (let o = 0; o < n.length; o++) i.push([n[o], r[o]])
-	return i.sort((o, c) => c[1] - o[1]).map(o => o[0])
+	return i.sort((o, s) => s[1] - o[1]).map(o => o[0])
 }
 function getDeep(n, t) {
 	if (n == null) return null
@@ -172,11 +172,11 @@ function setDeep(n, t, e) {
 	const r = t.split(/\.|\[/)
 	let i = n
 	for (let o = 0; o < r.length; o++) {
-		const c = r[o],
-			s = o < r.length - 1 && r[o + 1].includes(']'),
-			f = c.includes(']') ? c.replace(/\[|\]/g, '') : c
+		const s = r[o],
+			c = o < r.length - 1 && r[o + 1].includes(']'),
+			f = s.includes(']') ? s.replace(/\[|\]/g, '') : s
 		if (o === r.length - 1) return (i[f] = e), e
-		isObject(i[f]) || (s ? (i[f] = []) : (i[f] = {})), (i = i[f])
+		isObject(i[f]) || (c ? (i[f] = []) : (i[f] = {})), (i = i[f])
 	}
 	return e
 }
@@ -232,16 +232,16 @@ function whereAmI() {
 	return n ? (n.browser === !0 ? 'browser' : 'node') : 'browser'
 }
 async function withRetries(n, t, e, r, i, o) {
-	let c = null
-	for (let s = 0; s <= t; s++)
+	let s = null
+	for (let c = 0; c <= t; c++)
 		try {
 			return await n()
 		} catch (u) {
-			if (((c = u), s === t)) break
-			const f = e + (r - e) * (s / (t - 1))
-			i && i('Error in withRetries, retrying', { attempt: s + 1, allowedFailures: t, delayMillis: f, error: u }), o && o(), await sleepMillis(f)
+			if (((s = u), c === t)) break
+			const f = e + (r - e) * (c / (t - 1))
+			i && i('Error in withRetries, retrying', { attempt: c + 1, allowedFailures: t, delayMillis: f, error: u }), o && o(), await sleepMillis(f)
 		}
-	throw c
+	throw s
 }
 function asMegabytes(n) {
 	return n / 1024 / 1024
@@ -259,10 +259,10 @@ function rgbToHex(n) {
 }
 function haversineDistanceToMeters(n, t, e, r) {
 	const o = (n * Math.PI) / 180,
-		c = (e * Math.PI) / 180,
-		s = ((e - n) * Math.PI) / 180,
+		s = (e * Math.PI) / 180,
+		c = ((e - n) * Math.PI) / 180,
 		u = ((r - t) * Math.PI) / 180,
-		f = Math.sin(s / 2) * Math.sin(s / 2) + Math.cos(o) * Math.cos(c) * Math.sin(u / 2) * Math.sin(u / 2)
+		f = Math.sin(c / 2) * Math.sin(c / 2) + Math.cos(o) * Math.cos(s) * Math.sin(u / 2) * Math.sin(u / 2)
 	return 6371e3 * (2 * Math.atan2(Math.sqrt(f), Math.sqrt(1 - f)))
 }
 function roundToNearest(n, t) {
@@ -282,9 +282,9 @@ function searchFloat(n) {
 function binomialSample(n, t, e = Math.random) {
 	const r = n * t,
 		i = Math.sqrt(n * t * (1 - t)),
-		c = (e() + e() + e() + e() + e() + e() - 3) * Math.SQRT2,
-		s = Math.round(r + i * c)
-	return Math.max(0, Math.min(n, s))
+		s = (e() + e() + e() + e() + e() + e() - 3) * Math.SQRT2,
+		c = Math.round(r + i * s)
+	return Math.max(0, Math.min(n, c))
 }
 function toSignificantDigits(n, t) {
 	if (!n.includes('.')) return n
@@ -298,8 +298,8 @@ function toSignificantDigits(n, t) {
 			l = r.slice(0, f)
 		return /[1-9]/.test(l) ? `${e}.${l.replace(/0+$/, '')}` : e
 	}
-	const s = r.match(/^0*/)?.[0].length ?? 0,
-		u = t + s
+	const c = r.match(/^0*/)?.[0].length ?? 0,
+		u = t + c
 	return `${e}.${r.slice(0, u)}`
 }
 function isObject(n, t = !0) {
@@ -783,12 +783,12 @@ function expand(n) {
 	const r = e[1].split(','),
 		i = n.slice(0, e.index),
 		o = n.slice(e.index + e[0].length)
-	let c = []
-	for (const s of r) {
-		const u = expand(i + s + o)
-		c = c.concat(u)
+	let s = []
+	for (const c of r) {
+		const u = expand(i + c + o)
+		s = s.concat(u)
 	}
-	return c
+	return s
 }
 function shrinkTrim(n) {
 	return n
@@ -1031,22 +1031,22 @@ function baseToUint8Array(n, t) {
 		r = t.length
 	let i = 0,
 		o = 0
-	const c = []
-	for (let s = 0; s < n.length; s++) {
-		const u = n[s]
+	const s = []
+	for (let c = 0; c < n.length; c++) {
+		const u = n[c]
 		if (u === e) break
 		const f = t.indexOf(u)
 		if (f === -1) throw new Error(`Invalid character: ${u}`)
-		;(o = (o << Math.log2(r)) | f), (i += Math.log2(r)), i >= 8 && ((i -= 8), c.push((o >> i) & 255))
+		;(o = (o << Math.log2(r)) | f), (i += Math.log2(r)), i >= 8 && ((i -= 8), s.push((o >> i) & 255))
 	}
-	return new Uint8Array(c)
+	return new Uint8Array(s)
 }
 function uint8ArrayToBase(n, t) {
 	const e = t.length
 	let r = 0,
 		i = 0,
 		o = ''
-	for (let c = 0; c < n.length; c++) for (i = (i << 8) | n[c], r += 8; r >= Math.log2(e); ) (r -= Math.log2(e)), (o += t[(i >> r) & (e - 1)])
+	for (let s = 0; s < n.length; s++) for (i = (i << 8) | n[s], r += 8; r >= Math.log2(e); ) (r -= Math.log2(e)), (o += t[(i >> r) & (e - 1)])
 	return r > 0 && (o += t[(i << (Math.log2(e) - r)) & (e - 1)]), o.length % 4 !== 0 && (o += '='.repeat(4 - (o.length % 4))), o
 }
 function hexToUint8Array(n) {
@@ -1084,9 +1084,9 @@ function route(n, t) {
 	if (e.length !== r.length) return null
 	const i = {}
 	for (let o = 0; o < e.length; o++) {
-		const c = e[o]
-		if (c.startsWith(':')) i[c.slice(1)] = r[o]
-		else if (c !== r[o]) return null
+		const s = e[o]
+		if (s.startsWith(':')) i[s.slice(1)] = r[o]
+		else if (s !== r[o]) return null
 	}
 	return i
 }
@@ -1097,25 +1097,25 @@ function explodeReplace(n, t, e) {
 }
 function generateVariants(n, t, e, r = Math.random) {
 	const i = exports.Arrays.shuffle(
-			t.map(c => ({
+			t.map(s => ({
 				variants: exports.Arrays.shuffle(
-					c.variants.map(s => s),
+					s.variants.map(c => c),
 					r
 				),
-				avoid: c.avoid
+				avoid: s.avoid
 			})),
 			r
 		),
 		o = []
-	for (const c of i) {
-		const s = c.variants.filter(f => f !== c.avoid),
-			u = s.find(f => n.includes(f))
-		if (u && (pushAll(o, explodeReplace(n, u, s)), o.length >= e)) break
+	for (const s of i) {
+		const c = s.variants.filter(f => f !== s.avoid),
+			u = c.find(f => n.includes(f))
+		if (u && (pushAll(o, explodeReplace(n, u, c)), o.length >= e)) break
 	}
 	if (o.length < e)
-		for (const c of i) {
-			const s = c.variants.find(u => n.includes(u))
-			if (s && (pushAll(o, explodeReplace(n, s, c.variants)), o.length >= e)) break
+		for (const s of i) {
+			const c = s.variants.find(u => n.includes(u))
+			if (c && (pushAll(o, explodeReplace(n, c, s.variants)), o.length >= e)) break
 		}
 	return o.slice(0, e)
 }
@@ -1144,10 +1144,10 @@ function toLines(n, t, e = {}) {
 	const r = []
 	let i = '',
 		o = 0
-	for (let c = 0; c < n.length; c++) {
-		const s = n[c],
-			u = e[s] || 1
-		if (((i += s), (o += u), o > t)) {
+	for (let s = 0; s < n.length; s++) {
+		const c = n[s],
+			u = e[c] || 1
+		if (((i += c), (o += u), o > t)) {
 			const { line: f, rest: l } = breakLine(i)
 			r.push(f),
 				(i = l),
@@ -1223,8 +1223,8 @@ function resolveVariableWithDefaultSyntax(n, t, e, r = '$', i = ':') {
 		if (n[o + t.length + 1] === i)
 			if (n[o + t.length + 2] === i) n = n.replace(`${r}${t}${i}${i}`, e)
 			else {
-				const s = readNextWord(n, o + t.length + 2, ['_'])
-				n = n.replace(`${r}${t}${i}${s}`, e)
+				const c = readNextWord(n, o + t.length + 2, ['_'])
+				n = n.replace(`${r}${t}${i}${c}`, e)
 			}
 		else n = n.replace(`${r}${t}`, e)
 		o = n.indexOf(`${r}${t}`, o + e.length)
@@ -1238,8 +1238,8 @@ function resolveRemainingVariablesWithDefaults(n, t = '$', e = ':') {
 		if (n[r + i.length + 1] === e)
 			if (n[r + i.length + 2] === e) n = n.replace(`${t}${i}${e}${e}`, '')
 			else {
-				const c = readNextWord(n, r + i.length + 2)
-				n = n.replace(`${t}${i}${e}${c}`, c)
+				const s = readNextWord(n, r + i.length + 2)
+				n = n.replace(`${t}${i}${e}${s}`, s)
 			}
 		r = n.indexOf(t, r + 1)
 	}
@@ -1251,9 +1251,9 @@ function resolveMarkdownLinks(n, t) {
 		const r = lastIndexOfBefore(n, '[', e),
 			i = n.indexOf(')', e)
 		if (r !== -1 && i !== -1) {
-			const [o, c] = n.slice(r + 1, i).split(']('),
-				s = t(o, c)
-			n = n.slice(0, r) + s + n.slice(i + 1)
+			const [o, s] = n.slice(r + 1, i).split(']('),
+				c = t(o, s)
+			n = n.slice(0, r) + c + n.slice(i + 1)
 		}
 		e = n.indexOf('](', e + 1)
 	}
@@ -1282,15 +1282,15 @@ function selectMax(n, t) {
 	let e = null,
 		r = -1 / 0
 	for (const [i, o] of Object.entries(n)) {
-		const c = t(o)
-		c > r && ((r = c), (e = i))
+		const s = t(o)
+		s > r && ((r = s), (e = i))
 	}
 	return e ? [e, n[e]] : null
 }
 function reposition(n, t, e, r) {
-	const i = n.find(c => c[t] === e),
-		o = n.find(c => c[t] === e + r)
-	i && o ? ((i[t] = e + r), (o[t] = e)) : i && (i[t] = e + r), n.sort((c, s) => asNumber(c[t]) - asNumber(s[t])), n.forEach((c, s) => (c[t] = s + 1))
+	const i = n.find(s => s[t] === e),
+		o = n.find(s => s[t] === e + r)
+	i && o ? ((i[t] = e + r), (o[t] = e)) : i && (i[t] = e + r), n.sort((s, c) => asNumber(s[t]) - asNumber(c[t])), n.forEach((s, c) => (s[t] = c + 1))
 }
 function unwrapSingleKey(n) {
 	const t = Object.keys(n)
@@ -1317,8 +1317,8 @@ function parseCsv(n, t = ',', e = '"') {
 	const r = []
 	let i = '',
 		o = !1
-	const c = n.split('')
-	for (const s of c) s === t && !o ? (r.push(i), (i = '')) : s === e && ((!i && !o) || o) ? (o = !o) : (i += s)
+	const s = n.split('')
+	for (const c of s) c === t && !o ? (r.push(i), (i = '')) : c === e && ((!i && !o) || o) ? (o = !o) : (i += c)
 	return r.push(i), r
 }
 function humanizeProgress(n) {
@@ -1408,8 +1408,8 @@ function secondsToHumanTime(n, t = DefaultTimeDeltaLabels) {
 function countCycles(n, t, e) {
 	const i = (e?.now ?? Date.now()) - n,
 		o = Math.floor(i / t),
-		c = t / (e?.precision ?? 1) - Math.ceil((i % t) / (e?.precision ?? 1))
-	return { cycles: o, remaining: c }
+		s = t / (e?.precision ?? 1) - Math.ceil((i % t) / (e?.precision ?? 1))
+	return { cycles: o, remaining: s }
 }
 const throttleTimers = {}
 function throttle(n, t) {
@@ -1423,10 +1423,10 @@ function getProgress(n, t, e, r) {
 	r || (r = Date.now())
 	const i = t / e,
 		o = r - n,
-		c = o / t,
-		s = c * e,
-		u = s - o
-	return { deltaMs: o, progress: i, baseTimeMs: c, totalTimeMs: s, remainingTimeMs: u }
+		s = o / t,
+		c = s * e,
+		u = c - o
+	return { deltaMs: o, progress: i, baseTimeMs: s, totalTimeMs: c, remainingTimeMs: u }
 }
 const dayNumberIndex = { 0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday' }
 function mapDayNumber(n) {
@@ -1484,10 +1484,10 @@ async function getCached(n, t, e, r) {
 	if (o && o.validUntil > i) return o.value
 	r?.onMiss?.()
 	try {
-		const c = await e()
-		return tinyCache.set(n, { value: c, validUntil: i + t }), c
-	} catch (c) {
-		throw (r?.onFailure?.(c), c)
+		const s = await e()
+		return tinyCache.set(n, { value: s, validUntil: i + t }), s
+	} catch (s) {
+		throw (r?.onFailure?.(s), s)
 	}
 }
 function getCachedDeferred(n, t, e, r) {
@@ -1495,13 +1495,13 @@ function getCachedDeferred(n, t, e, r) {
 		o = tinyCache.get(n)
 	if (o && o.validUntil > i) return o.value
 	r?.onMiss?.()
-	const c = e()
+	const s = e()
 	return (
-		tinyCache.set(n, { value: c, validUntil: i + t }),
-		c.catch(s => {
-			tinyCache.delete(n), r?.onFailure?.(s)
+		tinyCache.set(n, { value: s, validUntil: i + t }),
+		s.catch(c => {
+			tinyCache.delete(n), r?.onFailure?.(c)
 		}),
-		c
+		s
 	)
 }
 function deleteFromCache(n) {
@@ -1528,9 +1528,9 @@ function joinUrl(n, t = !1) {
 }
 function replaceBetweenStrings(n, t, e, r, i = !0) {
 	const o = n.indexOf(t),
-		c = n.indexOf(e, o + t.length)
-	if (o === -1 || c === -1) throw Error('Start or end not found')
-	return i ? n.substring(0, o + t.length) + r + n.substring(c) : n.substring(0, o) + r + n.substring(c + e.length)
+		s = n.indexOf(e, o + t.length)
+	if (o === -1 || s === -1) throw Error('Start or end not found')
+	return i ? n.substring(0, o + t.length) + r + n.substring(s) : n.substring(0, o) + r + n.substring(s + e.length)
 }
 function describeMarkdown(n) {
 	let t = 'p'
@@ -1596,12 +1596,12 @@ function createStatefulToggle(n) {
 }
 function organiseWithLimits(n, t, e, r, i) {
 	const o = {}
-	for (const c of Object.keys(t)) o[c] = []
+	for (const s of Object.keys(t)) o[s] = []
 	;(o[r] = []), i && (n = n.sort(i))
-	for (const c of n) {
-		const s = c[e],
-			u = t[s] ? s : r
-		o[u].length >= t[u] ? o[r].push(c) : o[u].push(c)
+	for (const s of n) {
+		const c = s[e],
+			u = t[c] ? c : r
+		o[u].length >= t[u] ? o[r].push(s) : o[u].push(s)
 	}
 	return o
 }
@@ -1654,7 +1654,7 @@ function formatNumber(n, t) {
 		i = e ? longNumberUnits : shortNumberUnits,
 		o = t?.precision ?? 1
 	if (n < thresholds[0]) return `${n}${r}`
-	for (let c = 0; c < thresholds.length - 1; c++) if (n < thresholds[c + 1]) return `${(n / thresholds[c]).toFixed(o)}${e ? ' ' : ''}${i[c]}${r}`
+	for (let s = 0; s < thresholds.length - 1; s++) if (n < thresholds[s + 1]) return `${(n / thresholds[s]).toFixed(o)}${e ? ' ' : ''}${i[s]}${r}`
 	return `${(n / thresholds[thresholds.length - 1]).toFixed(o)}${e ? ' ' : ''}${i[thresholds.length - 1]}${r}`
 }
 function makeNumber(n) {
@@ -1738,22 +1738,22 @@ function flip(n) {
 }
 function getAllPermutations(n) {
 	const t = Object.keys(n),
-		e = t.map(s => n[s].length),
-		r = e.reduce((s, u) => (s *= u))
+		e = t.map(c => n[c].length),
+		r = e.reduce((c, u) => (c *= u))
 	let i = 1
 	const o = [1]
-	for (let s = 0; s < e.length - 1; s++) (i *= e[s]), o.push(i)
-	const c = []
-	for (let s = 0; s < r; s++) {
+	for (let c = 0; c < e.length - 1; c++) (i *= e[c]), o.push(i)
+	const s = []
+	for (let c = 0; c < r; c++) {
 		const u = {}
 		for (let f = 0; f < t.length; f++) {
 			const l = n[t[f]],
-				a = Math.floor(s / o[f]) % l.length
+				a = Math.floor(c / o[f]) % l.length
 			u[t[f]] = l[a]
 		}
-		c.push(u)
+		s.push(u)
 	}
-	return c
+	return s
 }
 function countTruthyValues(n) {
 	return Object.values(n).filter(t => t).length
@@ -1763,9 +1763,9 @@ function getFlatNotation(n, t, e) {
 }
 function flattenInner(n, t, e, r, i) {
 	if (!isObject(t)) return t
-	for (const [o, c] of Object.entries(t)) {
-		const s = getFlatNotation(e, o, r)
-		Array.isArray(c) ? (i ? flattenInner(n, c, s, !0, i) : (n[s] = c.map(u => flattenInner(Array.isArray(u) ? [] : {}, u, '', !1, i)))) : isObject(c) ? flattenInner(n, c, s, !1, i) : (n[s] = c)
+	for (const [o, s] of Object.entries(t)) {
+		const c = getFlatNotation(e, o, r)
+		Array.isArray(s) ? (i ? flattenInner(n, s, c, !0, i) : (n[c] = s.map(u => flattenInner(Array.isArray(u) ? [] : {}, u, '', !1, i)))) : isObject(s) ? flattenInner(n, s, c, !1, i) : (n[c] = s)
 	}
 	return n
 }
@@ -1830,10 +1830,10 @@ function makeUnique(n, t) {
 }
 function countUnique(n, t, e, r, i) {
 	const o = t ? n.map(t) : n,
-		c = {}
-	for (const u of o) c[u] = (c[u] || 0) + 1
-	const s = r ? sortObjectValues(c, i ? (u, f) => u[1] - f[1] : (u, f) => f[1] - u[1]) : c
-	return e ? Object.keys(s) : s
+		s = {}
+	for (const u of o) s[u] = (s[u] || 0) + 1
+	const c = r ? sortObjectValues(s, i ? (u, f) => u[1] - f[1] : (u, f) => f[1] - u[1]) : s
+	return e ? Object.keys(c) : c
 }
 function sortObjectValues(n, t) {
 	return Object.fromEntries(Object.entries(n).sort(t))
@@ -1844,7 +1844,7 @@ function transformToArray(n) {
 		r = n[e[0]].length
 	for (let i = 0; i < r; i++) {
 		const o = {}
-		for (const c of e) o[c] = n[c][i]
+		for (const s of e) o[s] = n[s][i]
 		t.push(o)
 	}
 	return t
@@ -1997,7 +1997,7 @@ class Node {
 }
 function createHierarchy(n, t, e, r, i = !1) {
 	const o = new Map(),
-		c = []
+		s = []
 	n.forEach(u => {
 		const f = new Node(u)
 		o.set(u[t], f)
@@ -2009,17 +2009,17 @@ function createHierarchy(n, t, e, r, i = !1) {
 			if (l) {
 				const a = o.get(l)
 				a && a.children.push(f)
-			} else c.push(f)
+			} else s.push(f)
 		})
-	const s = u => {
+	const c = u => {
 		u.children.sort((f, l) => {
 			const a = f.value[r],
 				h = l.value[r]
 			return i ? h - a : a - h
 		}),
-			u.children.forEach(s)
+			u.children.forEach(c)
 	}
-	return c.forEach(s), c
+	return s.forEach(c), s
 }
 function log2Reduce(n, t) {
 	if (Math.log2(n.length) % 1 !== 0) throw new Error('Array length must be a power of 2')
@@ -2121,8 +2121,8 @@ function keccakPermutate(n) {
 			r = n[1] ^ n[11] ^ n[21] ^ n[31] ^ n[41],
 			i = n[2] ^ n[12] ^ n[22] ^ n[32] ^ n[42],
 			o = n[3] ^ n[13] ^ n[23] ^ n[33] ^ n[43],
-			c = n[4] ^ n[14] ^ n[24] ^ n[34] ^ n[44],
-			s = n[5] ^ n[15] ^ n[25] ^ n[35] ^ n[45],
+			s = n[4] ^ n[14] ^ n[24] ^ n[34] ^ n[44],
+			c = n[5] ^ n[15] ^ n[25] ^ n[35] ^ n[45],
 			u = n[6] ^ n[16] ^ n[26] ^ n[36] ^ n[46],
 			f = n[7] ^ n[17] ^ n[27] ^ n[37] ^ n[47],
 			l = n[8] ^ n[18] ^ n[28] ^ n[38] ^ n[48],
@@ -2131,24 +2131,24 @@ function keccakPermutate(n) {
 			p = (o << 1) | (i >>> 31),
 			d = l ^ h,
 			m = a ^ p,
-			w = (c << 1) | (s >>> 31),
-			x = (s << 1) | (c >>> 31),
+			w = (s << 1) | (c >>> 31),
+			y = (c << 1) | (s >>> 31),
 			g = e ^ w,
-			y = r ^ x,
+			x = r ^ y,
 			En = (u << 1) | (f >>> 31),
-			Mn = (f << 1) | (u >>> 31),
+			kn = (f << 1) | (u >>> 31),
 			b = i ^ En,
-			A = o ^ Mn,
-			Sn = (l << 1) | (a >>> 31),
-			kn = (a << 1) | (l >>> 31),
-			$ = c ^ Sn,
-			E = s ^ kn,
+			A = o ^ kn,
+			Mn = (l << 1) | (a >>> 31),
+			Sn = (a << 1) | (l >>> 31),
+			$ = s ^ Mn,
+			E = c ^ Sn,
 			On = (e << 1) | (r >>> 31),
 			Tn = (r << 1) | (e >>> 31),
-			M = u ^ On,
-			S = f ^ Tn
-		;(n[0] ^= d), (n[1] ^= m), (n[2] ^= g), (n[3] ^= y), (n[4] ^= b), (n[5] ^= A), (n[6] ^= $), (n[7] ^= E), (n[8] ^= M), (n[9] ^= S), (n[10] ^= d), (n[11] ^= m), (n[12] ^= g), (n[13] ^= y), (n[14] ^= b), (n[15] ^= A), (n[16] ^= $), (n[17] ^= E), (n[18] ^= M), (n[19] ^= S), (n[20] ^= d), (n[21] ^= m), (n[22] ^= g), (n[23] ^= y), (n[24] ^= b), (n[25] ^= A), (n[26] ^= $), (n[27] ^= E), (n[28] ^= M), (n[29] ^= S), (n[30] ^= d), (n[31] ^= m), (n[32] ^= g), (n[33] ^= y), (n[34] ^= b), (n[35] ^= A), (n[36] ^= $), (n[37] ^= E), (n[38] ^= M), (n[39] ^= S), (n[40] ^= d), (n[41] ^= m), (n[42] ^= g), (n[43] ^= y), (n[44] ^= b), (n[45] ^= A), (n[46] ^= $), (n[47] ^= E), (n[48] ^= M), (n[49] ^= S)
-		const k = n[0],
+			k = u ^ On,
+			M = f ^ Tn
+		;(n[0] ^= d), (n[1] ^= m), (n[2] ^= g), (n[3] ^= x), (n[4] ^= b), (n[5] ^= A), (n[6] ^= $), (n[7] ^= E), (n[8] ^= k), (n[9] ^= M), (n[10] ^= d), (n[11] ^= m), (n[12] ^= g), (n[13] ^= x), (n[14] ^= b), (n[15] ^= A), (n[16] ^= $), (n[17] ^= E), (n[18] ^= k), (n[19] ^= M), (n[20] ^= d), (n[21] ^= m), (n[22] ^= g), (n[23] ^= x), (n[24] ^= b), (n[25] ^= A), (n[26] ^= $), (n[27] ^= E), (n[28] ^= k), (n[29] ^= M), (n[30] ^= d), (n[31] ^= m), (n[32] ^= g), (n[33] ^= x), (n[34] ^= b), (n[35] ^= A), (n[36] ^= $), (n[37] ^= E), (n[38] ^= k), (n[39] ^= M), (n[40] ^= d), (n[41] ^= m), (n[42] ^= g), (n[43] ^= x), (n[44] ^= b), (n[45] ^= A), (n[46] ^= $), (n[47] ^= E), (n[48] ^= k), (n[49] ^= M)
+		const S = n[0],
 			O = n[1],
 			T = (n[2] << 1) | (n[3] >>> 31),
 			C = (n[3] << 1) | (n[2] >>> 31),
@@ -2158,10 +2158,10 @@ function keccakPermutate(n) {
 			B = (n[7] << 28) | (n[6] >>> 4),
 			P = (n[8] << 27) | (n[9] >>> 5),
 			U = (n[9] << 27) | (n[8] >>> 5),
-			v = (n[11] << 4) | (n[10] >>> 28),
-			j = (n[10] << 4) | (n[11] >>> 28),
-			L = (n[13] << 12) | (n[12] >>> 20),
-			N = (n[12] << 12) | (n[13] >>> 20),
+			j = (n[11] << 4) | (n[10] >>> 28),
+			L = (n[10] << 4) | (n[11] >>> 28),
+			N = (n[13] << 12) | (n[12] >>> 20),
+			v = (n[12] << 12) | (n[13] >>> 20),
 			F = (n[14] << 6) | (n[15] >>> 26),
 			z = (n[15] << 6) | (n[14] >>> 26),
 			W = (n[17] << 23) | (n[16] >>> 9),
@@ -2181,8 +2181,8 @@ function keccakPermutate(n) {
 			en = (n[31] << 9) | (n[30] >>> 23),
 			rn = (n[30] << 9) | (n[31] >>> 23),
 			on = (n[33] << 13) | (n[32] >>> 19),
-			cn = (n[32] << 13) | (n[33] >>> 19),
-			sn = (n[34] << 15) | (n[35] >>> 17),
+			sn = (n[32] << 13) | (n[33] >>> 19),
+			cn = (n[34] << 15) | (n[35] >>> 17),
 			un = (n[35] << 15) | (n[34] >>> 17),
 			fn = (n[36] << 21) | (n[37] >>> 11),
 			ln = (n[37] << 21) | (n[36] >>> 11),
@@ -2193,12 +2193,12 @@ function keccakPermutate(n) {
 			mn = (n[42] << 2) | (n[43] >>> 30),
 			gn = (n[43] << 2) | (n[42] >>> 30),
 			wn = (n[45] << 29) | (n[44] >>> 3),
-			xn = (n[44] << 29) | (n[45] >>> 3),
-			yn = (n[47] << 24) | (n[46] >>> 8),
+			yn = (n[44] << 29) | (n[45] >>> 3),
+			xn = (n[47] << 24) | (n[46] >>> 8),
 			bn = (n[46] << 24) | (n[47] >>> 8),
 			An = (n[48] << 14) | (n[49] >>> 18),
 			$n = (n[49] << 14) | (n[48] >>> 18)
-		;(n[0] = k ^ (~L & G)), (n[1] = O ^ (~N & _)), (n[2] = L ^ (~G & fn)), (n[3] = N ^ (~_ & ln)), (n[4] = G ^ (~fn & An)), (n[5] = _ ^ (~ln & $n)), (n[6] = fn ^ (~An & k)), (n[7] = ln ^ (~$n & O)), (n[8] = An ^ (~k & L)), (n[9] = $n ^ (~O & N)), (n[10] = D ^ (~q & J)), (n[11] = B ^ (~V & K)), (n[12] = q ^ (~J & on)), (n[13] = V ^ (~K & cn)), (n[14] = J ^ (~on & wn)), (n[15] = K ^ (~cn & xn)), (n[16] = on ^ (~wn & D)), (n[17] = cn ^ (~xn & B)), (n[18] = wn ^ (~D & q)), (n[19] = xn ^ (~B & V)), (n[20] = T ^ (~F & Y)), (n[21] = C ^ (~z & X)), (n[22] = F ^ (~Y & an)), (n[23] = z ^ (~X & hn)), (n[24] = Y ^ (~an & dn)), (n[25] = X ^ (~hn & pn)), (n[26] = an ^ (~dn & T)), (n[27] = hn ^ (~pn & C)), (n[28] = dn ^ (~T & F)), (n[29] = pn ^ (~C & z)), (n[30] = P ^ (~v & Z)), (n[31] = U ^ (~j & Q)), (n[32] = v ^ (~Z & sn)), (n[33] = j ^ (~Q & un)), (n[34] = Z ^ (~sn & yn)), (n[35] = Q ^ (~un & bn)), (n[36] = sn ^ (~yn & P)), (n[37] = un ^ (~bn & U)), (n[38] = yn ^ (~P & v)), (n[39] = bn ^ (~U & j)), (n[40] = R ^ (~W & nn)), (n[41] = I ^ (~H & tn)), (n[42] = W ^ (~nn & en)), (n[43] = H ^ (~tn & rn)), (n[44] = nn ^ (~en & mn)), (n[45] = tn ^ (~rn & gn)), (n[46] = en ^ (~mn & R)), (n[47] = rn ^ (~gn & I)), (n[48] = mn ^ (~R & W)), (n[49] = gn ^ (~I & H)), (n[0] ^= IOTA_CONSTANTS[t * 2]), (n[1] ^= IOTA_CONSTANTS[t * 2 + 1])
+		;(n[0] = S ^ (~N & G)), (n[1] = O ^ (~v & _)), (n[2] = N ^ (~G & fn)), (n[3] = v ^ (~_ & ln)), (n[4] = G ^ (~fn & An)), (n[5] = _ ^ (~ln & $n)), (n[6] = fn ^ (~An & S)), (n[7] = ln ^ (~$n & O)), (n[8] = An ^ (~S & N)), (n[9] = $n ^ (~O & v)), (n[10] = D ^ (~q & J)), (n[11] = B ^ (~V & K)), (n[12] = q ^ (~J & on)), (n[13] = V ^ (~K & sn)), (n[14] = J ^ (~on & wn)), (n[15] = K ^ (~sn & yn)), (n[16] = on ^ (~wn & D)), (n[17] = sn ^ (~yn & B)), (n[18] = wn ^ (~D & q)), (n[19] = yn ^ (~B & V)), (n[20] = T ^ (~F & Y)), (n[21] = C ^ (~z & X)), (n[22] = F ^ (~Y & an)), (n[23] = z ^ (~X & hn)), (n[24] = Y ^ (~an & dn)), (n[25] = X ^ (~hn & pn)), (n[26] = an ^ (~dn & T)), (n[27] = hn ^ (~pn & C)), (n[28] = dn ^ (~T & F)), (n[29] = pn ^ (~C & z)), (n[30] = P ^ (~j & Z)), (n[31] = U ^ (~L & Q)), (n[32] = j ^ (~Z & cn)), (n[33] = L ^ (~Q & un)), (n[34] = Z ^ (~cn & xn)), (n[35] = Q ^ (~un & bn)), (n[36] = cn ^ (~xn & P)), (n[37] = un ^ (~bn & U)), (n[38] = xn ^ (~P & j)), (n[39] = bn ^ (~U & L)), (n[40] = R ^ (~W & nn)), (n[41] = I ^ (~H & tn)), (n[42] = W ^ (~nn & en)), (n[43] = H ^ (~tn & rn)), (n[44] = nn ^ (~en & mn)), (n[45] = tn ^ (~rn & gn)), (n[46] = en ^ (~mn & R)), (n[47] = rn ^ (~gn & I)), (n[48] = mn ^ (~R & W)), (n[49] = gn ^ (~I & H)), (n[0] ^= IOTA_CONSTANTS[t * 2]), (n[1] ^= IOTA_CONSTANTS[t * 2 + 1])
 	}
 }
 function bytesToNumbers(n) {
@@ -2247,10 +2247,10 @@ function bmtRoot(n) {
 	let i = t.length >>> 5
 	for (; i > 1; ) {
 		const o = i >>> 1
-		for (let c = 0; c < o; c++) {
-			r.set(t.subarray(c << 6, (c + 1) << 6)), e.fill(0)
-			for (let s = 0, u = 0; s < 34; s += 2, u += 8) (e[s] ^= r[u + 4] | (r[u + 5] << 8) | (r[u + 6] << 16) | (r[u + 7] << 24)), (e[s + 1] ^= r[u] | (r[u + 1] << 8) | (r[u + 2] << 16) | (r[u + 3] << 24))
-			keccakPermutate(e), squeezeInto(e, t, c << 5)
+		for (let s = 0; s < o; s++) {
+			r.set(t.subarray(s << 6, (s + 1) << 6)), e.fill(0)
+			for (let c = 0, u = 0; c < 34; c += 2, u += 8) (e[c] ^= r[u + 4] | (r[u + 5] << 8) | (r[u + 6] << 16) | (r[u + 7] << 24)), (e[c + 1] ^= r[u] | (r[u + 1] << 8) | (r[u + 2] << 16) | (r[u + 3] << 24))
+			keccakPermutate(e), squeezeInto(e, t, s << 5)
 		}
 		i = o
 	}
@@ -2261,12 +2261,12 @@ function encryptSegments(n, t, e) {
 	const r = new Uint8Array(e.length),
 		i = new Uint8Array(36)
 	i.set(n)
-	for (let o = 0, c = 0; c < e.length; o++, c += 32) {
-		const s = (t + o) >>> 0
-		;(i[32] = s & 255), (i[33] = (s >>> 8) & 255), (i[34] = (s >>> 16) & 255), (i[35] = (s >>> 24) & 255)
+	for (let o = 0, s = 0; s < e.length; o++, s += 32) {
+		const c = (t + o) >>> 0
+		;(i[32] = c & 255), (i[33] = (c >>> 8) & 255), (i[34] = (c >>> 16) & 255), (i[35] = (c >>> 24) & 255)
 		const u = keccak256(keccak256(i)),
-			f = Math.min(c + 32, e.length)
-		for (let l = c; l < f; l++) r[l] = e[l] ^ u[l - c]
+			f = Math.min(s + 32, e.length)
+		for (let l = s; l < f; l++) r[l] = e[l] ^ u[l - s]
 	}
 	return r
 }
@@ -2362,8 +2362,8 @@ function modInverse(n, t) {
 	let [e, r] = [0n, 1n],
 		[i, o] = [t, n]
 	for (; o !== 0n; ) {
-		const c = i / o
-		;([e, r] = [r, e - c * r]), ([i, o] = [o, i - c * o])
+		const s = i / o
+		;([e, r] = [r, e - s * r]), ([i, o] = [o, i - s * o])
 	}
 	if (i > 1n) throw new Error('a is not invertible')
 	return e < 0n && (e += t), e
@@ -2394,9 +2394,9 @@ function ellipticAdd(n, t, e, r, i) {
 	if (n === e && t === mod(-r, i)) return [0n, 0n]
 	if (n === e && t === r) return ellipticDouble(n, t, i)
 	const o = mod((r - t) * modInverse(e - n, i), i),
-		c = mod(o * o - n - e, i),
-		s = mod(o * (n - c) - t, i)
-	return [c, s]
+		s = mod(o * o - n - e, i),
+		c = mod(o * (n - s) - t, i)
+	return [s, c]
 }
 function privateKeyToPublicKey(n) {
 	if (n <= 0n || n >= SECP256K1_N) throw new Error('Invalid private key')
@@ -2432,19 +2432,19 @@ function jacobianDouble(n, t, e) {
 	const r = SECP256K1_P,
 		i = (t * t) % r,
 		o = (4n * n * i) % r,
-		c = (3n * n * n) % r,
-		s = mod(c * c - 2n * o, r),
-		u = mod(c * (o - s) - 8n * i * i, r),
+		s = (3n * n * n) % r,
+		c = mod(s * s - 2n * o, r),
+		u = mod(s * (o - c) - 8n * i * i, r),
 		f = (2n * t * e) % r
-	return [s, u, f]
+	return [c, u, f]
 }
 function jacobianAddMixed(n, t, e, r, i) {
 	if (e === 0n) return [r, i, 1n]
 	const o = SECP256K1_P,
-		c = (e * e) % o,
-		s = (r * c) % o,
-		u = (((i * c) % o) * e) % o,
-		f = mod(s - n, o),
+		s = (e * e) % o,
+		c = (r * s) % o,
+		u = (((i * s) % o) * e) % o,
+		f = mod(c - n, o),
 		l = mod(u - t, o)
 	if (f === 0n) return l === 0n ? jacobianDouble(n, t, e) : [0n, 0n, 0n]
 	const a = (f * f) % o,
@@ -2468,10 +2468,10 @@ function glvDecompose(n) {
 		r = 0xe4437ed6010e88286f547fa90abfe4c3n,
 		i = 0x114ca50f7a8e2f3f657c1108d9d44cfd8n,
 		o = 0x3086d221a7d46bcde86c90e49284eb15n,
-		c = (o * n + t / 2n) / t,
-		s = (r * n + t / 2n) / t
-	let u = mod(n - c * e - s * i, t),
-		f = mod(c * r - s * o, t)
+		s = (o * n + t / 2n) / t,
+		c = (r * n + t / 2n) / t
+	let u = mod(n - s * e - c * i, t),
+		f = mod(s * r - c * o, t)
 	const l = u > 1n << 128n,
 		a = f > 1n << 128n
 	return l && (u = t - u), a && (f = t - f), [u, l, f, a]
@@ -2497,57 +2497,57 @@ function batchToAffine(n) {
 	if (e === 1) return [jacobianToAffine(n[0][0], n[0][1], n[0][2])]
 	const r = new Array(e)
 	r[0] = n[0][2]
-	for (let s = 1; s < e; s++) r[s] = (r[s - 1] * n[s][2]) % t
+	for (let c = 1; c < e; c++) r[c] = (r[c - 1] * n[c][2]) % t
 	let i = modInverse(r[e - 1], t)
 	const o = new Array(e)
-	for (let s = e - 1; s > 0; s--) {
-		const u = (i * r[s - 1]) % t,
+	for (let c = e - 1; c > 0; c--) {
+		const u = (i * r[c - 1]) % t,
 			f = (u * u) % t
-		;(o[s] = [(n[s][0] * f) % t, (((n[s][1] * f) % t) * u) % t]), (i = (i * n[s][2]) % t)
+		;(o[c] = [(n[c][0] * f) % t, (((n[c][1] * f) % t) * u) % t]), (i = (i * n[c][2]) % t)
 	}
-	const c = (i * i) % t
-	return (o[0] = [(n[0][0] * c) % t, (((n[0][1] * c) % t) * i) % t]), o
+	const s = (i * i) % t
+	return (o[0] = [(n[0][0] * s) % t, (((n[0][1] * s) % t) * i) % t]), o
 }
 function precomputeOddMultiples(n, t) {
 	const e = 1 << (WNAF_W - 2),
 		[r, i] = jacobianToAffine(...jacobianDouble(n, t, 1n)),
 		o = [[n, t, 1n]]
-	for (let c = 1; c < e; c++) {
-		const [s, u, f] = o[c - 1]
-		o.push(jacobianAddMixed(s, u, f, r, i))
+	for (let s = 1; s < e; s++) {
+		const [c, u, f] = o[s - 1]
+		o.push(jacobianAddMixed(c, u, f, r, i))
 	}
 	return batchToAffine(o)
 }
 function shamirWNAF(n, t, e, r, i, o) {
-	const c = toWNAF(n),
-		s = toWNAF(r),
+	const s = toWNAF(n),
+		c = toWNAF(r),
 		u = precomputeOddMultiples(t, e),
 		f = precomputeOddMultiples(i, o),
-		l = Math.max(c.length, s.length)
+		l = Math.max(s.length, c.length)
 	let a = 0n,
 		h = 0n,
 		p = 0n
 	for (let d = l - 1; d >= 0; d--) {
 		;[a, h, p] = jacobianDouble(a, h, p)
-		const m = d < c.length ? c[d] : 0
+		const m = d < s.length ? s[d] : 0
 		if (m !== 0) {
-			const [x, g] = u[(Math.abs(m) - 1) >> 1]
-			;[a, h, p] = jacobianAddMixed(a, h, p, x, m > 0 ? g : SECP256K1_P - g)
+			const [y, g] = u[(Math.abs(m) - 1) >> 1]
+			;[a, h, p] = jacobianAddMixed(a, h, p, y, m > 0 ? g : SECP256K1_P - g)
 		}
-		const w = d < s.length ? s[d] : 0
+		const w = d < c.length ? c[d] : 0
 		if (w !== 0) {
-			const [x, g] = f[(Math.abs(w) - 1) >> 1]
-			;[a, h, p] = jacobianAddMixed(a, h, p, x, w > 0 ? g : SECP256K1_P - g)
+			const [y, g] = f[(Math.abs(w) - 1) >> 1]
+			;[a, h, p] = jacobianAddMixed(a, h, p, y, w > 0 ? g : SECP256K1_P - g)
 		}
 	}
 	return jacobianToAffine(a, h, p)
 }
 function doubleAndAdd(n, t, e) {
-	const [r, i, o, c] = glvDecompose(e),
-		s = i ? SECP256K1_P - t : t,
+	const [r, i, o, s] = glvDecompose(e),
+		c = i ? SECP256K1_P - t : t,
 		u = (SECP256K1_BETA * n) % SECP256K1_P,
-		f = c ? SECP256K1_P - t : t
-	return shamirWNAF(r, n, s, o, u, f)
+		f = s ? SECP256K1_P - t : t
+	return shamirWNAF(r, n, c, o, u, f)
 }
 function signMessage(n, t, e) {
 	return signHash(uint256ToNumber(keccak256(n), 'BE'), t, e)
@@ -2558,29 +2558,29 @@ function signHash(n, t, e) {
 	const r = mod(n, SECP256K1_N),
 		i = doubleAndAdd(SECP256K1_X, SECP256K1_Y, e),
 		o = mod(i[0], SECP256K1_N)
-	let c = mod((r + mod(o, SECP256K1_N) * t) * modInverse(e, SECP256K1_N), SECP256K1_N)
-	if (o === 0n || c === 0n) throw new Error('Invalid r or s value')
-	let s = i[1] % 2n === 0n ? 27n : 28n
-	return c > SECP256K1_N / 2n && ((c = SECP256K1_N - c), (s = s === 27n ? 28n : 27n)), [o, c, s]
+	let s = mod((r + mod(o, SECP256K1_N) * t) * modInverse(e, SECP256K1_N), SECP256K1_N)
+	if (o === 0n || s === 0n) throw new Error('Invalid r or s value')
+	let c = i[1] % 2n === 0n ? 27n : 28n
+	return s > SECP256K1_N / 2n && ((s = SECP256K1_N - s), (c = c === 27n ? 28n : 27n)), [o, s, c]
 }
 function recoverPublicKey(n, t, e, r) {
 	const i = modSqrt(mod(t ** 3n + 7n, SECP256K1_P), SECP256K1_P)
 	if (!i) throw new Error('Invalid r: does not correspond to a valid curve point')
 	const o = r === 27n ? 0n : 1n,
-		c = i % 2n === o ? i : SECP256K1_P - i,
-		s = mod(uint256ToNumber(keccak256(n), 'BE'), SECP256K1_N),
-		u = doubleAndAdd(t, c, e),
-		f = doubleAndAdd(SECP256K1_X, SECP256K1_Y, s),
+		s = i % 2n === o ? i : SECP256K1_P - i,
+		c = mod(uint256ToNumber(keccak256(n), 'BE'), SECP256K1_N),
+		u = doubleAndAdd(t, s, e),
+		f = doubleAndAdd(SECP256K1_X, SECP256K1_Y, c),
 		l = ellipticAdd(u[0], u[1], f[0], mod(-f[1], SECP256K1_P), SECP256K1_P)
 	return doubleAndAdd(l[0], l[1], modInverse(t, SECP256K1_N))
 }
 function verifySignature(n, t, e, r) {
 	const i = mod(uint256ToNumber(keccak256(n), 'BE'), SECP256K1_N),
 		o = modInverse(r, SECP256K1_N),
-		c = mod(i * o, SECP256K1_N),
-		s = mod(e * o, SECP256K1_N),
-		u = doubleAndAdd(SECP256K1_X, SECP256K1_Y, c),
-		f = doubleAndAdd(t[0], t[1], s),
+		s = mod(i * o, SECP256K1_N),
+		c = mod(e * o, SECP256K1_N),
+		u = doubleAndAdd(SECP256K1_X, SECP256K1_Y, s),
+		f = doubleAndAdd(t[0], t[1], c),
 		l = ellipticAdd(u[0], u[1], f[0], f[1], SECP256K1_P)
 	return e === mod(l[0], SECP256K1_N)
 }
@@ -2639,8 +2639,8 @@ class Chunk {
 }
 ;(exports.Chunk = Chunk), (Chunk.hashFunction = keccak256)
 class ChunkSplitter {
-	constructor(t, e, r = !1) {
-		;(this.counters = [1]), (this.pending = [[]]), (this.encrypted = r), (this.refSize = r ? 64 : 32), (this.maxShards = e ?? 4096 / this.refSize), (this.chunks = [new Chunk()]), (this.onBatch = t)
+	constructor(t, e, r = !1, i) {
+		;(this.counters = [1]), (this.pending = [[]]), (this.hasParity = [!1]), (this.encrypted = r), (this.refSize = r ? 64 : 32), (this.maxShards = e ?? 4096 / this.refSize), (this.chunks = [new Chunk()]), (this.onBatch = t), (this.onIntermediateChunk = i)
 	}
 	static async root(t) {
 		const e = new _a(_a.NOOP)
@@ -2659,7 +2659,7 @@ class ChunkSplitter {
 		}
 	}
 	async elevate(t) {
-		if (((this.counters[t] = ++this.counters[t] % (4096 / this.refSize)), this.pending[t] || (this.pending[t] = []), this.encrypted)) {
+		if (((this.counters[t] = ++this.counters[t] % (4096 / this.refSize)), this.pending[t] || (this.pending[t] = []), t >= 1 && this.onIntermediateChunk && (this.onIntermediateChunk(this.chunks[t], this.hasParity[t] ?? !1), (this.hasParity[t] = !1)), this.encrypted)) {
 			const { address: e, key: r } = this.chunks[t].encryptedHash(),
 				i = new Uint8Array(64)
 			i.set(e), i.set(r, 32), this.pending[t].push({ entry: { chunk: this.chunks[t], key: r }, ref: i, span: this.chunks[t].span })
@@ -2667,21 +2667,22 @@ class ChunkSplitter {
 		;(this.chunks[t] = new Chunk()), this.pending[t].length >= this.maxShards && (await this.flushBatch(t))
 	}
 	async flushBatch(t) {
-		this.chunks[t + 1] || (this.chunks.push(new Chunk()), this.counters.push(1), this.pending.push([]))
+		this.chunks[t + 1] || (this.chunks.push(new Chunk()), this.counters.push(1), this.pending.push([]), this.hasParity.push(!1))
 		const e = this.pending[t]
 		this.pending[t] = []
 		const r = await this.onBatch(e.map(i => i.entry))
 		for (const { ref: i, span: o } of e) await this.append(i, t + 1, o)
+		r.length > 0 && (this.hasParity[t + 1] = !0)
 		for (const { chunk: i, key: o } of r)
 			if (this.encrypted) {
-				const { address: c, key: s } = i.encryptedHash(o),
+				const { address: s, key: c } = i.encryptedHash(o),
 					u = new Uint8Array(64)
-				u.set(c), u.set(s, 32), await this.append(u, t + 1, i.span)
+				u.set(s), u.set(c, 32), await this.append(u, t + 1, i.span)
 			} else await this.append(i.hash(), t + 1, i.span)
 	}
 	async finalize(t = 0) {
 		if ((this.pending[t]?.length && (await this.flushBatch(t)), !this.chunks[t + 1])) {
-			if (this.encrypted) {
+			if ((t >= 1 && this.onIntermediateChunk && this.onIntermediateChunk(this.chunks[t], this.hasParity[t] ?? !1), this.encrypted)) {
 				const { key: e } = this.chunks[t].encryptedHash()
 				await this.onBatch([{ chunk: this.chunks[t], key: e }])
 			} else await this.onBatch([{ chunk: this.chunks[t] }])
@@ -2726,11 +2727,11 @@ class ChunkJoiner {
 		let i, o
 		if ((this.encrypted && e ? ({ span: i, data: o } = decryptChunk(r, e)) : ((i = uint64ToNumber(r.subarray(0, 8), 'LE')), (o = r.subarray(8, 4104))), i <= 4096n)) await this.onData(o.subarray(0, Number(i)))
 		else
-			for (let c = 0; c < 4096 / this.refSize; c++) {
-				const s = o.subarray(c * this.refSize, (c + 1) * this.refSize),
-					u = s.subarray(0, 32)
+			for (let s = 0; s < 4096 / this.refSize; s++) {
+				const c = o.subarray(s * this.refSize, (s + 1) * this.refSize),
+					u = c.subarray(0, 32)
 				if (isAllZero(u)) break
-				await this.join(u, this.encrypted ? s.subarray(32, 64) : void 0)
+				await this.join(u, this.encrypted ? c.subarray(32, 64) : void 0)
 			}
 	}
 }
@@ -2809,12 +2810,12 @@ function tickPlaybook(n) {
 	return t.ttlMax ? --t.ttl <= 0 && n.shift() : (t.ttlMax = t.ttl), { progress: (t.ttlMax - t.ttl) / t.ttlMax, data: t.data }
 }
 function getArgument(n, t, e, r) {
-	const i = n.findIndex(s => s === `--${t}` || s.startsWith(`--${t}=`)),
+	const i = n.findIndex(c => c === `--${t}` || c.startsWith(`--${t}=`)),
 		o = n[i]
 	if (!o) return (e || {})[r || t || ''] || null
 	if (o.includes('=')) return o.split('=')[1]
-	const c = n[i + 1]
-	return c && !c.startsWith('-') ? c : (e || {})[r || t || ''] || null
+	const s = n[i + 1]
+	return s && !s.startsWith('-') ? s : (e || {})[r || t || ''] || null
 }
 function getNumberArgument(n, t, e, r) {
 	const i = getArgument(n, t, e, r)
@@ -2830,10 +2831,10 @@ function getBooleanArgument(n, t, e, r) {
 		o = getArgument(n, t, e, r)
 	if (!o && i) return !0
 	if (!o && !i) return null
-	const c = ['true', '1', 'yes', 'y', 'on'],
-		s = ['false', '0', 'no', 'n', 'off']
-	if (c.includes(o.toLowerCase())) return !0
-	if (s.includes(o.toLowerCase())) return !1
+	const s = ['true', '1', 'yes', 'y', 'on'],
+		c = ['false', '0', 'no', 'n', 'off']
+	if (s.includes(o.toLowerCase())) return !0
+	if (c.includes(o.toLowerCase())) return !1
 	throw Error(`Invalid boolean argument ${t}: ${o}`)
 }
 function requireStringArgument(n, t, e, r) {
@@ -2912,9 +2913,9 @@ function findCorners(n, t, e, r) {
 		{ x: e, y: r }
 	]
 	for (let o = 0; o < n.length; o++)
-		for (let c = 0; c < n[0].length; c++) {
-			const s = getCorners(n, o, c)
-			for (const u of s) i.some(f => f.x === u.x && f.y === u.y) || i.push(u)
+		for (let s = 0; s < n[0].length; s++) {
+			const c = getCorners(n, o, s)
+			for (const u of c) i.some(f => f.x === u.x && f.y === u.y) || i.push(u)
 		}
 	return i.map(o => ({ x: o.x * t, y: o.y * t }))
 }
@@ -2924,9 +2925,9 @@ function findLines(n, t) {
 		i = filterCoordinates(n, (u, f) => n[u][f] === 0 && n[u - 1]?.[f] !== 0, 'column-first').map(u => ({ ...u, dx: 0, dy: 1 })),
 		o = filterCoordinates(n, (u, f) => n[u][f] === 0 && n[u + 1]?.[f] !== 0, 'column-first').map(u => ({ ...u, dx: 0, dy: 1 }))
 	e.forEach(u => u.y++), o.forEach(u => u.x++)
-	const c = group([...i, ...o], (u, f) => u.x === f.x && u.y - 1 === f.y),
-		s = group([...r, ...e], (u, f) => u.y === f.y && u.x - 1 === f.x)
-	return [...c, ...s].map(u => ({ start: u[0], end: last(u) })).map(u => ({ start: multiplyPoint(u.start, t), end: multiplyPoint(addPoint(u.end, { x: u.start.dx, y: u.start.dy }), t) }))
+	const s = group([...i, ...o], (u, f) => u.x === f.x && u.y - 1 === f.y),
+		c = group([...r, ...e], (u, f) => u.y === f.y && u.x - 1 === f.x)
+	return [...s, ...c].map(u => ({ start: u[0], end: last(u) })).map(u => ({ start: multiplyPoint(u.start, t), end: multiplyPoint(addPoint(u.end, { x: u.start.dx, y: u.start.dy }), t) }))
 }
 function getAngleInRadians(n, t) {
 	return Math.atan2(t.y - n.y, t.x - n.x)
@@ -2938,33 +2939,33 @@ function getLineIntersectionPoint(n, t, e, r) {
 	const i = (r.y - e.y) * (t.x - n.x) - (r.x - e.x) * (t.y - n.y)
 	if (i === 0) return null
 	let o = n.y - e.y,
-		c = n.x - e.x
-	const s = (r.x - e.x) * o - (r.y - e.y) * c,
-		u = (t.x - n.x) * o - (t.y - n.y) * c
-	return (o = s / i), (c = u / i), o > 0 && o < 1 && c > 0 && c < 1 ? { x: n.x + o * (t.x - n.x), y: n.y + o * (t.y - n.y) } : null
+		s = n.x - e.x
+	const c = (r.x - e.x) * o - (r.y - e.y) * s,
+		u = (t.x - n.x) * o - (t.y - n.y) * s
+	return (o = c / i), (s = u / i), o > 0 && o < 1 && s > 0 && s < 1 ? { x: n.x + o * (t.x - n.x), y: n.y + o * (t.y - n.y) } : null
 }
 function raycast(n, t, e) {
 	const r = [],
 		i = pushPoint(n, e, 1e4)
 	for (const o of t) {
-		const c = getLineIntersectionPoint(n, i, o.start, o.end)
-		c && r.push(c)
+		const s = getLineIntersectionPoint(n, i, o.start, o.end)
+		s && r.push(s)
 	}
 	return r.length
-		? r.reduce((o, c) => {
-				const s = getDistanceBetweenPoints(n, c),
+		? r.reduce((o, s) => {
+				const c = getDistanceBetweenPoints(n, s),
 					u = getDistanceBetweenPoints(n, o)
-				return s < u ? c : o
+				return c < u ? s : o
 		  })
 		: null
 }
 function raycastCircle(n, t, e) {
 	const i = getSortedRayAngles(n, e),
 		o = []
-	for (const c of i) {
-		const s = raycast(n, t, c - 0.001),
-			u = raycast(n, t, c + 0.001)
-		s && o.push(s), u && o.push(u)
+	for (const s of i) {
+		const c = raycast(n, t, s - 0.001),
+			u = raycast(n, t, s + 0.001)
+		c && o.push(c), u && o.push(u)
 	}
 	return o
 }
@@ -3037,18 +3038,18 @@ class TrieRouter {
 		let i = r,
 			o
 		if ((r.startsWith(':') && ((i = ':'), (o = r.slice(1))), !this.forks.has(i))) {
-			const c = new TrieRouter()
-			o && (c.variableName = o), this.forks.set(i, c)
+			const s = new TrieRouter()
+			o && (s.variableName = o), this.forks.set(i, s)
 		}
 		this.forks.get(i).insert(t.slice(1), e)
 	}
 	async handle(t, e, r, i) {
 		if (t.length === 0) return this.handler ? (await this.handler(e, r, i), !0) : !1
 		const o = t[0],
-			c = this.forks.get(o)
-		if (c) return c.handle(t.slice(1), e, r, i)
-		const s = this.forks.get(':')
-		if (s) return s.variableName && i.set(s.variableName, decodeURIComponent(o)), s.handle(t.slice(1), e, r, i)
+			s = this.forks.get(o)
+		if (s) return s.handle(t.slice(1), e, r, i)
+		const c = this.forks.get(':')
+		if (c) return c.variableName && i.set(c.variableName, decodeURIComponent(o)), c.handle(t.slice(1), e, r, i)
 		const u = this.forks.get('*')
 		return u ? (i.set('wildcard', t.join('/')), u.handler ? (await u.handler(e, r, i), !0) : !1) : !1
 	}
