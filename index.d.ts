@@ -727,7 +727,7 @@ export declare class ChunkSplitter {
 	private onBatch
 	private onIntermediateChunk?
 	private hasParity
-	private pendingParities
+	private pendingEntries
 	constructor(onBatch: (batch: ChunkEntry[]) => Promise<ChunkEntry[]>, maxShards?: number, encrypted?: boolean, onIntermediateChunk?: (chunk: Chunk, hasParity: boolean) => void)
 	static root(data: Uint8Array): Promise<Chunk>
 	static encryptedRoot(data: Uint8Array): Promise<{
