@@ -2165,8 +2165,8 @@ function keccakPermutate(n) {
 			F = (n[14] << 6) | (n[15] >>> 26),
 			z = (n[15] << 6) | (n[14] >>> 26),
 			W = (n[17] << 23) | (n[16] >>> 9),
-			H = (n[16] << 23) | (n[17] >>> 9),
-			q = (n[18] << 20) | (n[19] >>> 12),
+			q = (n[16] << 23) | (n[17] >>> 9),
+			H = (n[18] << 20) | (n[19] >>> 12),
 			V = (n[19] << 20) | (n[18] >>> 12),
 			J = (n[20] << 3) | (n[21] >>> 29),
 			K = (n[21] << 3) | (n[20] >>> 29),
@@ -2198,7 +2198,7 @@ function keccakPermutate(n) {
 			bn = (n[46] << 24) | (n[47] >>> 8),
 			An = (n[48] << 14) | (n[49] >>> 18),
 			$n = (n[49] << 14) | (n[48] >>> 18)
-		;(n[0] = k ^ (~N & G)), (n[1] = O ^ (~v & _)), (n[2] = N ^ (~G & fn)), (n[3] = v ^ (~_ & ln)), (n[4] = G ^ (~fn & An)), (n[5] = _ ^ (~ln & $n)), (n[6] = fn ^ (~An & k)), (n[7] = ln ^ (~$n & O)), (n[8] = An ^ (~k & N)), (n[9] = $n ^ (~O & v)), (n[10] = D ^ (~q & J)), (n[11] = P ^ (~V & K)), (n[12] = q ^ (~J & on)), (n[13] = V ^ (~K & sn)), (n[14] = J ^ (~on & wn)), (n[15] = K ^ (~sn & xn)), (n[16] = on ^ (~wn & D)), (n[17] = sn ^ (~xn & P)), (n[18] = wn ^ (~D & q)), (n[19] = xn ^ (~P & V)), (n[20] = T ^ (~F & Y)), (n[21] = C ^ (~z & X)), (n[22] = F ^ (~Y & an)), (n[23] = z ^ (~X & hn)), (n[24] = Y ^ (~an & dn)), (n[25] = X ^ (~hn & pn)), (n[26] = an ^ (~dn & T)), (n[27] = hn ^ (~pn & C)), (n[28] = dn ^ (~T & F)), (n[29] = pn ^ (~C & z)), (n[30] = B ^ (~j & Z)), (n[31] = U ^ (~L & Q)), (n[32] = j ^ (~Z & cn)), (n[33] = L ^ (~Q & un)), (n[34] = Z ^ (~cn & yn)), (n[35] = Q ^ (~un & bn)), (n[36] = cn ^ (~yn & B)), (n[37] = un ^ (~bn & U)), (n[38] = yn ^ (~B & j)), (n[39] = bn ^ (~U & L)), (n[40] = R ^ (~W & nn)), (n[41] = I ^ (~H & tn)), (n[42] = W ^ (~nn & en)), (n[43] = H ^ (~tn & rn)), (n[44] = nn ^ (~en & mn)), (n[45] = tn ^ (~rn & gn)), (n[46] = en ^ (~mn & R)), (n[47] = rn ^ (~gn & I)), (n[48] = mn ^ (~R & W)), (n[49] = gn ^ (~I & H)), (n[0] ^= IOTA_CONSTANTS[t * 2]), (n[1] ^= IOTA_CONSTANTS[t * 2 + 1])
+		;(n[0] = k ^ (~N & G)), (n[1] = O ^ (~v & _)), (n[2] = N ^ (~G & fn)), (n[3] = v ^ (~_ & ln)), (n[4] = G ^ (~fn & An)), (n[5] = _ ^ (~ln & $n)), (n[6] = fn ^ (~An & k)), (n[7] = ln ^ (~$n & O)), (n[8] = An ^ (~k & N)), (n[9] = $n ^ (~O & v)), (n[10] = D ^ (~H & J)), (n[11] = P ^ (~V & K)), (n[12] = H ^ (~J & on)), (n[13] = V ^ (~K & sn)), (n[14] = J ^ (~on & wn)), (n[15] = K ^ (~sn & xn)), (n[16] = on ^ (~wn & D)), (n[17] = sn ^ (~xn & P)), (n[18] = wn ^ (~D & H)), (n[19] = xn ^ (~P & V)), (n[20] = T ^ (~F & Y)), (n[21] = C ^ (~z & X)), (n[22] = F ^ (~Y & an)), (n[23] = z ^ (~X & hn)), (n[24] = Y ^ (~an & dn)), (n[25] = X ^ (~hn & pn)), (n[26] = an ^ (~dn & T)), (n[27] = hn ^ (~pn & C)), (n[28] = dn ^ (~T & F)), (n[29] = pn ^ (~C & z)), (n[30] = B ^ (~j & Z)), (n[31] = U ^ (~L & Q)), (n[32] = j ^ (~Z & cn)), (n[33] = L ^ (~Q & un)), (n[34] = Z ^ (~cn & yn)), (n[35] = Q ^ (~un & bn)), (n[36] = cn ^ (~yn & B)), (n[37] = un ^ (~bn & U)), (n[38] = yn ^ (~B & j)), (n[39] = bn ^ (~U & L)), (n[40] = R ^ (~W & nn)), (n[41] = I ^ (~q & tn)), (n[42] = W ^ (~nn & en)), (n[43] = q ^ (~tn & rn)), (n[44] = nn ^ (~en & mn)), (n[45] = tn ^ (~rn & gn)), (n[46] = en ^ (~mn & R)), (n[47] = rn ^ (~gn & I)), (n[48] = mn ^ (~R & W)), (n[49] = gn ^ (~I & q)), (n[0] ^= IOTA_CONSTANTS[t * 2]), (n[1] ^= IOTA_CONSTANTS[t * 2 + 1])
 	}
 }
 function bytesToNumbers(n) {
@@ -2673,12 +2673,7 @@ class ChunkSplitter {
 		const r = await this.onBatch(e.map(i => i.entry))
 		for (const { ref: i, span: o } of e) await this.append(i, t + 1, o)
 		r.length > 0 && (this.hasParity[t + 1] = !0)
-		for (const { chunk: i, key: o } of r)
-			if ((this.chunks[t + 1].writer.max() === 0 && (await this.elevate(t + 1)), this.encrypted)) {
-				const { address: s, key: c } = i.encryptedHash(o),
-					u = new Uint8Array(64)
-				u.set(s), u.set(c, 32), this.chunks[t + 1].writer.write(new Uint8ArrayReader(u))
-			} else this.chunks[t + 1].writer.write(new Uint8ArrayReader(i.hash()))
+		for (const { chunk: i } of r) this.chunks[t + 1].writer.max() === 0 && (await this.elevate(t + 1)), this.chunks[t + 1].writer.write(new Uint8ArrayReader(i.hash()))
 	}
 	async finalize(t = 0) {
 		return this.pending[t]?.length && (await this.flushBatch(t)), this.chunks[t + 1] ? (this.counters[t] === 1 ? (await this.elevate(t + 1), await this.flushBatch(t + 1), (this.chunks[t + 1] = this.chunks[t]), this.finalize(t + 1)) : (await this.elevate(t), await this.flushBatch(t), this.finalize(t + 1))) : (t >= 1 && this.onIntermediateChunk && this.onIntermediateChunk(this.chunks[t], this.hasParity[t] ?? !1), this.chunks[t])
