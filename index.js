@@ -2653,7 +2653,7 @@ class ChunkSplitter {
 	async append(t, e = 0, r = 0n) {
 		const i = new Uint8ArrayReader(t)
 		for (; i.max() > 0; ) {
-			this.chunks[e].writer.max() === 0 && (await this.elevate(e))
+			;(this.chunks[e].writer.max() === 0 || (r && this.chunks[e].writer.max() < t.length)) && (await this.elevate(e))
 			const o = this.chunks[e].writer.write(i)
 			r ? (this.chunks[e].span += r) : (this.chunks[0].span += BigInt(o))
 		}
