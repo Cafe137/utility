@@ -2136,18 +2136,18 @@ function keccakPermutate(n) {
 			g = e ^ w,
 			y = r ^ x,
 			En = (u << 1) | (f >>> 31),
-			Mn = (f << 1) | (u >>> 31),
+			Sn = (f << 1) | (u >>> 31),
 			b = i ^ En,
-			A = o ^ Mn,
-			Sn = (l << 1) | (a >>> 31),
+			A = o ^ Sn,
+			Mn = (l << 1) | (a >>> 31),
 			kn = (a << 1) | (l >>> 31),
-			$ = s ^ Sn,
+			$ = s ^ Mn,
 			E = c ^ kn,
 			On = (e << 1) | (r >>> 31),
 			Tn = (r << 1) | (e >>> 31),
-			M = u ^ On,
-			S = f ^ Tn
-		;(n[0] ^= d), (n[1] ^= m), (n[2] ^= g), (n[3] ^= y), (n[4] ^= b), (n[5] ^= A), (n[6] ^= $), (n[7] ^= E), (n[8] ^= M), (n[9] ^= S), (n[10] ^= d), (n[11] ^= m), (n[12] ^= g), (n[13] ^= y), (n[14] ^= b), (n[15] ^= A), (n[16] ^= $), (n[17] ^= E), (n[18] ^= M), (n[19] ^= S), (n[20] ^= d), (n[21] ^= m), (n[22] ^= g), (n[23] ^= y), (n[24] ^= b), (n[25] ^= A), (n[26] ^= $), (n[27] ^= E), (n[28] ^= M), (n[29] ^= S), (n[30] ^= d), (n[31] ^= m), (n[32] ^= g), (n[33] ^= y), (n[34] ^= b), (n[35] ^= A), (n[36] ^= $), (n[37] ^= E), (n[38] ^= M), (n[39] ^= S), (n[40] ^= d), (n[41] ^= m), (n[42] ^= g), (n[43] ^= y), (n[44] ^= b), (n[45] ^= A), (n[46] ^= $), (n[47] ^= E), (n[48] ^= M), (n[49] ^= S)
+			S = u ^ On,
+			M = f ^ Tn
+		;(n[0] ^= d), (n[1] ^= m), (n[2] ^= g), (n[3] ^= y), (n[4] ^= b), (n[5] ^= A), (n[6] ^= $), (n[7] ^= E), (n[8] ^= S), (n[9] ^= M), (n[10] ^= d), (n[11] ^= m), (n[12] ^= g), (n[13] ^= y), (n[14] ^= b), (n[15] ^= A), (n[16] ^= $), (n[17] ^= E), (n[18] ^= S), (n[19] ^= M), (n[20] ^= d), (n[21] ^= m), (n[22] ^= g), (n[23] ^= y), (n[24] ^= b), (n[25] ^= A), (n[26] ^= $), (n[27] ^= E), (n[28] ^= S), (n[29] ^= M), (n[30] ^= d), (n[31] ^= m), (n[32] ^= g), (n[33] ^= y), (n[34] ^= b), (n[35] ^= A), (n[36] ^= $), (n[37] ^= E), (n[38] ^= S), (n[39] ^= M), (n[40] ^= d), (n[41] ^= m), (n[42] ^= g), (n[43] ^= y), (n[44] ^= b), (n[45] ^= A), (n[46] ^= $), (n[47] ^= E), (n[48] ^= S), (n[49] ^= M)
 		const k = n[0],
 			O = n[1],
 			T = (n[2] << 1) | (n[3] >>> 31),
@@ -2161,8 +2161,8 @@ function keccakPermutate(n) {
 			j = (n[11] << 4) | (n[10] >>> 28),
 			L = (n[10] << 4) | (n[11] >>> 28),
 			N = (n[13] << 12) | (n[12] >>> 20),
-			F = (n[12] << 12) | (n[13] >>> 20),
-			v = (n[14] << 6) | (n[15] >>> 26),
+			v = (n[12] << 12) | (n[13] >>> 20),
+			F = (n[14] << 6) | (n[15] >>> 26),
 			z = (n[15] << 6) | (n[14] >>> 26),
 			W = (n[17] << 23) | (n[16] >>> 9),
 			q = (n[16] << 23) | (n[17] >>> 9),
@@ -2198,7 +2198,7 @@ function keccakPermutate(n) {
 			bn = (n[46] << 24) | (n[47] >>> 8),
 			An = (n[48] << 14) | (n[49] >>> 18),
 			$n = (n[49] << 14) | (n[48] >>> 18)
-		;(n[0] = k ^ (~N & G)), (n[1] = O ^ (~F & _)), (n[2] = N ^ (~G & fn)), (n[3] = F ^ (~_ & ln)), (n[4] = G ^ (~fn & An)), (n[5] = _ ^ (~ln & $n)), (n[6] = fn ^ (~An & k)), (n[7] = ln ^ (~$n & O)), (n[8] = An ^ (~k & N)), (n[9] = $n ^ (~O & F)), (n[10] = D ^ (~H & J)), (n[11] = P ^ (~V & K)), (n[12] = H ^ (~J & on)), (n[13] = V ^ (~K & sn)), (n[14] = J ^ (~on & wn)), (n[15] = K ^ (~sn & xn)), (n[16] = on ^ (~wn & D)), (n[17] = sn ^ (~xn & P)), (n[18] = wn ^ (~D & H)), (n[19] = xn ^ (~P & V)), (n[20] = T ^ (~v & Y)), (n[21] = C ^ (~z & X)), (n[22] = v ^ (~Y & an)), (n[23] = z ^ (~X & hn)), (n[24] = Y ^ (~an & dn)), (n[25] = X ^ (~hn & pn)), (n[26] = an ^ (~dn & T)), (n[27] = hn ^ (~pn & C)), (n[28] = dn ^ (~T & v)), (n[29] = pn ^ (~C & z)), (n[30] = B ^ (~j & Z)), (n[31] = U ^ (~L & Q)), (n[32] = j ^ (~Z & cn)), (n[33] = L ^ (~Q & un)), (n[34] = Z ^ (~cn & yn)), (n[35] = Q ^ (~un & bn)), (n[36] = cn ^ (~yn & B)), (n[37] = un ^ (~bn & U)), (n[38] = yn ^ (~B & j)), (n[39] = bn ^ (~U & L)), (n[40] = R ^ (~W & nn)), (n[41] = I ^ (~q & tn)), (n[42] = W ^ (~nn & en)), (n[43] = q ^ (~tn & rn)), (n[44] = nn ^ (~en & mn)), (n[45] = tn ^ (~rn & gn)), (n[46] = en ^ (~mn & R)), (n[47] = rn ^ (~gn & I)), (n[48] = mn ^ (~R & W)), (n[49] = gn ^ (~I & q)), (n[0] ^= IOTA_CONSTANTS[t * 2]), (n[1] ^= IOTA_CONSTANTS[t * 2 + 1])
+		;(n[0] = k ^ (~N & G)), (n[1] = O ^ (~v & _)), (n[2] = N ^ (~G & fn)), (n[3] = v ^ (~_ & ln)), (n[4] = G ^ (~fn & An)), (n[5] = _ ^ (~ln & $n)), (n[6] = fn ^ (~An & k)), (n[7] = ln ^ (~$n & O)), (n[8] = An ^ (~k & N)), (n[9] = $n ^ (~O & v)), (n[10] = D ^ (~H & J)), (n[11] = P ^ (~V & K)), (n[12] = H ^ (~J & on)), (n[13] = V ^ (~K & sn)), (n[14] = J ^ (~on & wn)), (n[15] = K ^ (~sn & xn)), (n[16] = on ^ (~wn & D)), (n[17] = sn ^ (~xn & P)), (n[18] = wn ^ (~D & H)), (n[19] = xn ^ (~P & V)), (n[20] = T ^ (~F & Y)), (n[21] = C ^ (~z & X)), (n[22] = F ^ (~Y & an)), (n[23] = z ^ (~X & hn)), (n[24] = Y ^ (~an & dn)), (n[25] = X ^ (~hn & pn)), (n[26] = an ^ (~dn & T)), (n[27] = hn ^ (~pn & C)), (n[28] = dn ^ (~T & F)), (n[29] = pn ^ (~C & z)), (n[30] = B ^ (~j & Z)), (n[31] = U ^ (~L & Q)), (n[32] = j ^ (~Z & cn)), (n[33] = L ^ (~Q & un)), (n[34] = Z ^ (~cn & yn)), (n[35] = Q ^ (~un & bn)), (n[36] = cn ^ (~yn & B)), (n[37] = un ^ (~bn & U)), (n[38] = yn ^ (~B & j)), (n[39] = bn ^ (~U & L)), (n[40] = R ^ (~W & nn)), (n[41] = I ^ (~q & tn)), (n[42] = W ^ (~nn & en)), (n[43] = q ^ (~tn & rn)), (n[44] = nn ^ (~en & mn)), (n[45] = tn ^ (~rn & gn)), (n[46] = en ^ (~mn & R)), (n[47] = rn ^ (~gn & I)), (n[48] = mn ^ (~R & W)), (n[49] = gn ^ (~I & q)), (n[0] ^= IOTA_CONSTANTS[t * 2]), (n[1] ^= IOTA_CONSTANTS[t * 2 + 1])
 	}
 }
 function bytesToNumbers(n) {
@@ -2659,11 +2659,13 @@ class ChunkSplitter {
 		}
 	}
 	async elevate(t) {
-		if (((this.counters[t] = ++this.counters[t] % (4096 / this.refSize)), this.pending[t] || (this.pending[t] = []), await this.sealParities(t), t >= 1 && this.onIntermediateChunk && (this.onIntermediateChunk(this.chunks[t], this.hasParity[t] ?? !1), (this.hasParity[t] = !1)), this.encrypted)) {
-			const { address: e, key: r } = this.chunks[t].encryptedHash(),
-				i = new Uint8Array(64)
-			i.set(e), i.set(r, 32), this.pending[t].push({ entry: { chunk: this.chunks[t], key: r }, ref: i, span: this.chunks[t].span })
-		} else this.pending[t].push({ entry: { chunk: this.chunks[t] }, ref: this.chunks[t].hash(), span: this.chunks[t].span })
+		;(this.counters[t] = ++this.counters[t] % (4096 / this.refSize)), this.pending[t] || (this.pending[t] = []), await this.sealParities(t)
+		const e = this.chunks[t].span
+		if ((t >= 1 && this.onIntermediateChunk && (this.onIntermediateChunk(this.chunks[t], this.hasParity[t] ?? !1), (this.hasParity[t] = !1)), this.encrypted)) {
+			const { address: r, key: i } = this.chunks[t].encryptedHash(),
+				o = new Uint8Array(64)
+			o.set(r), o.set(i, 32), this.pending[t].push({ entry: { chunk: this.chunks[t], key: i }, ref: o, span: e })
+		} else this.pending[t].push({ entry: { chunk: this.chunks[t] }, ref: this.chunks[t].hash(), span: e })
 		;(this.chunks[t] = new Chunk()), this.pending[t].length >= this.maxShards && (await this.flushBatch(t))
 	}
 	async sealParities(t) {
