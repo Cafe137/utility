@@ -2132,31 +2132,31 @@ function keccakPermutate(n) {
 			d = l ^ h,
 			m = a ^ p,
 			w = (s << 1) | (c >>> 31),
-			y = (c << 1) | (s >>> 31),
+			x = (c << 1) | (s >>> 31),
 			g = e ^ w,
-			x = r ^ y,
+			y = r ^ x,
 			En = (u << 1) | (f >>> 31),
-			kn = (f << 1) | (u >>> 31),
+			Mn = (f << 1) | (u >>> 31),
 			b = i ^ En,
-			A = o ^ kn,
-			Mn = (l << 1) | (a >>> 31),
-			Sn = (a << 1) | (l >>> 31),
-			$ = s ^ Mn,
-			E = c ^ Sn,
+			A = o ^ Mn,
+			Sn = (l << 1) | (a >>> 31),
+			kn = (a << 1) | (l >>> 31),
+			$ = s ^ Sn,
+			E = c ^ kn,
 			On = (e << 1) | (r >>> 31),
 			Tn = (r << 1) | (e >>> 31),
-			k = u ^ On,
-			M = f ^ Tn
-		;(n[0] ^= d), (n[1] ^= m), (n[2] ^= g), (n[3] ^= x), (n[4] ^= b), (n[5] ^= A), (n[6] ^= $), (n[7] ^= E), (n[8] ^= k), (n[9] ^= M), (n[10] ^= d), (n[11] ^= m), (n[12] ^= g), (n[13] ^= x), (n[14] ^= b), (n[15] ^= A), (n[16] ^= $), (n[17] ^= E), (n[18] ^= k), (n[19] ^= M), (n[20] ^= d), (n[21] ^= m), (n[22] ^= g), (n[23] ^= x), (n[24] ^= b), (n[25] ^= A), (n[26] ^= $), (n[27] ^= E), (n[28] ^= k), (n[29] ^= M), (n[30] ^= d), (n[31] ^= m), (n[32] ^= g), (n[33] ^= x), (n[34] ^= b), (n[35] ^= A), (n[36] ^= $), (n[37] ^= E), (n[38] ^= k), (n[39] ^= M), (n[40] ^= d), (n[41] ^= m), (n[42] ^= g), (n[43] ^= x), (n[44] ^= b), (n[45] ^= A), (n[46] ^= $), (n[47] ^= E), (n[48] ^= k), (n[49] ^= M)
-		const S = n[0],
+			M = u ^ On,
+			S = f ^ Tn
+		;(n[0] ^= d), (n[1] ^= m), (n[2] ^= g), (n[3] ^= y), (n[4] ^= b), (n[5] ^= A), (n[6] ^= $), (n[7] ^= E), (n[8] ^= M), (n[9] ^= S), (n[10] ^= d), (n[11] ^= m), (n[12] ^= g), (n[13] ^= y), (n[14] ^= b), (n[15] ^= A), (n[16] ^= $), (n[17] ^= E), (n[18] ^= M), (n[19] ^= S), (n[20] ^= d), (n[21] ^= m), (n[22] ^= g), (n[23] ^= y), (n[24] ^= b), (n[25] ^= A), (n[26] ^= $), (n[27] ^= E), (n[28] ^= M), (n[29] ^= S), (n[30] ^= d), (n[31] ^= m), (n[32] ^= g), (n[33] ^= y), (n[34] ^= b), (n[35] ^= A), (n[36] ^= $), (n[37] ^= E), (n[38] ^= M), (n[39] ^= S), (n[40] ^= d), (n[41] ^= m), (n[42] ^= g), (n[43] ^= y), (n[44] ^= b), (n[45] ^= A), (n[46] ^= $), (n[47] ^= E), (n[48] ^= M), (n[49] ^= S)
+		const k = n[0],
 			O = n[1],
 			T = (n[2] << 1) | (n[3] >>> 31),
 			C = (n[3] << 1) | (n[2] >>> 31),
 			R = (n[5] << 30) | (n[4] >>> 2),
 			I = (n[4] << 30) | (n[5] >>> 2),
 			D = (n[6] << 28) | (n[7] >>> 4),
-			B = (n[7] << 28) | (n[6] >>> 4),
-			P = (n[8] << 27) | (n[9] >>> 5),
+			P = (n[7] << 28) | (n[6] >>> 4),
+			B = (n[8] << 27) | (n[9] >>> 5),
 			U = (n[9] << 27) | (n[8] >>> 5),
 			j = (n[11] << 4) | (n[10] >>> 28),
 			L = (n[10] << 4) | (n[11] >>> 28),
@@ -2193,12 +2193,12 @@ function keccakPermutate(n) {
 			mn = (n[42] << 2) | (n[43] >>> 30),
 			gn = (n[43] << 2) | (n[42] >>> 30),
 			wn = (n[45] << 29) | (n[44] >>> 3),
-			yn = (n[44] << 29) | (n[45] >>> 3),
-			xn = (n[47] << 24) | (n[46] >>> 8),
+			xn = (n[44] << 29) | (n[45] >>> 3),
+			yn = (n[47] << 24) | (n[46] >>> 8),
 			bn = (n[46] << 24) | (n[47] >>> 8),
 			An = (n[48] << 14) | (n[49] >>> 18),
 			$n = (n[49] << 14) | (n[48] >>> 18)
-		;(n[0] = S ^ (~N & G)), (n[1] = O ^ (~v & _)), (n[2] = N ^ (~G & fn)), (n[3] = v ^ (~_ & ln)), (n[4] = G ^ (~fn & An)), (n[5] = _ ^ (~ln & $n)), (n[6] = fn ^ (~An & S)), (n[7] = ln ^ (~$n & O)), (n[8] = An ^ (~S & N)), (n[9] = $n ^ (~O & v)), (n[10] = D ^ (~q & J)), (n[11] = B ^ (~V & K)), (n[12] = q ^ (~J & on)), (n[13] = V ^ (~K & sn)), (n[14] = J ^ (~on & wn)), (n[15] = K ^ (~sn & yn)), (n[16] = on ^ (~wn & D)), (n[17] = sn ^ (~yn & B)), (n[18] = wn ^ (~D & q)), (n[19] = yn ^ (~B & V)), (n[20] = T ^ (~F & Y)), (n[21] = C ^ (~z & X)), (n[22] = F ^ (~Y & an)), (n[23] = z ^ (~X & hn)), (n[24] = Y ^ (~an & dn)), (n[25] = X ^ (~hn & pn)), (n[26] = an ^ (~dn & T)), (n[27] = hn ^ (~pn & C)), (n[28] = dn ^ (~T & F)), (n[29] = pn ^ (~C & z)), (n[30] = P ^ (~j & Z)), (n[31] = U ^ (~L & Q)), (n[32] = j ^ (~Z & cn)), (n[33] = L ^ (~Q & un)), (n[34] = Z ^ (~cn & xn)), (n[35] = Q ^ (~un & bn)), (n[36] = cn ^ (~xn & P)), (n[37] = un ^ (~bn & U)), (n[38] = xn ^ (~P & j)), (n[39] = bn ^ (~U & L)), (n[40] = R ^ (~W & nn)), (n[41] = I ^ (~H & tn)), (n[42] = W ^ (~nn & en)), (n[43] = H ^ (~tn & rn)), (n[44] = nn ^ (~en & mn)), (n[45] = tn ^ (~rn & gn)), (n[46] = en ^ (~mn & R)), (n[47] = rn ^ (~gn & I)), (n[48] = mn ^ (~R & W)), (n[49] = gn ^ (~I & H)), (n[0] ^= IOTA_CONSTANTS[t * 2]), (n[1] ^= IOTA_CONSTANTS[t * 2 + 1])
+		;(n[0] = k ^ (~N & G)), (n[1] = O ^ (~v & _)), (n[2] = N ^ (~G & fn)), (n[3] = v ^ (~_ & ln)), (n[4] = G ^ (~fn & An)), (n[5] = _ ^ (~ln & $n)), (n[6] = fn ^ (~An & k)), (n[7] = ln ^ (~$n & O)), (n[8] = An ^ (~k & N)), (n[9] = $n ^ (~O & v)), (n[10] = D ^ (~q & J)), (n[11] = P ^ (~V & K)), (n[12] = q ^ (~J & on)), (n[13] = V ^ (~K & sn)), (n[14] = J ^ (~on & wn)), (n[15] = K ^ (~sn & xn)), (n[16] = on ^ (~wn & D)), (n[17] = sn ^ (~xn & P)), (n[18] = wn ^ (~D & q)), (n[19] = xn ^ (~P & V)), (n[20] = T ^ (~F & Y)), (n[21] = C ^ (~z & X)), (n[22] = F ^ (~Y & an)), (n[23] = z ^ (~X & hn)), (n[24] = Y ^ (~an & dn)), (n[25] = X ^ (~hn & pn)), (n[26] = an ^ (~dn & T)), (n[27] = hn ^ (~pn & C)), (n[28] = dn ^ (~T & F)), (n[29] = pn ^ (~C & z)), (n[30] = B ^ (~j & Z)), (n[31] = U ^ (~L & Q)), (n[32] = j ^ (~Z & cn)), (n[33] = L ^ (~Q & un)), (n[34] = Z ^ (~cn & yn)), (n[35] = Q ^ (~un & bn)), (n[36] = cn ^ (~yn & B)), (n[37] = un ^ (~bn & U)), (n[38] = yn ^ (~B & j)), (n[39] = bn ^ (~U & L)), (n[40] = R ^ (~W & nn)), (n[41] = I ^ (~H & tn)), (n[42] = W ^ (~nn & en)), (n[43] = H ^ (~tn & rn)), (n[44] = nn ^ (~en & mn)), (n[45] = tn ^ (~rn & gn)), (n[46] = en ^ (~mn & R)), (n[47] = rn ^ (~gn & I)), (n[48] = mn ^ (~R & W)), (n[49] = gn ^ (~I & H)), (n[0] ^= IOTA_CONSTANTS[t * 2]), (n[1] ^= IOTA_CONSTANTS[t * 2 + 1])
 	}
 }
 function bytesToNumbers(n) {
@@ -2531,13 +2531,13 @@ function shamirWNAF(n, t, e, r, i, o) {
 		;[a, h, p] = jacobianDouble(a, h, p)
 		const m = d < s.length ? s[d] : 0
 		if (m !== 0) {
-			const [y, g] = u[(Math.abs(m) - 1) >> 1]
-			;[a, h, p] = jacobianAddMixed(a, h, p, y, m > 0 ? g : SECP256K1_P - g)
+			const [x, g] = u[(Math.abs(m) - 1) >> 1]
+			;[a, h, p] = jacobianAddMixed(a, h, p, x, m > 0 ? g : SECP256K1_P - g)
 		}
 		const w = d < c.length ? c[d] : 0
 		if (w !== 0) {
-			const [y, g] = f[(Math.abs(w) - 1) >> 1]
-			;[a, h, p] = jacobianAddMixed(a, h, p, y, w > 0 ? g : SECP256K1_P - g)
+			const [x, g] = f[(Math.abs(w) - 1) >> 1]
+			;[a, h, p] = jacobianAddMixed(a, h, p, x, w > 0 ? g : SECP256K1_P - g)
 		}
 	}
 	return jacobianToAffine(a, h, p)
@@ -2681,14 +2681,7 @@ class ChunkSplitter {
 			} else await this.append(i.hash(), t + 1, i.span)
 	}
 	async finalize(t = 0) {
-		if ((this.pending[t]?.length && (await this.flushBatch(t)), !this.chunks[t + 1])) {
-			if ((t >= 1 && this.onIntermediateChunk && this.onIntermediateChunk(this.chunks[t], this.hasParity[t] ?? !1), this.encrypted)) {
-				const { key: e } = this.chunks[t].encryptedHash()
-				await this.onBatch([{ chunk: this.chunks[t], key: e }])
-			} else await this.onBatch([{ chunk: this.chunks[t] }])
-			return this.chunks[t]
-		}
-		return this.counters[t] === 1 ? (await this.elevate(t + 1), await this.flushBatch(t + 1), (this.chunks[t + 1] = this.chunks[t]), this.finalize(t + 1)) : (await this.elevate(t), await this.flushBatch(t), this.finalize(t + 1))
+		return this.pending[t]?.length && (await this.flushBatch(t)), this.chunks[t + 1] ? (this.counters[t] === 1 ? (await this.elevate(t + 1), await this.flushBatch(t + 1), (this.chunks[t + 1] = this.chunks[t]), this.finalize(t + 1)) : (await this.elevate(t), await this.flushBatch(t), this.finalize(t + 1))) : (t >= 1 && this.onIntermediateChunk && this.onIntermediateChunk(this.chunks[t], this.hasParity[t] ?? !1), this.chunks[t])
 	}
 }
 ;(exports.ChunkSplitter = ChunkSplitter), (_a = ChunkSplitter), (ChunkSplitter.NOOP = async n => [])
