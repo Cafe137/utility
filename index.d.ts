@@ -712,14 +712,20 @@ export declare class Chunk {
 		data: Uint8Array
 	}
 }
+export type ChunkEntry = {
+	chunk: Chunk
+	key?: Uint8Array
+}
 export declare class ChunkSplitter {
-	static readonly NOOP: (_: Chunk, _key?: Uint8Array) => Promise<void>
+	static readonly NOOP: (_: ChunkEntry[]) => Promise<ChunkEntry[]>
 	private refSize
 	private encrypted
+	private maxShards
 	private chunks
 	private counters
-	private onChunk
-	constructor(onChunk: (chunk: Chunk, key?: Uint8Array) => Promise<void>, encrypted?: boolean)
+	private pending
+	private onBatch
+	constructor(onBatch: (batch: ChunkEntry[]) => Promise<ChunkEntry[]>, maxShards?: number, encrypted?: boolean)
 	static root(data: Uint8Array): Promise<Chunk>
 	static encryptedRoot(data: Uint8Array): Promise<{
 		address: Uint8Array
@@ -727,6 +733,7 @@ export declare class ChunkSplitter {
 	}>
 	append(data: Uint8Array, level?: number, spanIncrement?: bigint): Promise<void>
 	private elevate
+	private flushBatch
 	finalize(level?: number): Promise<Chunk>
 }
 export declare class ChunkJoiner {
